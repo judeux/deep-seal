@@ -1,0 +1,17 @@
+# Project-scoped Codex configuration for Deep Seal.
+# Keep personal preferences in ~/.codex/config.toml.
+# Keep repo-specific behavior here.
+# Default workflow is proposal-only: Codex should not directly edit files unless explicitly asked.
+
+approval_policy = "on-request"
+sandbox_mode = "read-only"
+
+# Let the Codex App or user-level config choose the model.
+# Do not pin a model in this repository unless the project owner explicitly requests it.
+
+model_reasoning_effort = "high"
+model_verbosity = "medium"
+
+[shell_environment_policy]
+# Keep a minimal, safer inherited shell environment.
+inherit = "core"
