@@ -57,6 +57,23 @@ If a feature is removed, mark it as `OUT` and explain the reason.
 
 If a feature is core, mark it as `LOCKED` only when the project owner explicitly agrees.
 
+## Asset Request Documentation Rule
+
+When a task requires new assets, Codex must document the request clearly instead of assuming that the asset already exists.
+
+Asset-related requests should be written in a reusable format so the project owner can later create the asset manually, purchase it from an asset store, generate it with AI, or commission it.
+
+If the asset affects design direction, Codex should also suggest whether the relevant GDD document should be updated.
+
+Examples:
+
+* A new miner sprite requirement may affect `docs/gdd/08_world_art_and_audio.md`.
+* A terrain tileset requirement may affect `docs/gdd/10_procedural_generation.md`.
+* A UI icon requirement may affect future UI documentation.
+* A third-party or AI-generated asset must be recorded in `docs/licenses/ASSET_REGISTER.md`.
+
+Asset requests should not be mixed into code-only implementation instructions without a clear heading.
+
 ## Architecture Documents
 
 Architecture documents should describe code boundaries, responsibilities, and dependencies.

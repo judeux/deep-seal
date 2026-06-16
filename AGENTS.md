@@ -39,6 +39,58 @@ When proposing code, include complete file contents for new small files, or clea
 
 If direct editing would be useful, Codex must ask first and state exactly which files it wants to change.
 
+## Asset and Image Request Rule — Locked
+
+When an implementation step requires new visual, audio, UI, font, animation, VFX, or other external assets, Codex must not use placeholders silently and must not import random assets.
+
+Codex must first provide an explicit asset request specification for the project owner.
+
+Each asset request must include:
+
+* Purpose: where and why the asset is needed.
+* Asset type: sprite, tile, tileset, portrait, icon, UI panel, VFX texture, sound effect, music loop, font, shader, material, or other.
+* Required file format: for example PNG, WAV, OGG, TTF, FBX, PSD source, or Unity prefab.
+* Recommended resolution or size:
+
+  * sprites: pixel size and pixels-per-unit assumption;
+  * tiles: tile size, tile count, and atlas layout;
+  * UI: target canvas size and scaling expectation;
+  * audio: sample rate, bit depth, mono/stereo, loop requirement.
+* Orientation and pivot:
+
+  * character sprite pivot;
+  * projectile direction;
+  * tile origin;
+  * UI anchor expectation.
+* Animation requirements, if any:
+
+  * frame count;
+  * directions;
+  * frame rate;
+  * loop or one-shot behavior.
+* Style constraints:
+
+  * visual mood;
+  * palette direction;
+  * outline or no outline;
+  * readability constraints;
+  * relationship to the current GDD art direction.
+* Implementation constraints:
+
+  * expected folder path under `Assets/_Project`;
+  * whether the asset is temporary prototype content or intended production content;
+  * whether a placeholder is acceptable.
+* Licensing constraints:
+
+  * commercial use must be allowed;
+  * attribution requirements must be recorded;
+  * third-party or AI-generated assets must be documented in `docs/licenses/ASSET_REGISTER.md`.
+
+Codex must present the asset request as a proposal only. The project owner will create, purchase, generate, or import the asset manually.
+
+If a placeholder is acceptable for a prototype step, Codex must explicitly state the placeholder requirements and the later replacement criteria.
+
+
 ## Primary Source Documents
 
 Before changing design-sensitive code, read these documents:
