@@ -23,7 +23,6 @@ Write-Host "Running Unity EditMode tests..."
 
 & $UnityPath `
     -batchmode `
-    -quit `
     -projectPath $ProjectPath `
     -runTests `
     -testPlatform EditMode `
@@ -34,6 +33,10 @@ $exitCode = $LASTEXITCODE
 
 if ($exitCode -ne 0) {
     Write-Error "EditMode tests failed with exit code $exitCode. See $logFile and $resultsFile"
+}
+
+if (-not (Test-Path $resultsFile)) {
+    Write-Error "EditMode test results file was not created. See $logFile"
 }
 
 Write-Host "EditMode tests completed successfully. Results: $resultsFile"

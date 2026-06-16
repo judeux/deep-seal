@@ -23,7 +23,6 @@ Write-Host "Running Unity PlayMode tests..."
 
 & $UnityPath `
     -batchmode `
-    -quit `
     -projectPath $ProjectPath `
     -runTests `
     -testPlatform PlayMode `
@@ -34,6 +33,10 @@ $exitCode = $LASTEXITCODE
 
 if ($exitCode -ne 0) {
     Write-Error "PlayMode tests failed with exit code $exitCode. See $logFile and $resultsFile"
+}
+
+if (-not (Test-Path $resultsFile)) {
+    Write-Error "PlayMode test results file was not created. See $logFile"
 }
 
 Write-Host "PlayMode tests completed successfully. Results: $resultsFile"
