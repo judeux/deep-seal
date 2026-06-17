@@ -1,11 +1,11 @@
-using DeepSeal.Core;
+Ôªøusing DeepSeal.Core;
 using DeepSeal.Mining;
 using NUnit.Framework;
 
 namespace DeepSeal.Tests.Mining
 {
     /// <summary>
-    /// √§±º «««ÿ ¿˚øÎ ±‘ƒ¢¿ª ∞À¡ı«—¥Ÿ.
+    /// Ï±ÑÍµ¥ ÌîºÌï¥ Ï†ÅÏö© Í∑úÏπôÏùÑ Í≤ÄÏ¶ùÌïúÎã§.
     /// </summary>
     public sealed class MiningRulesTests
     {
@@ -119,6 +119,61 @@ namespace DeepSeal.Tests.Mining
             {
                 _ = MiningRules.ApplyMiningDamage(null, GridPosition.Zero, 1);
             });
+        }
+
+        [Test]
+        public void ApplyMiningDamage_OutOfBoundsDoesNotChangeGrid()
+        {
+            var grid = new MineGrid(2, 2, TerrainCell.Floor);
+            var wallPosition = new GridPosition(1, 1);
+            grid.TrySetCell(wallPosition, TerrainCell.Wall(3));
+
+            MiningResult result = MiningRules.ApplyMiningDamage(
+                grid,
+                new GridPosition(-1, 0),
+                2);
+
+            Assert.That(result.Type, Is.EqualTo(MiningResultType.OutOfBounds));
+            Assert.That(result.Succeeded, Is.False);
+            Assert.That(result.ChangedCell, Is.False);
+
+            for (int y = 0; y < grid.Height; y++)
+            {
+                for (int x = 0; x < grid.Width; x++)
+                {
+                    var position = new GridPosition(x, y);
+                    grid.TryGetCell(position, out TerrainCell cell);
+
+                    TerrainCell expected = position == wallPosition
+                        ? TerrainCell.Wall(3)
+                        : TerrainCell.Floor;
+
+                    Assert.That(cell, Is.EqualTo(expected), $"Cell {position} should not change.");
+                }
+            }
+        }
+
+        [Test]
+        public void ApplyMiningDamage_AfterWallDestroyedSecondAttemptReturnsNotMineable()
+        {
+            var grid = new MineGrid(1, 1, TerrainCell.Wall(1));
+            GridPosition position = GridPosition.Zero;
+
+            MiningResult firstResult = MiningRules.ApplyMiningDamage(grid, position, 1);
+            MiningResult secondResult = MiningRules.ApplyMiningDamage(grid, position, 1);
+            grid.TryGetCell(position, out TerrainCell currentCell);
+
+            Assert.That(firstResult.Type, Is.EqualTo(MiningResultType.Destroyed));
+            Assert.That(firstResult.WasDestroyed, Is.True);
+
+            Assert.That(secondResult.Type, Is.EqualTo(MiningResultType.NotMineable));
+            Assert.That(secondResult.Succeeded, Is.False);
+            Assert.That(secondResult.ChangedCell, Is.False);
+            Assert.That(secondResult.WasDestroyed, Is.False);
+            Assert.That(secondResult.HasCell, Is.True);
+            Assert.That(secondResult.PreviousCell, Is.EqualTo(TerrainCell.Floor));
+            Assert.That(secondResult.CurrentCell, Is.EqualTo(TerrainCell.Floor));
+            Assert.That(currentCell, Is.EqualTo(TerrainCell.Floor));
         }
     }
 }
