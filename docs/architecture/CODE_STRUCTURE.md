@@ -58,3 +58,31 @@ If compilation time or test boundaries require assembly definitions, start with:
 - `DeepSeal.Editor.asmdef`
 - `DeepSeal.Tests.EditMode.asmdef`
 - `DeepSeal.Tests.PlayMode.asmdef`
+
+## Current Runtime Structure
+
+The initial runtime code structure has started with pure C# domain logic.
+
+Implemented areas:
+
+- `DeepSeal.Core`
+  - Integer grid position primitives.
+  - Grid direction primitives.
+
+- `DeepSeal.Mining`
+  - Terrain cell type.
+  - Terrain cell state.
+  - Mine grid storage and safe cell access.
+  - Basic mining rule calculation.
+
+Current constraints:
+
+- Runtime domain logic must not depend on `UnityEngine`.
+- Unity scene, Tilemap, rendering, input, and MonoBehaviour adapters are intentionally not part of the mining domain layer.
+- The current mining model is designed for EditMode tests first, then Unity adapters later.
+
+Next planned area:
+
+- `DeepSeal.ProceduralGeneration`
+  - Seed-based prototype mine map generation.
+  - Basic map validation.
