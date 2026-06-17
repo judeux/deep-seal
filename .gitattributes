@@ -1,4 +1,3 @@
-@"
 # Normalize text files
 * text=auto
 
@@ -28,4 +27,3 @@
 *.fbx filter=lfs diff=lfs merge=lfs -text
 *.wav filter=lfs diff=lfs merge=lfs -text
 *.mp4 filter=lfs diff=lfs merge=lfs -text
-"@ | Set-Content .gitattributes -Encoding UTF8
