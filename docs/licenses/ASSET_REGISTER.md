@@ -18,7 +18,7 @@
 | File | Tool/Model | Generated Date | Prompt Record | Modified | Commercial Terms Checked | Stored At | Notes |
 |---|---|---|---|---|---|---|---|
 |floor_prototype.png|ChatGPT|2026-06-18|16x16 통과 가능한 바닥 어두운 회청색 바닥, 예: #3B4652, 멀리서도 wall과 구분되어야 함|No|Yes|Assets/_Project/Art/Prototype/Tiles/Mine/floor_prototype.png|Prototype-only floor tile|
-|wall_prototype.png|ChatGPT|2026-06-18|16x16 채굴 가능한 바닥 더 어두운 암석색 + 밝은 균열, 예: #1F2933, 균열 #6B7580, 멀리서도 floor와 구분되어야 함|No|Yes|Assets/_Project/Art/Prototype/Tiles/Mine/wall_prototype.png|Prototype-only wall tile|
+|wall_prototype.png|ChatGPT|2026-06-18|16x16 채굴 가능한 벽 더 어두운 암석색 + 밝은 균열, 예: #1F2933, 균열 #6B7580, 멀리서도 floor와 구분되어야 함|No|Yes|Assets/_Project/Art/Prototype/Tiles/Mine/wall_prototype.png|Prototype-only wall tile|
 
 ## Audio / Fonts
 
