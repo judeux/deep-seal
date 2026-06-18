@@ -11,7 +11,7 @@ namespace DeepSeal.UnityAdapters.Prototype
     /// "보이게 하기"용 최소 부트스트랩 역할.
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class PrototypeMineGridBoostrap : MonoBehaviour
+    public sealed class PrototypeMineGridBootstrap : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] private MineGridTilemapRenderer mineGridRenderer;

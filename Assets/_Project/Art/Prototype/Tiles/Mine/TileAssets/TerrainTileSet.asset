@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c6a9a10804de324396f9cea18304851, type: 3}
   m_Name: TerrainTileSet
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Tilemaps.TerrainTileSet
-  floorTile: {fileID: 0}
-  wallTile: {fileID: 0}
+  floorTile: {fileID: 11400000, guid: 69013cb27abf0e14eaaa035248848dcb, type: 2}
+  wallTile: {fileID: 11400000, guid: 19199567756633d4081f778f6b214f12, type: 2}
