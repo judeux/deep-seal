@@ -408,7 +408,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1450090156}
-  - component: {fileID: 1450090155}
+  - component: {fileID: 1450090157}
   m_Layer: 0
   m_Name: PrototypeMineGridBootstrap
   m_TagString: Untagged
@@ -416,28 +416,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1450090155
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1450090154}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d89c9a86b6e0a9942a386e3a81d0ebba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Prototype.PrototypeMineGridBoostrap
-  mineGridRenderer: {fileID: 924460738}
-  generateOnStart: 1
-  seed: 999
-  width: 24
-  height: 16
-  startX: 12
-  startY: 8
-  startClearRadius: 1
-  wallDurability: 3
-  randomFloorPercent: 65
 --- !u!4 &1450090156
 Transform:
   m_ObjectHideFlags: 0
@@ -453,6 +431,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1450090157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1450090154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d89c9a86b6e0a9942a386e3a81d0ebba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Prototype.PrototypeMineGridBootstrap
+  mineGridRenderer: {fileID: 924460738}
+  generateOnStart: 1
+  seed: 999
+  width: 24
+  height: 16
+  startX: 12
+  startY: 8
+  startClearRadius: 1
+  wallDurability: 3
+  randomFloorPercent: 65
 --- !u!1 &1562891232
 GameObject:
   m_ObjectHideFlags: 0
