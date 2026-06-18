@@ -1,7 +1,9 @@
-{
+﻿{
 	"name": "DeepSeal.Runtime",
 	"rootNamespace": "DeepSeal",
-	"references": [],
+	"references": [
+		"Unity.InputSystem"
+	],
 	"includePlatforms": [],
 	"excludePlatforms": [],
 	"allowUnsafeCode": false,
