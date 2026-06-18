@@ -1,5 +1,6 @@
 ﻿using System;
 using DeepSeal.Core;
+using DeepSeal.Mining;
 using DeepSeal.ProceduralGeneration;
 using DeepSeal.UnityAdapters.Tilemaps;
 using UnityEngine;
@@ -7,8 +8,8 @@ using UnityEngine;
 namespace DeepSeal.UnityAdapters.Prototype
 {
     /// <summary>
-    /// 프로토타입 씬에서 MineGridGenerator를 호출해 시드 기반 MineGrid를 만들고, MineGridTileMapRenderer에 넘긴다.
-    /// "보이게 하기"용 최소 부트스트랩 역할.
+    /// 프로토타입 씬에서 MineGridGenerator를 호출해 시드 기반 MineGrid를 만들고 Tilemap에 표시한다.
+    /// 현재 생성 결과를 명시적 Inspector 참조를 통해 다른 프로토타입 컴포넌트가 읽을 수 있게 한다.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class PrototypeMineGridBootstrap : MonoBehaviour
@@ -25,12 +26,22 @@ namespace DeepSeal.UnityAdapters.Prototype
         [SerializeField] private int startY = 8;
         [SerializeField] private int startClearRadius = 1;
         [SerializeField] private int wallDurability = 3;
+
         [Range(0, 100)]
         [SerializeField] private int randomFloorPercent = 35;
 
+        private MineGenerationResult currentResult;
+        private bool hasCurrentResult;
+
+        public bool HasCurrentResult => hasCurrentResult;
+
+        public MineGenerationResult CurrentResult => currentResult;
+
+        public MineGrid CurrentGrid => hasCurrentResult ? currentResult.Grid : null;
+
         private void Start()
         {
-            if(generateOnStart)
+            if (generateOnStart && !hasCurrentResult)
             {
                 GenerateAndRender();
             }
@@ -39,17 +50,24 @@ namespace DeepSeal.UnityAdapters.Prototype
         [ContextMenu("Generate And Render")]
         public void GenerateAndRender()
         {
+            _ = TryGenerateAndRender();
+        }
+
+        public bool TryGenerateAndRender()
+        {
+            ClearCurrentResult();
+
             if (mineGridRenderer == null)
             {
                 Debug.LogError(
                     "Cannot generate prototype mine grid because Mine Grid Renderer is not assigned.",
                     this);
-                return;
+                return false;
             }
 
             if (!TryCreateSettings(out MineGenerationSettings settings))
             {
-                return;
+                return false;
             }
 
             MineGenerationResult generationResult;
@@ -63,7 +81,7 @@ namespace DeepSeal.UnityAdapters.Prototype
                 Debug.LogError(
                     $"Failed to generate prototype mine grid. {exception.Message}",
                     this);
-                return;
+                return false;
             }
 
             MineGridValidationResult validationResult = MineGridValidator.Validate(generationResult);
@@ -73,10 +91,44 @@ namespace DeepSeal.UnityAdapters.Prototype
                 Debug.LogError(
                     $"Generated mine grid is invalid. Issue={validationResult.Issue}, Position={FormatPosition(validationResult)}.",
                     this);
-                return;
+                return false;
             }
 
+            currentResult = generationResult;
+            hasCurrentResult = true;
+
             mineGridRenderer.Render(generationResult.Grid);
+            return true;
+        }
+
+        public bool TryGetCurrentResult(out MineGenerationResult result)
+        {
+            result = currentResult;
+            return hasCurrentResult;
+        }
+
+        public bool TryGetCurrentGrid(out MineGrid grid)
+        {
+            grid = hasCurrentResult ? currentResult.Grid : null;
+            return grid != null;
+        }
+
+        public bool TryGetStartPosition(out GridPosition startPosition)
+        {
+            if (hasCurrentResult)
+            {
+                startPosition = currentResult.StartPosition;
+                return true;
+            }
+
+            if (TryCreateSettings(out MineGenerationSettings settings))
+            {
+                startPosition = settings.StartPosition;
+                return true;
+            }
+
+            startPosition = default;
+            return false;
         }
 
         private bool TryCreateSettings(out MineGenerationSettings settings)
@@ -104,6 +156,12 @@ namespace DeepSeal.UnityAdapters.Prototype
 
                 return false;
             }
+        }
+
+        private void ClearCurrentResult()
+        {
+            currentResult = default;
+            hasCurrentResult = false;
         }
 
         private static string FormatPosition(MineGridValidationResult validationResult)
@@ -146,6 +204,5 @@ namespace DeepSeal.UnityAdapters.Prototype
                 startY = Mathf.Clamp(startY, minStartY, maxStartY);
             }
         }
-
     }
 }
