@@ -61,9 +61,9 @@ If compilation time or test boundaries require assembly definitions, start with:
 
 ## Current Runtime Structure
 
-The initial runtime code structure has started with pure C# domain logic.
+The runtime code structure has started with pure C# domain logic plus a thin Unity adapter layer.
 
-Implemented areas:
+Implemented pure domain areas:
 
 - `DeepSeal.Core`
   - Integer grid position primitives.
@@ -75,14 +75,30 @@ Implemented areas:
   - Mine grid storage and safe cell access.
   - Basic mining rule calculation.
 
+- `DeepSeal.ProceduralGeneration`
+  - Seed-based prototype mine map generation.
+  - Basic generated mine grid validation.
+  - Deterministic generation tests for repeated seed/settings.
+
+Implemented Unity adapter areas:
+
+- `DeepSeal.UnityAdapters.Tilemaps`
+  - Terrain cell type to TileBase mapping.
+  - MineGrid to Unity Tilemap rendering.
+
+- `DeepSeal.UnityAdapters.Prototype`
+  - Prototype scene bootstrap that generates a seeded MineGrid and renders it to Tilemap.
+
 Current constraints:
 
-- Runtime domain logic must not depend on `UnityEngine`.
-- Unity scene, Tilemap, rendering, input, and MonoBehaviour adapters are intentionally not part of the mining domain layer.
-- The current mining model is designed for EditMode tests first, then Unity adapters later.
+- Pure domain logic must not depend on `UnityEngine`.
+- Unity scene, Tilemap, rendering, and MonoBehaviour code must stay in Unity adapter namespaces.
+- The current Tilemap adapter is display-only.
+- Player movement, mining input, combat, treasure, and extraction flows are intentionally not implemented yet.
 
 Next planned area:
 
-- `DeepSeal.ProceduralGeneration`
-  - Seed-based prototype mine map generation.
-  - Basic map validation.
+- First interactive prototype layer on top of the visible MineGrid/Tilemap prototype.
+- Candidate next steps:
+  - Player movement over passable terrain.
+  - Mining input that applies `MiningRules` and refreshes the Tilemap.
