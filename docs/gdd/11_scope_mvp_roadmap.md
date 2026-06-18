@@ -125,10 +125,13 @@
 - Unity Tilemap prototype display
   - MineGrid 데이터를 Unity Tilemap에 표시.
   - 프로토타입 씬에서 seed/settings 기반 광산 맵 확인 가능.
+- Prototype player movement
+  - WASD/방향키 기반 임시 이동.
+  - MineGrid의 통과 가능 셀 기준으로 이동 가능 여부 판정.
+  - 벽 셀과 맵 밖으로 이동 불가.
 
 아직 미구현:
 
-- 플레이어 이동.
 - 채굴 입력.
 - 런타임 채굴 후 Tilemap 갱신 흐름.
 - 자동 전투.
@@ -138,6 +141,6 @@
 
 다음 구현 후보:
 
-1. 플레이어 이동.
-2. 채굴 입력과 Tilemap 갱신.
-3. 자동 전투 최소 루프.
+1. 채굴 입력과 Tilemap 갱신.
+2. 자동 전투 최소 루프.
+3. 적 스폰.

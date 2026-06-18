@@ -1,6 +1,6 @@
 ## Current Development Phase
 
-Prototype bootstrap foundation.
+Interactive prototype foundation.
 
 Implemented:
 - Core grid primitives.
@@ -9,10 +9,11 @@ Implemented:
 - Basic generated mine grid validation.
 - Unity Tilemap rendering adapter for generated MineGrid data.
 - Prototype scene that displays a seed-based mine grid through Tilemap.
+- Prototype player movement over passable MineGrid cells.
+- Wall collision based on MineGrid terrain passability.
 - EditMode tests for core, mining, and procedural generation rules.
 
 Not implemented yet:
-- Player movement.
 - Mining input and runtime terrain updates.
 - Automatic combat.
 - Enemy spawning.
@@ -20,4 +21,4 @@ Not implemented yet:
 - Extraction and return flow.
 
 Next:
-- Add the first interactive prototype step, starting with player movement or mining input on top of the visible MineGrid/Tilemap prototype.
+- Add mining input that applies MiningRules to the current MineGrid and refreshes the Tilemap.

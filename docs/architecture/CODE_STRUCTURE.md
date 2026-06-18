@@ -86,19 +86,25 @@ Implemented Unity adapter areas:
   - Terrain cell type to TileBase mapping.
   - MineGrid to Unity Tilemap rendering.
 
+- `DeepSeal.UnityAdapters.Grid`
+  - Prototype conversion between `GridPosition` and Unity world coordinates.
+
 - `DeepSeal.UnityAdapters.Prototype`
-  - Prototype scene bootstrap that generates a seeded MineGrid and renders it to Tilemap.
+  - Prototype scene bootstrap that generates a seeded MineGrid, renders it to Tilemap, and exposes the current generated grid to scene adapters.
+
+- `DeepSeal.UnityAdapters.Player`
+  - Temporary Keyboard-based prototype player movement.
+  - Passability checks against the current `MineGrid`.
 
 Current constraints:
 
 - Pure domain logic must not depend on `UnityEngine`.
-- Unity scene, Tilemap, rendering, and MonoBehaviour code must stay in Unity adapter namespaces.
+- Unity scene, Tilemap, rendering, input, and MonoBehaviour code must stay in Unity adapter namespaces.
+- Player movement is currently a prototype adapter using `Keyboard.current`; it should be replaced by InputActions when production input bindings are introduced.
 - The current Tilemap adapter is display-only.
-- Player movement, mining input, combat, treasure, and extraction flows are intentionally not implemented yet.
+- Mining input, combat, treasure, and extraction flows are intentionally not implemented yet.
 
 Next planned area:
 
-- First interactive prototype layer on top of the visible MineGrid/Tilemap prototype.
-- Candidate next steps:
-  - Player movement over passable terrain.
-  - Mining input that applies `MiningRules` and refreshes the Tilemap.
+- Mining input that applies `MiningRules` to the current `MineGrid`.
+- Runtime Tilemap refresh after terrain changes.
