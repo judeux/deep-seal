@@ -17,6 +17,8 @@
 
 | File | Tool/Model | Generated Date | Prompt Record | Modified | Commercial Terms Checked | Stored At | Notes |
 |---|---|---|---|---|---|---|---|
+|floor_prototype.png|ChatGPT|2026-06-18|---|---|---|---|---|
+|wall_prototype.png|ChatGPT|2026-06-18|---|---|---|---|---|
 
 ## Audio / Fonts
 
