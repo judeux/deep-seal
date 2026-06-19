@@ -509,6 +509,7 @@ GameObject:
   - component: {fileID: 2045824080}
   - component: {fileID: 2045824079}
   - component: {fileID: 2045824078}
+  - component: {fileID: 2045824081}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -589,11 +590,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerMovement
   mineGridBootstrap: {fileID: 1450090157}
   controlledTransform: {fileID: 2045824080}
-  moveSpeed: 10
+  moveSpeed: 4
   placeAtStartOnStart: 1
   generateGridIfMissing: 1
   normalizeDiagonalInput: 1
   maxCollisionStepDistance: 0.2
+  initialFacingDirection: 2
 --- !u!4 &2045824080
 Transform:
   m_ObjectHideFlags: 0
@@ -609,6 +611,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2045824081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045824077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9cfcd7546e85ba4fb136431b0e1ce16, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerMiningInput
+  playerMovement: {fileID: 2045824079}
+  mineGridBootstrap: {fileID: 1450090157}
+  mineGridRenderer: {fileID: 924460738}
+  mineKey: 1
+  repeatWhileHeld: 1
+  miningIntervalSeconds: 0.25
+  miningDamage: 1
+  logMiningResults: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
