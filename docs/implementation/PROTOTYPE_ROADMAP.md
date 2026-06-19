@@ -44,9 +44,9 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 1-C  | Procedural Mine Generation     | Done        | Added seed-based mine grid generation and validation.                                 |
 | 1-D  | Tilemap Rendering              | Done        | Added Unity adapter to render generated mine grids through Tilemap.                   |
 | 1-E  | Prototype Player Movement      | Done        | Added grid-aware prototype player movement.                                           |
-| 1-F  | Player Mining Input            | In Progress | Connect player mining input to MiningRules, MineGrid mutation, and Tilemap refresh.   |
-| 1-G  | Camera and Prototype Feel Pass | Planned     | Add minimal camera follow and tune movement/mining feel.                              |
-| 1-H  | Basic Enemy Domain             | Planned     | Add simple enemy data and movement domain rules.                                      |
+| 1-F  | Player Mining Input            | Done        | Connected player mining input to MiningRules, MineGrid mutation, and Tilemap refresh. |
+| 1-G  | Camera and Prototype Feel Pass | Done        | Added minimal camera follow and tuned prototype scene readability.                    |
+| 1-H  | Basic Enemy Domain             | In Progress | Add simple enemy state and movement domain rules.                                     |
 | 1-I  | Enemy Unity Adapter            | Planned     | Render and move simple enemies in the prototype scene.                                |
 | 1-J  | Basic Automatic Attack         | Planned     | Add nearest-target automatic attack prototype.                                        |
 | 1-K  | Damage and Death Loop          | Planned     | Add simple health, damage, enemy death, and player damage.                            |
@@ -163,7 +163,7 @@ Notes:
 
 ## Current Step
 
-### 1-F. Player Mining Input
+### 1-H. Basic Enemy Domain
 
 Goal:
 
@@ -222,7 +222,7 @@ feat: add prototype player mining input
 
 ## Next Planned Step
 
-### 1-G. Camera and Prototype Feel Pass
+### 1-I. Enemy Unity Adapter
 
 Goal:
 
