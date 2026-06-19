@@ -26,9 +26,27 @@ namespace DeepSeal.UnityAdapters.Player
         [SerializeField] private bool generateGridIfMissing = true;
         [SerializeField] private bool normalizeDiagonalInput = true;
         [SerializeField] private float maxCollisionStepDistance = 0.2f;
+        [SerializeField] private GridDirection initialFacingDirection = GridDirection.Right;
 
+        private GridDirection facingDirection = GridDirection.Right;
         private bool warnedMissingBootstrap;
         private bool warnedMissingGrid;
+
+        public GridDirection FacingDirection => facingDirection;
+
+        public Transform ControlledTransform
+        {
+            get
+            {
+                EnsureControlledTransform();
+                return controlledTransform;
+            }
+        }
+
+        private void Awake()
+        {
+            facingDirection = NormalizeFacingDirection(initialFacingDirection);
+        }
 
         private void Start()
         {
@@ -49,12 +67,13 @@ namespace DeepSeal.UnityAdapters.Player
         {
             EnsureControlledTransform();
 
+            Vector2 input = ReadMoveInput();
+            UpdateFacingFromInput(input);
+
             if (!TryResolveGrid(out MineGrid grid))
             {
                 return;
             }
-
-            Vector2 input = ReadMoveInput();
 
             if (input.sqrMagnitude <= 0f)
             {
@@ -68,6 +87,20 @@ namespace DeepSeal.UnityAdapters.Player
 
             Vector3 delta = new Vector3(input.x, input.y, 0f) * (moveSpeed * Time.deltaTime);
             MoveWithGridCollision(grid, delta);
+        }
+
+        public bool TryGetCurrentGridPosition(out GridPosition position)
+        {
+            EnsureControlledTransform();
+
+            if (controlledTransform == null)
+            {
+                position = default;
+                return false;
+            }
+
+            position = GridCoordinateConverter.WorldToGridPosition(controlledTransform.position);
+            return true;
         }
 
         private void PlaceAtMineStartPosition()
@@ -163,6 +196,28 @@ namespace DeepSeal.UnityAdapters.Player
             controlledTransform.position = currentPosition;
         }
 
+        private void UpdateFacingFromInput(Vector2 input)
+        {
+            if (input.sqrMagnitude <= 0f)
+            {
+                return;
+            }
+
+            float absX = Mathf.Abs(input.x);
+            float absY = Mathf.Abs(input.y);
+
+            if (absX >= absY && input.x != 0f)
+            {
+                facingDirection = input.x > 0f ? GridDirection.Right : GridDirection.Left;
+                return;
+            }
+
+            if (input.y != 0f)
+            {
+                facingDirection = input.y > 0f ? GridDirection.Up : GridDirection.Down;
+            }
+        }
+
         private static bool CanOccupyWorldPosition(MineGrid grid, Vector3 worldPosition)
         {
             GridPosition gridPosition = GridCoordinateConverter.WorldToGridPosition(worldPosition);
@@ -209,6 +264,11 @@ namespace DeepSeal.UnityAdapters.Player
             return input;
         }
 
+        private static GridDirection NormalizeFacingDirection(GridDirection direction)
+        {
+            return direction.IsCardinal() ? direction : GridDirection.Right;
+        }
+
         private void EnsureControlledTransform()
         {
             if (controlledTransform == null)
@@ -220,13 +280,15 @@ namespace DeepSeal.UnityAdapters.Player
         private void Reset()
         {
             controlledTransform = transform;
+            initialFacingDirection = GridDirection.Right;
+            facingDirection = GridDirection.Right;
         }
 
         private void OnValidate()
         {
             moveSpeed = Mathf.Max(0f, moveSpeed);
             maxCollisionStepDistance = Mathf.Max(0.01f, maxCollisionStepDistance);
+            initialFacingDirection = NormalizeFacingDirection(initialFacingDirection);
         }
-
     }
 }

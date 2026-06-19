@@ -39,6 +39,31 @@ When proposing code, include complete file contents for new small files, or clea
 
 If direct editing would be useful, Codex must ask first and state exactly which files it wants to change.
 
+## Prototype Roadmap Rule — Locked
+
+Before proposing a new implementation step, Codex must read:
+
+* `docs/implementation/PROTOTYPE_ROADMAP.md`
+* `docs/architecture/CODE_STRUCTURE.md`
+* `docs/testing/LOCAL_VERIFICATION.md`
+* relevant files under `docs/gdd`
+* recent decision records under `docs/decisions`
+
+Codex must use `docs/implementation/PROTOTYPE_ROADMAP.md` as the primary source of truth for the current prototype sequence.
+
+If the project owner asks for the next task without specifying a task, Codex must:
+
+1. identify the current roadmap step;
+2. summarize the previous completed step;
+3. propose only the next planned step;
+4. state explicit exclusions;
+5. provide proposal-only implementation instructions;
+6. include verification steps;
+7. avoid skipping ahead to later roadmap items.
+
+If Codex believes the roadmap should change, it must propose the roadmap change first and explain why. It must not silently change the implementation order.
+
+
 ## Asset and Image Request Rule — Locked
 
 When an implementation step requires new visual, audio, UI, font, animation, VFX, or other external assets, Codex must not use placeholders silently and must not import random assets.
