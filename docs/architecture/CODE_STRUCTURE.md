@@ -80,6 +80,11 @@ Implemented pure domain areas:
   - Basic generated mine grid validation.
   - Deterministic generation tests for repeated seed/settings.
 
+- `DeepSeal.Combat`
+  - Prototype enemy state.
+  - Simple MineGrid-based enemy movement rules.
+  - Enemy movement result types.
+
 Implemented Unity adapter areas:
 
 - `DeepSeal.UnityAdapters.Tilemaps`
@@ -107,6 +112,7 @@ Current constraints:
 - Player movement is currently a prototype adapter using `Keyboard.current`; it should be replaced by InputActions when production input bindings are introduced.
 - The current Tilemap adapter is display-only.
 - Combat, enemies, treasure, and extraction flows are intentionally not implemented yet.
+- Automatic attack, damage/death, treasure, and extraction flows are intentionally not implemented yet.
 
 Next planned area:
 

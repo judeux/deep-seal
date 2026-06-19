@@ -46,8 +46,8 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 1-E  | Prototype Player Movement      | Done        | Added grid-aware prototype player movement.                                           |
 | 1-F  | Player Mining Input            | Done        | Connected player mining input to MiningRules, MineGrid mutation, and Tilemap refresh. |
 | 1-G  | Camera and Prototype Feel Pass | Done        | Added minimal camera follow and tuned prototype scene readability.                    |
-| 1-H  | Basic Enemy Domain             | In Progress | Add simple enemy state and movement domain rules.                                     |
-| 1-I  | Enemy Unity Adapter            | Planned     | Render and move simple enemies in the prototype scene.                                |
+| 1-H  | Basic Enemy Domain             | Done        | Added pure C# enemy state and simple MineGrid-based movement rules.                   |
+| 1-I  | Enemy Unity Adapter            | In Progress | Render and move simple enemies in the prototype scene.                                |
 | 1-J  | Basic Automatic Attack         | Planned     | Add nearest-target automatic attack prototype.                                        |
 | 1-K  | Damage and Death Loop          | Planned     | Add simple health, damage, enemy death, and player damage.                            |
 | 1-L  | Treasure Pickup                | Planned     | Add simple treasure pickup and prototype reward marker.                               |
@@ -163,99 +163,78 @@ Notes:
 
 ## Current Step
 
-### 1-H. Basic Enemy Domain
+### 1-I. Enemy Unity Adapter
 
 Goal:
 
-* Connect player mining input to the mining domain and Tilemap refresh.
+* Render and move simple enemies in the prototype scene.
 
 Expected behavior:
 
-* The player has a current facing direction or last valid movement direction.
-* Pressing or holding the mining input targets the adjacent cell in that direction.
-* If the target cell is mineable, `MiningRules` applies mining damage.
-* When a wall cell reaches zero durability, it becomes passable floor.
-* The Tilemap refreshes after mining.
-* The player can move into newly mined cells.
+* Prototype enemies are visible in the scene.
+* Enemies use the existing pure C# `EnemyState` and `EnemyMovementRules`.
+* Enemies move toward the player at a simple fixed interval.
+* Enemies respect `MineGrid` passability.
+* Enemies cannot move through walls or out of bounds.
+* Newly mined paths can become valid enemy movement paths.
 
 Implementation scope:
 
-* Prototype mining input adapter.
-* Minimal facing direction support if not already present.
-* Connection to existing `MiningRules`.
-* Connection to existing `MineGrid`.
-* Connection to existing `MineGridTilemapRenderer`.
-* Inspector-configurable mining damage and mining interval.
+* Prototype enemy view adapter.
+* Prototype enemy spawner adapter.
+* Explicit scene references to the mine grid bootstrap and player.
+* Prototype enemy sprite asset.
 
 Explicit exclusions:
 
-* No combat.
-* No enemy spawning.
-* No mining animation.
-* No particle effects.
-* No sound effects.
-* No camera shake.
-* No durability UI.
-* No tool inventory.
-* No resource drops.
-* No campaign rewards.
+* No automatic attacks.
+* No health, damage, or death.
+* No enemy-player collision damage.
+* No complex AI.
+* No pathfinding.
+* No enemy animation.
+* No combat VFX or audio.
+* No wave spawning.
 
 Verification:
 
 * Unity Console has no errors.
-* Player can still move.
-* Player cannot move through walls before mining.
-* Player can mine an adjacent wall.
-* Wall changes to floor after sufficient mining.
-* Tilemap visually updates.
-* Player can move into the newly mined cell.
+* Enemies spawn in the prototype scene.
+* Enemies move toward the player.
+* Enemies do not move through walls.
+* Enemies can move through mined paths after terrain changes.
 * `tools/verify-project.ps1` passes.
 * `tools/test-editmode.ps1` passes.
-
-Suggested commit message:
-
-```text
-feat: add prototype player mining input
-```
 
 ---
 
 ## Next Planned Step
 
-### 1-I. Enemy Unity Adapter
+### 1-J. Basic Automatic Attack
 
 Goal:
 
-* Make the prototype scene easier to play and inspect before adding combat.
+* Add a minimal automatic attack loop against nearby enemies.
 
 Expected behavior:
 
-* Camera follows the player.
-* Camera view is appropriate for the generated map scale.
-* Movement speed and mining interval are easy to tune.
-* Prototype test instructions are clear.
+* The player can automatically target a nearby enemy.
+* A simple attack interval applies damage or a placeholder hit result.
+* The implementation remains small enough to replace after the combat model is clarified.
 
 Implementation scope:
 
-* Minimal camera follow component or simple camera follow logic.
-* Optional inspector fields for follow smoothing and offset.
-* No Cinemachine unless explicitly approved.
-* No camera shake yet.
-* No combat, enemies, treasure, extraction, or UI.
+* Minimal target selection.
+* Minimal attack timing.
+* Prototype-only visual/debug feedback if needed.
 
-Verification:
+Explicit exclusions:
 
-* Camera follows the player.
-* Player remains visible while moving and mining.
-* Tilemap and mined paths remain readable.
-* No console errors.
-* `verify-project.ps1` passes.
-
-Suggested commit message:
-
-```text
-feat: add prototype camera follow
-```
+* No weapon evolution.
+* No upgrade selection.
+* No VFX polish.
+* No audio.
+* No complex enemy behavior.
 
 ---
 
