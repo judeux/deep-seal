@@ -95,6 +95,10 @@ Implemented Unity adapter areas:
 - `DeepSeal.UnityAdapters.Player`
   - Temporary Keyboard-based prototype player movement.
   - Passability checks against the current `MineGrid`.
+  - Prototype mining input that applies `MiningRules` and refreshes the Tilemap after terrain changes.
+
+- `DeepSeal.UnityAdapters.Cameras`
+  - Prototype camera follow adapter for keeping the player visible during movement and mining.
 
 Current constraints:
 
@@ -102,7 +106,7 @@ Current constraints:
 - Unity scene, Tilemap, rendering, input, and MonoBehaviour code must stay in Unity adapter namespaces.
 - Player movement is currently a prototype adapter using `Keyboard.current`; it should be replaced by InputActions when production input bindings are introduced.
 - The current Tilemap adapter is display-only.
-- Mining input, combat, treasure, and extraction flows are intentionally not implemented yet.
+- Combat, enemies, treasure, and extraction flows are intentionally not implemented yet.
 
 Next planned area:
 
