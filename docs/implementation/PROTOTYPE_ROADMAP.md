@@ -47,8 +47,8 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 1-F  | Player Mining Input            | Done        | Connected player mining input to MiningRules, MineGrid mutation, and Tilemap refresh. |
 | 1-G  | Camera and Prototype Feel Pass | Done        | Added minimal camera follow and tuned prototype scene readability.                    |
 | 1-H  | Basic Enemy Domain             | Done        | Added pure C# enemy state and simple MineGrid-based movement rules.                   |
-| 1-I  | Enemy Unity Adapter            | In Progress | Render and move simple enemies in the prototype scene.                                |
-| 1-J  | Basic Automatic Attack         | Planned     | Add nearest-target automatic attack prototype.                                        |
+| 1-I  | Enemy Unity Adapter            | Done        | Rendered and moved simple prototype enemies in the scene.                             |
+| 1-J  | Basic Automatic Attack         | In Progress | Add nearest-target automatic attack prototype.                                        |
 | 1-K  | Damage and Death Loop          | Planned     | Add simple health, damage, enemy death, and player damage.                            |
 | 1-L  | Treasure Pickup                | Planned     | Add simple treasure pickup and prototype reward marker.                               |
 | 1-M  | Extraction Marker              | Planned     | Add a simple return/extraction objective.                                             |
@@ -163,53 +163,6 @@ Notes:
 
 ## Current Step
 
-### 1-I. Enemy Unity Adapter
-
-Goal:
-
-* Render and move simple enemies in the prototype scene.
-
-Expected behavior:
-
-* Prototype enemies are visible in the scene.
-* Enemies use the existing pure C# `EnemyState` and `EnemyMovementRules`.
-* Enemies move toward the player at a simple fixed interval.
-* Enemies respect `MineGrid` passability.
-* Enemies cannot move through walls or out of bounds.
-* Newly mined paths can become valid enemy movement paths.
-
-Implementation scope:
-
-* Prototype enemy view adapter.
-* Prototype enemy spawner adapter.
-* Explicit scene references to the mine grid bootstrap and player.
-* Prototype enemy sprite asset.
-
-Explicit exclusions:
-
-* No automatic attacks.
-* No health, damage, or death.
-* No enemy-player collision damage.
-* No complex AI.
-* No pathfinding.
-* No enemy animation.
-* No combat VFX or audio.
-* No wave spawning.
-
-Verification:
-
-* Unity Console has no errors.
-* Enemies spawn in the prototype scene.
-* Enemies move toward the player.
-* Enemies do not move through walls.
-* Enemies can move through mined paths after terrain changes.
-* `tools/verify-project.ps1` passes.
-* `tools/test-editmode.ps1` passes.
-
----
-
-## Next Planned Step
-
 ### 1-J. Basic Automatic Attack
 
 Goal:
@@ -218,23 +171,62 @@ Goal:
 
 Expected behavior:
 
-* The player can automatically target a nearby enemy.
-* A simple attack interval applies damage or a placeholder hit result.
-* The implementation remains small enough to replace after the combat model is clarified.
-
-Implementation scope:
-
-* Minimal target selection.
-* Minimal attack timing.
-* Prototype-only visual/debug feedback if needed.
+* The player periodically selects a nearby enemy.
+* The selected enemy receives prototype attack damage.
+* Enemy death or removal is handled in a minimal, visible way.
+* The implementation remains prototype-only and avoids weapon evolution or upgrade systems.
 
 Explicit exclusions:
 
 * No weapon evolution.
 * No upgrade selection.
-* No VFX polish.
+* No polished VFX.
 * No audio.
-* No complex enemy behavior.
+* No enemy attack damage to the player.
+* No full health UI.
+
+---
+
+## Next Planned Step
+
+### 1-K. Damage and Death Loop
+
+Goal:
+
+* Add minimal health, damage, enemy death, and player damage.
+
+Expected behavior:
+
+* Enemies can be defeated after taking enough damage.
+* The player can receive prototype damage from enemies or enemy contact.
+* Death/removal behavior is visible enough to validate the combat loop.
+* The system remains small and prototype-only.
+
+Implementation scope:
+
+* Minimal health state for player and enemies.
+* Minimal damage application.
+* Enemy death/removal.
+* Prototype player damage.
+* Simple debug or visual feedback if needed.
+
+Explicit exclusions:
+
+* No campaign injury or missing miner system.
+* No permanent death.
+* No expedition result screen.
+* No polished combat VFX.
+* No audio polish.
+* No armor, resistances, status effects, or advanced damage formulas.
+
+Verification:
+
+* Unity Console has no errors.
+* Player automatic attack can contribute to defeating enemies.
+* Defeated enemies are removed or clearly disabled.
+* Player can receive prototype damage.
+* `tools/verify-project.ps1` passes.
+* `tools/test-editmode.ps1` passes.
 
 ---
 

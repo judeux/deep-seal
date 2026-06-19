@@ -85,6 +85,11 @@ Implemented pure domain areas:
   - Simple MineGrid-based enemy movement rules.
   - Enemy movement result types.
 
+- `DeepSeal.UnityAdapters.Enemies`
+  - Prototype enemy view adapter.
+  - Prototype enemy spawner adapter.
+  - Scene connection between enemy GameObjects and pure Combat movement rules.
+
 Implemented Unity adapter areas:
 
 - `DeepSeal.UnityAdapters.Tilemaps`
