@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 214386103}
   - component: {fileID: 214386102}
   - component: {fileID: 214386105}
+  - component: {fileID: 214386106}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -181,7 +182,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -222,7 +223,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
   m_RenderShadows: 1
   m_RequiresDepthTextureOption: 2
@@ -256,6 +257,26 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &214386106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 214386101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d34d8841ecd6b04fb8196a4cc7a200e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Cameras.PrototypeCameraFollow
+  target: {fileID: 2045824080}
+  targetOffset: {x: 0, y: 0, z: -10}
+  snapToTargetOnStart: 1
+  smoothFollow: 1
+  smoothTime: 0.12
+  maxFollowSpeed: 50
+  followX: 1
+  followY: 1
 --- !u!1 &924460737
 GameObject:
   m_ObjectHideFlags: 0
@@ -285,7 +306,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af753e636e3f6e742bb4ce67a2f0fe2b, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Tilemaps.MineGridTilemapRenderer
   targetTilemap: {fileID: 924460739}
   tileSet: {fileID: 11400000, guid: 56d50d92098d76a4da19e2def48a417b, type: 2}
@@ -441,13 +462,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d89c9a86b6e0a9942a386e3a81d0ebba, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Prototype.PrototypeMineGridBootstrap
   mineGridRenderer: {fileID: 924460738}
   generateOnStart: 1
   seed: 999
-  width: 24
-  height: 16
+  width: 48
+  height: 32
   startX: 12
   startY: 8
   startClearRadius: 1
@@ -586,7 +607,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 772d0d658cb208745ad21b171afe4ffd, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerMovement
   mineGridBootstrap: {fileID: 1450090157}
   controlledTransform: {fileID: 2045824080}
