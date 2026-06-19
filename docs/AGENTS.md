@@ -89,3 +89,19 @@ docs/licenses/ASSET_REGISTER.md
 ```
 
 Never assume that a free asset is commercially usable without checking and recording the license.
+
+## Prototype Roadmap Maintenance Rule
+
+`docs/implementation/PROTOTYPE_ROADMAP.md` must be updated when a prototype step is completed, skipped, split, merged, or re-scoped.
+
+Each roadmap update should include:
+
+* current step status;
+* completed behavior;
+* explicit exclusions that remain out of scope;
+* next planned step;
+* verification results or expected verification method;
+* suggested commit message if relevant.
+
+Do not rewrite the full roadmap for small updates. Prefer small, targeted edits.
+
