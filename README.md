@@ -19,10 +19,11 @@ Implemented:
 - EditMode tests for core, mining, procedural generation, enemy movement, and attack targeting rules.
 - Prototype player health, enemy contact damage, and player defeat handling.
 - Prototype treasure spawning and grid-position pickup tracking.
+- Prototype extraction marker and simple return completion tracking.
 
 Not implemented yet:
-- Extraction and return flow.
 - Weapon definitions, upgrades, combat UI, and polished combat feedback.
+- Full expedition result screen, campaign rewards, and persistence.
 
 Next:
-- Add a prototype extraction marker.
+- Review the first playable prototype loop.

@@ -96,6 +96,8 @@ Implemented pure domain areas:
 - `DeepSeal.Expedition`
   - Prototype treasure state.
   - Grid-position treasure pickup rules.
+  - Prototype extraction marker state.
+  - Simple extraction completion rules.
 
 Implemented Unity adapter areas:
 
@@ -118,6 +120,7 @@ Implemented Unity adapter areas:
   - Prototype enemy contact damage adapter.
   - Minimal player defeat behavior for prototype combat validation.
   - Prototype treasure pickup adapter.
+  - Prototype extraction completion adapter.
 
 - `DeepSeal.UnityAdapters.Cameras`
   - Prototype camera follow adapter for keeping the player visible during movement and mining.
@@ -125,6 +128,10 @@ Implemented Unity adapter areas:
 - `DeepSeal.UnityAdapters.Treasures`
   - Prototype treasure view adapter.
   - Prototype treasure spawner adapter.
+
+- `DeepSeal.UnityAdapters.Extraction`
+  - Prototype extraction marker view adapter.
+  - Prototype extraction marker spawner adapter.
 
 Current constraints:
 
@@ -135,8 +142,9 @@ Current constraints:
 - Automatic attack, enemy contact damage, and player defeat are prototype-only and do not yet include formal weapon definitions, upgrades, combat UI, treasure, or extraction.
 - Enemy and player hit point handling now share pure `DeepSeal.Combat` health rules, while Unity adapters remain responsible for scene visibility and component disabling.
 - Treasure pickup is prototype-only and currently tracks only collected count/value, not inventory, economy, campaign persistence, or reward settlement.
+- Extraction is prototype-only and currently represents completion with marker state and component disabling, not a full expedition result screen or campaign reward settlement.
 
 Next planned area:
 
-- Prototype extraction marker.
-- First playable loop review after extraction.
+- First playable loop review.
+- Decide the next implementation sequence after the loop review.

@@ -51,8 +51,8 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 1-J  | Basic Automatic Attack         | Done        | Added nearest-target automatic attack and prototype enemy defeat/removal.             |
 | 1-K  | Player Damage and Health Loop  | Done        | Added player health, enemy contact damage, and prototype defeat handling.             |
 | 1-L  | Treasure Pickup                | Done        | Added visible prototype treasures and grid-position pickup tracking.                  |
-| 1-M  | Extraction Marker              | In Progress | Add a simple return/extraction objective.                                             |
-| 1-N  | First Playable Loop Review     | Planned     | Review whether mining, movement, combat, pickup, and extraction form a playable loop. |
+| 1-M  | Extraction Marker              | Done        | Added a visible prototype extraction marker and simple return completion trigger.      |
+| 1-N  | First Playable Loop Review     | In Progress | Review whether mining, movement, combat, pickup, and extraction form a playable loop. |
 
 ---
 
@@ -163,29 +163,6 @@ Notes:
 
 ## Current Step
 
-### 1-M. Extraction Marker
-
-Goal:
-
-* Add a simple return or extraction objective.
-
-Expected behavior:
-
-* A visible prototype extraction marker exists in the mine.
-* The player can reach it after collecting treasure.
-* Completion is represented with a minimal debug result.
-
-Explicit exclusions:
-
-* No final dungeon.
-* No sealstone campaign.
-* No full expedition result screen.
-* No campaign persistence.
-
----
-
-## Next Planned Step
-
 ### 1-N. First Playable Loop Review
 
 Goal:
@@ -202,6 +179,21 @@ Explicit exclusions:
 
 * No new content expansion before review.
 * No campaign systems before the first loop is evaluated.
+
+---
+
+## Next Planned Step
+
+### TBD. Post-review implementation sequence
+
+Goal:
+
+* Decide the next implementation step after reviewing the first playable loop.
+
+Notes:
+
+* Candidate directions include prototype loop tuning, basic UI feedback, upgrade selection, or restructuring weak prototype adapters.
+* Do not start campaign systems before the first loop review is complete.
 
 ---
 
