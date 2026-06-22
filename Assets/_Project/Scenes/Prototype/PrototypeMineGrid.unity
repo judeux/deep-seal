@@ -591,6 +591,8 @@ GameObject:
   - component: {fileID: 2045824078}
   - component: {fileID: 2045824081}
   - component: {fileID: 2045824082}
+  - component: {fileID: 2045824084}
+  - component: {fileID: 2045824083}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -731,6 +733,53 @@ MonoBehaviour:
   attackRangeCells: 4
   attackDamage: 1
   logAttackResults: 0
+--- !u!114 &2045824083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045824077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3f75c5cf5d1b8f4ca9ac0f767084882, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerContactDamage
+  playerMovement: {fileID: 2045824079}
+  playerHealth: {fileID: 2045824084}
+  enemySpawner: {fileID: 2039030422}
+  damageOnUpdate: 1
+  contactRangeCells: 0
+  contactDamage: 1
+  damageIntervalSeconds: 0.75
+  logDamageResults: 0
+--- !u!114 &2045824084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045824077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1c7940174c19864e871b782dffec6f4, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerHealth
+  maxHitPoints: 10
+  resetOnAwake: 1
+  currentHitPoints: 10
+  reenableOnReset: 1
+  tintOnDefeat: 1
+  aliveTint: {r: 1, g: 1, b: 1, a: 1}
+  defeatedTint: {r: 0.4, g: 0.4, b: 0.4, a: 1}
+  tintRenderers:
+  - {fileID: 2045824078}
+  disableOnDefeat:
+  - {fileID: 2045824079}
+  - {fileID: 2045824081}
+  - {fileID: 2045824082}
+  - {fileID: 2045824083}
+  logHealthChanges: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

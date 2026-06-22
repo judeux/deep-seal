@@ -85,6 +85,7 @@ Implemented pure domain areas:
   - Simple MineGrid-based enemy movement rules.
   - Enemy movement result types.
   - Prototype automatic attack target selection rules.
+  - Prototype hit point state and damage application rules.
 
 - `DeepSeal.UnityAdapters.Enemies`
   - Prototype enemy view adapter.
@@ -109,6 +110,9 @@ Implemented Unity adapter areas:
   - Passability checks against the current `MineGrid`.
   - Prototype mining input that applies `MiningRules` and refreshes the Tilemap after terrain changes.
   - Prototype automatic attack adapter that targets spawned enemies.
+  - Prototype player health adapter.
+  - Prototype enemy contact damage adapter.
+  - Minimal player defeat behavior for prototype combat validation.
 
 - `DeepSeal.UnityAdapters.Cameras`
   - Prototype camera follow adapter for keeping the player visible during movement and mining.
@@ -119,10 +123,10 @@ Current constraints:
 - Unity scene, Tilemap, rendering, input, and MonoBehaviour code must stay in Unity adapter namespaces.
 - Player movement and prototype combat input are currently temporary adapters; they should be replaced by InputActions when production input bindings are introduced.
 - The current Tilemap adapter is clear and prototype-oriented, not optimized for large dirty-cell refresh workflows.
-- Automatic attack is prototype-only and does not yet include player damage, formal weapon definitions, upgrades, combat UI, treasure, or extraction.
-- Enemy hit points and defeat handling currently live in the Unity enemy adapter as temporary prototype state. If combat state grows, move health and damage rules into pure `DeepSeal.Combat` domain code.
+- Automatic attack, enemy contact damage, and player defeat are prototype-only and do not yet include formal weapon definitions, upgrades, combat UI, treasure, or extraction.
+- Enemy and player hit point handling now share pure `DeepSeal.Combat` health rules, while Unity adapters remain responsible for scene visibility and component disabling.
 
 Next planned area:
 
-- Prototype player health and enemy contact damage.
-- Player defeat handling for the first combat loop.
+- Prototype treasure pickup.
+- Prototype extraction marker after treasure pickup.
