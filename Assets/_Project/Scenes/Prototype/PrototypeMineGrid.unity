@@ -119,6 +119,67 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &9823382
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9823384}
+  - component: {fileID: 9823383}
+  m_Layer: 0
+  m_Name: PrototypeTreasureSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &9823383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9823382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 611808fb9c1b92c46ba95957e6273ad4, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Treasures.PrototypeTreasureSpawner
+  mineGridBootstrap: {fileID: 1450090157}
+  treasurePrefab: {fileID: 4901126365687248126, guid: d5272a7d24130d74b9ac8f6718b91133, type: 3}
+  spawnParent: {fileID: 9823384}
+  spawnOnStart: 1
+  generateGridIfMissing: 1
+  firstTreasureId: 0
+  treasureSpawnPoints:
+  - x: 1
+    y: 1
+    value: 1
+  - x: -1
+    y: 1
+    value: 1
+  - x: 1
+    y: -1
+    value: 2
+  logSkippedSpawns: 0
+--- !u!4 &9823384
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9823382}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.29197, y: 0.37532, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &214386101
 GameObject:
   m_ObjectHideFlags: 0
@@ -593,6 +654,7 @@ GameObject:
   - component: {fileID: 2045824082}
   - component: {fileID: 2045824084}
   - component: {fileID: 2045824083}
+  - component: {fileID: 2045824085}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -779,7 +841,28 @@ MonoBehaviour:
   - {fileID: 2045824081}
   - {fileID: 2045824082}
   - {fileID: 2045824083}
+  - {fileID: 2045824085}
   logHealthChanges: 0
+--- !u!114 &2045824085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045824077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d1253ea997d7a94999a367598a61a49, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerTreasurePickup
+  playerMovement: {fileID: 2045824079}
+  playerHealth: {fileID: 2045824084}
+  treasureSpawner: {fileID: 9823383}
+  pickupOnUpdate: 1
+  pickupIntervalSeconds: 0.1
+  collectedTreasureCount: 0
+  collectedTreasureValue: 0
+  logPickupResults: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -789,3 +872,4 @@ SceneRoots:
   - {fileID: 1450090156}
   - {fileID: 2045824080}
   - {fileID: 2039030423}
+  - {fileID: 9823384}

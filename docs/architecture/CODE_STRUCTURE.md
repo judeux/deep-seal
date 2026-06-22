@@ -93,6 +93,10 @@ Implemented pure domain areas:
   - Scene connection between enemy GameObjects and pure Combat movement rules.
   - Prototype-only enemy hit points and defeat handling for automatic attack validation.
 
+- `DeepSeal.Expedition`
+  - Prototype treasure state.
+  - Grid-position treasure pickup rules.
+
 Implemented Unity adapter areas:
 
 - `DeepSeal.UnityAdapters.Tilemaps`
@@ -113,9 +117,14 @@ Implemented Unity adapter areas:
   - Prototype player health adapter.
   - Prototype enemy contact damage adapter.
   - Minimal player defeat behavior for prototype combat validation.
+  - Prototype treasure pickup adapter.
 
 - `DeepSeal.UnityAdapters.Cameras`
   - Prototype camera follow adapter for keeping the player visible during movement and mining.
+
+- `DeepSeal.UnityAdapters.Treasures`
+  - Prototype treasure view adapter.
+  - Prototype treasure spawner adapter.
 
 Current constraints:
 
@@ -125,8 +134,9 @@ Current constraints:
 - The current Tilemap adapter is clear and prototype-oriented, not optimized for large dirty-cell refresh workflows.
 - Automatic attack, enemy contact damage, and player defeat are prototype-only and do not yet include formal weapon definitions, upgrades, combat UI, treasure, or extraction.
 - Enemy and player hit point handling now share pure `DeepSeal.Combat` health rules, while Unity adapters remain responsible for scene visibility and component disabling.
+- Treasure pickup is prototype-only and currently tracks only collected count/value, not inventory, economy, campaign persistence, or reward settlement.
 
 Next planned area:
 
-- Prototype treasure pickup.
-- Prototype extraction marker after treasure pickup.
+- Prototype extraction marker.
+- First playable loop review after extraction.
