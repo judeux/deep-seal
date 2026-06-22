@@ -24,18 +24,30 @@ namespace DeepSeal.UnityAdapters.Enemies
         [SerializeField] private Vector2Int initialGridPosition;
         [SerializeField] private bool placeAtInitialPositionOnStart = true;
 
+        [Header("Prototype Health")]
+        [SerializeField] private int maxHitPoints = 3;
+        [SerializeField] private bool disableOnDefeat = true;
+
         [Header("Movement")]
         [SerializeField] private float moveIntervalSeconds = 0.5f;
         [SerializeField] private bool logMovementResults;
 
         private EnemyState enemyState;
         private bool hasEnemyState;
+        private int currentHitPoints;
+        private bool isDefeated;
         private float nextMoveTime;
         private bool warnedMissingBootstrap;
         private bool warnedMissingGrid;
         private bool warnedMissingTarget;
 
         public bool HasEnemyState => hasEnemyState;
+
+        public bool IsDefeated => isDefeated;
+
+        public int CurrentHitPoints => currentHitPoints;
+
+        public int MaxHitPoints => maxHitPoints;
 
         public EnemyState CurrentEnemy => enemyState;
 
@@ -49,12 +61,17 @@ namespace DeepSeal.UnityAdapters.Enemies
                 SetEnemyState(new EnemyState(enemyId, initialPosition), placeAtInitialPositionOnStart);
             }
 
+            if (currentHitPoints <= 0)
+            {
+                ResetPrototypeHealth();
+            }
+
             ScheduleNextMove();
         }
 
         private void Update()
         {
-            if (!hasEnemyState)
+            if (!hasEnemyState || isDefeated)
             {
                 return;
             }
@@ -81,12 +98,50 @@ namespace DeepSeal.UnityAdapters.Enemies
 
             EnsureControlledTransform();
             SetEnemyState(new EnemyState(enemyId, position), true);
+            ResetPrototypeHealth();
             ScheduleNextMove();
+        }
+
+        public bool TryGetCurrentEnemy(out EnemyState enemy)
+        {
+            enemy = enemyState;
+            return hasEnemyState && !isDefeated && isActiveAndEnabled;
+        }
+
+        public bool TryApplyPrototypeDamage(int damage)
+        {
+            if (isDefeated)
+            {
+                return false;
+            }
+
+            if (damage <= 0)
+            {
+                Debug.LogWarning(
+                    $"Ignored prototype enemy damage because damage must be greater than zero. Damage={damage}.",
+                    this);
+                return false;
+            }
+
+            currentHitPoints = Mathf.Max(0, currentHitPoints - damage);
+
+            if (currentHitPoints > 0)
+            {
+                return false;
+            }
+
+            Defeat();
+            return true;
         }
 
         [ContextMenu("Move Toward Target Once")]
         public bool TryMoveTowardTarget()
         {
+            if (isDefeated)
+            {
+                return false;
+            }
+
             if (!TryResolveGrid(out MineGrid grid))
             {
                 return false;
@@ -166,6 +221,22 @@ namespace DeepSeal.UnityAdapters.Enemies
             }
         }
 
+        private void ResetPrototypeHealth()
+        {
+            currentHitPoints = maxHitPoints;
+            isDefeated = false;
+        }
+
+        private void Defeat()
+        {
+            isDefeated = true;
+
+            if (disableOnDefeat)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+
         private void SyncTransformToGridPosition(GridPosition position)
         {
             EnsureControlledTransform();
@@ -195,6 +266,8 @@ namespace DeepSeal.UnityAdapters.Enemies
         private void Reset()
         {
             controlledTransform = transform;
+            maxHitPoints = 3;
+            disableOnDefeat = true;
             moveIntervalSeconds = 0.5f;
             placeAtInitialPositionOnStart = true;
         }
@@ -202,6 +275,7 @@ namespace DeepSeal.UnityAdapters.Enemies
         private void OnValidate()
         {
             enemyId = Mathf.Max(0, enemyId);
+            maxHitPoints = Mathf.Max(1, maxHitPoints);
             moveIntervalSeconds = Mathf.Max(0.05f, moveIntervalSeconds);
         }
     }

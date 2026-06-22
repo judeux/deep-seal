@@ -11,14 +11,18 @@ Implemented:
 - Prototype scene that displays a seed-based mine grid through Tilemap.
 - Prototype player movement over passable MineGrid cells.
 - Wall collision based on MineGrid terrain passability.
-- EditMode tests for core, mining, and procedural generation rules.
+- Player mining input and runtime Tilemap refresh after terrain changes.
+- Prototype camera follow.
+- Pure C# enemy state and MineGrid-based enemy movement rules.
+- Prototype enemy spawning and Unity view adapter.
+- Basic automatic attack targeting and prototype enemy defeat/removal.
+- EditMode tests for core, mining, procedural generation, enemy movement, and attack targeting rules.
 
 Not implemented yet:
-- Mining input and runtime terrain updates.
-- Automatic combat.
-- Enemy spawning.
+- Player health, enemy contact damage, and player defeat.
 - Treasure pickup.
 - Extraction and return flow.
+- Weapon definitions, upgrades, combat UI, and polished combat feedback.
 
 Next:
-- Add mining input that applies MiningRules to the current MineGrid and refreshes the Tilemap.
+- Add a prototype player damage and health loop.

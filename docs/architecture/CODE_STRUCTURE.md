@@ -84,11 +84,13 @@ Implemented pure domain areas:
   - Prototype enemy state.
   - Simple MineGrid-based enemy movement rules.
   - Enemy movement result types.
+  - Prototype automatic attack target selection rules.
 
 - `DeepSeal.UnityAdapters.Enemies`
   - Prototype enemy view adapter.
   - Prototype enemy spawner adapter.
   - Scene connection between enemy GameObjects and pure Combat movement rules.
+  - Prototype-only enemy hit points and defeat handling for automatic attack validation.
 
 Implemented Unity adapter areas:
 
@@ -106,6 +108,7 @@ Implemented Unity adapter areas:
   - Temporary Keyboard-based prototype player movement.
   - Passability checks against the current `MineGrid`.
   - Prototype mining input that applies `MiningRules` and refreshes the Tilemap after terrain changes.
+  - Prototype automatic attack adapter that targets spawned enemies.
 
 - `DeepSeal.UnityAdapters.Cameras`
   - Prototype camera follow adapter for keeping the player visible during movement and mining.
@@ -114,12 +117,12 @@ Current constraints:
 
 - Pure domain logic must not depend on `UnityEngine`.
 - Unity scene, Tilemap, rendering, input, and MonoBehaviour code must stay in Unity adapter namespaces.
-- Player movement is currently a prototype adapter using `Keyboard.current`; it should be replaced by InputActions when production input bindings are introduced.
-- The current Tilemap adapter is display-only.
-- Combat, enemies, treasure, and extraction flows are intentionally not implemented yet.
-- Automatic attack, damage/death, treasure, and extraction flows are intentionally not implemented yet.
+- Player movement and prototype combat input are currently temporary adapters; they should be replaced by InputActions when production input bindings are introduced.
+- The current Tilemap adapter is clear and prototype-oriented, not optimized for large dirty-cell refresh workflows.
+- Automatic attack is prototype-only and does not yet include player damage, formal weapon definitions, upgrades, combat UI, treasure, or extraction.
+- Enemy hit points and defeat handling currently live in the Unity enemy adapter as temporary prototype state. If combat state grows, move health and damage rules into pure `DeepSeal.Combat` domain code.
 
 Next planned area:
 
-- Mining input that applies `MiningRules` to the current `MineGrid`.
-- Runtime Tilemap refresh after terrain changes.
+- Prototype player health and enemy contact damage.
+- Player defeat handling for the first combat loop.

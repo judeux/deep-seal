@@ -223,7 +223,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
   m_RenderShadows: 1
   m_RequiresDepthTextureOption: 2
@@ -267,7 +267,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d34d8841ecd6b04fb8196a4cc7a200e, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Cameras.PrototypeCameraFollow
   target: {fileID: 2045824080}
   targetOffset: {x: 0, y: 0, z: -10}
@@ -306,7 +306,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af753e636e3f6e742bb4ce67a2f0fe2b, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Tilemaps.MineGridTilemapRenderer
   targetTilemap: {fileID: 924460739}
   tileSet: {fileID: 11400000, guid: 56d50d92098d76a4da19e2def48a417b, type: 2}
@@ -462,7 +462,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d89c9a86b6e0a9942a386e3a81d0ebba, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Prototype.PrototypeMineGridBootstrap
   mineGridRenderer: {fileID: 924460738}
   generateOnStart: 1
@@ -546,7 +546,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66d4e28d93d7a2f45b990e1ced56ac3f, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Enemies.PrototypeEnemySpawner
   mineGridBootstrap: {fileID: 1450090157}
   target: {fileID: 2045824080}
@@ -590,6 +590,7 @@ GameObject:
   - component: {fileID: 2045824079}
   - component: {fileID: 2045824078}
   - component: {fileID: 2045824081}
+  - component: {fileID: 2045824082}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -666,7 +667,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 772d0d658cb208745ad21b171afe4ffd, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerMovement
   mineGridBootstrap: {fileID: 1450090157}
   controlledTransform: {fileID: 2045824080}
@@ -701,7 +702,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b9cfcd7546e85ba4fb136431b0e1ce16, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerMiningInput
   playerMovement: {fileID: 2045824079}
   mineGridBootstrap: {fileID: 1450090157}
@@ -711,6 +712,25 @@ MonoBehaviour:
   miningIntervalSeconds: 0.25
   miningDamage: 1
   logMiningResults: 0
+--- !u!114 &2045824082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045824077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 731d1ff37eb35e44f8fab2598385958e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerAutoAttack
+  playerMovement: {fileID: 2045824079}
+  enemySpawner: {fileID: 2039030422}
+  attackOnUpdate: 1
+  attackIntervalSeconds: 0.5
+  attackRangeCells: 4
+  attackDamage: 1
+  logAttackResults: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

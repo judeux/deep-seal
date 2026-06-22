@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DeepSeal.Core;
 using DeepSeal.Mining;
 using DeepSeal.UnityAdapters.Grid;
@@ -57,7 +58,10 @@ namespace DeepSeal.UnityAdapters.Enemies
         [Header("Debug")]
         [SerializeField] private bool logSkippedSpawns;
 
+        private readonly List<PrototypeEnemyView> spawnedEnemies = new List<PrototypeEnemyView>();
         private bool hasSpawned;
+
+        public IReadOnlyList<PrototypeEnemyView> SpawnedEnemies => spawnedEnemies;
 
         private void Start()
         {
@@ -136,11 +140,25 @@ namespace DeepSeal.UnityAdapters.Enemies
 
                 enemyView.name = $"PrototypeEnemy_{enemyId}";
                 enemyView.Initialize(enemyId, spawnPosition, mineGridBootstrap, target);
+                spawnedEnemies.Add(enemyView);
 
                 spawnedCount++;
             }
 
             hasSpawned = true;
+        }
+
+        public void RemoveInactiveEnemyReferences()
+        {
+            for (int i = spawnedEnemies.Count - 1; i >= 0; i--)
+            {
+                PrototypeEnemyView enemy = spawnedEnemies[i];
+
+                if (enemy == null || enemy.IsDefeated || !enemy.gameObject.activeInHierarchy)
+                {
+                    spawnedEnemies.RemoveAt(i);
+                }
+            }
         }
 
         private bool TryResolveGrid(out MineGrid grid)
