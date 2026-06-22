@@ -48,8 +48,8 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 1-G  | Camera and Prototype Feel Pass | Done        | Added minimal camera follow and tuned prototype scene readability.                    |
 | 1-H  | Basic Enemy Domain             | Done        | Added pure C# enemy state and simple MineGrid-based movement rules.                   |
 | 1-I  | Enemy Unity Adapter            | Done        | Rendered and moved simple prototype enemies in the scene.                             |
-| 1-J  | Basic Automatic Attack         | In Progress | Add nearest-target automatic attack prototype.                                        |
-| 1-K  | Damage and Death Loop          | Planned     | Add simple health, damage, enemy death, and player damage.                            |
+| 1-J  | Basic Automatic Attack         | Done        | Added nearest-target automatic attack and prototype enemy defeat/removal.             |
+| 1-K  | Player Damage and Health Loop  | In Progress | Add player health, enemy contact damage, and prototype player defeat handling.        |
 | 1-L  | Treasure Pickup                | Planned     | Add simple treasure pickup and prototype reward marker.                               |
 | 1-M  | Extraction Marker              | Planned     | Add a simple return/extraction objective.                                             |
 | 1-N  | First Playable Loop Review     | Planned     | Review whether mining, movement, combat, pickup, and extraction form a playable loop. |
@@ -163,70 +163,49 @@ Notes:
 
 ## Current Step
 
-### 1-J. Basic Automatic Attack
+### 1-K. Player Damage and Health Loop
 
 Goal:
 
-* Add a minimal automatic attack loop against nearby enemies.
+* Add minimal player health, enemy contact damage, and prototype player defeat handling.
 
 Expected behavior:
 
-* The player periodically selects a nearby enemy.
-* The selected enemy receives prototype attack damage.
-* Enemy death or removal is handled in a minimal, visible way.
-* The implementation remains prototype-only and avoids weapon evolution or upgrade systems.
-
-Explicit exclusions:
-
-* No weapon evolution.
-* No upgrade selection.
-* No polished VFX.
-* No audio.
-* No enemy attack damage to the player.
-* No full health UI.
-
----
-
-## Next Planned Step
-
-### 1-K. Damage and Death Loop
-
-Goal:
-
-* Add minimal health, damage, enemy death, and player damage.
-
-Expected behavior:
-
-* Enemies can be defeated after taking enough damage.
-* The player can receive prototype damage from enemies or enemy contact.
-* Death/removal behavior is visible enough to validate the combat loop.
-* The system remains small and prototype-only.
-
-Implementation scope:
-
-* Minimal health state for player and enemies.
-* Minimal damage application.
-* Enemy death/removal.
-* Prototype player damage.
-* Simple debug or visual feedback if needed.
+* The player has visible or inspectable prototype health.
+* Enemies can damage the player when close enough or on contact.
+* Player defeat is represented in a minimal way suitable for prototype validation.
+* Existing movement, mining, enemy spawning, and automatic attack continue to work.
 
 Explicit exclusions:
 
 * No campaign injury or missing miner system.
 * No permanent death.
 * No expedition result screen.
-* No polished combat VFX.
-* No audio polish.
 * No armor, resistances, status effects, or advanced damage formulas.
+* No polished combat UI, VFX, or audio.
 
-Verification:
+---
 
-* Unity Console has no errors.
-* Player automatic attack can contribute to defeating enemies.
-* Defeated enemies are removed or clearly disabled.
-* Player can receive prototype damage.
-* `tools/verify-project.ps1` passes.
-* `tools/test-editmode.ps1` passes.
+## Next Planned Step
+
+### 1-L. Treasure Pickup
+
+Goal:
+
+* Add a simple collectible treasure or resource marker.
+
+Expected behavior:
+
+* A visible prototype treasure can be placed or spawned in the mine.
+* The player can pick it up by moving onto it or interacting with it.
+* Pickup state is tracked in a minimal prototype form.
+
+Explicit exclusions:
+
+* No full inventory.
+* No economy.
+* No museum.
+* No campaign persistence.
 
 ---
 
