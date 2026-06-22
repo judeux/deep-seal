@@ -284,7 +284,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
   m_RenderShadows: 1
   m_RequiresDepthTextureOption: 2
@@ -328,7 +328,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d34d8841ecd6b04fb8196a4cc7a200e, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Cameras.PrototypeCameraFollow
   target: {fileID: 2045824080}
   targetOffset: {x: 0, y: 0, z: -10}
@@ -338,6 +338,59 @@ MonoBehaviour:
   maxFollowSpeed: 50
   followX: 1
   followY: 1
+--- !u!1 &745383669
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 745383671}
+  - component: {fileID: 745383670}
+  m_Layer: 0
+  m_Name: PrototypeExtractionMarkerSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &745383670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 745383669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b09a17f0df3fa6449a0f8b74d665f6eb, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Extraction.PrototypeExtractionMarkerSpawner
+  mineGridBootstrap: {fileID: 1450090157}
+  markerPrefab: {fileID: 7340325969796924759, guid: 93062deaa6092084a92a625cfc4ade43, type: 3}
+  spawnParent: {fileID: 745383671}
+  spawnOnStart: 1
+  generateGridIfMissing: 1
+  markerId: 0
+  offsetX: -1
+  offsetY: -1
+  logSkippedSpawn: 0
+--- !u!4 &745383671
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 745383669}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.12961, y: 8.92459, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &924460737
 GameObject:
   m_ObjectHideFlags: 0
@@ -367,7 +420,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af753e636e3f6e742bb4ce67a2f0fe2b, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Tilemaps.MineGridTilemapRenderer
   targetTilemap: {fileID: 924460739}
   tileSet: {fileID: 11400000, guid: 56d50d92098d76a4da19e2def48a417b, type: 2}
@@ -523,7 +576,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d89c9a86b6e0a9942a386e3a81d0ebba, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Prototype.PrototypeMineGridBootstrap
   mineGridRenderer: {fileID: 924460738}
   generateOnStart: 1
@@ -607,7 +660,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66d4e28d93d7a2f45b990e1ced56ac3f, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Enemies.PrototypeEnemySpawner
   mineGridBootstrap: {fileID: 1450090157}
   target: {fileID: 2045824080}
@@ -655,6 +708,7 @@ GameObject:
   - component: {fileID: 2045824084}
   - component: {fileID: 2045824083}
   - component: {fileID: 2045824085}
+  - component: {fileID: 2045824086}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -731,7 +785,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 772d0d658cb208745ad21b171afe4ffd, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerMovement
   mineGridBootstrap: {fileID: 1450090157}
   controlledTransform: {fileID: 2045824080}
@@ -766,7 +820,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b9cfcd7546e85ba4fb136431b0e1ce16, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerMiningInput
   playerMovement: {fileID: 2045824079}
   mineGridBootstrap: {fileID: 1450090157}
@@ -786,7 +840,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 731d1ff37eb35e44f8fab2598385958e, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerAutoAttack
   playerMovement: {fileID: 2045824079}
   enemySpawner: {fileID: 2039030422}
@@ -842,6 +896,7 @@ MonoBehaviour:
   - {fileID: 2045824082}
   - {fileID: 2045824083}
   - {fileID: 2045824085}
+  - {fileID: 2045824086}
   logHealthChanges: 0
 --- !u!114 &2045824085
 MonoBehaviour:
@@ -863,6 +918,35 @@ MonoBehaviour:
   collectedTreasureCount: 0
   collectedTreasureValue: 0
   logPickupResults: 0
+--- !u!114 &2045824086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045824077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 796b224776094514e984b62fad413661, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerExtraction
+  playerMovement: {fileID: 2045824079}
+  playerHealth: {fileID: 2045824084}
+  treasurePickup: {fileID: 2045824085}
+  extractionMarkerSpawner: {fileID: 745383670}
+  extractionOnUpdate: 1
+  extractionCheckIntervalSeconds: 0.1
+  requiredTreasureValue: 1
+  disableBehavioursOnExtraction: 1
+  disableOnExtraction:
+  - {fileID: 2045824079}
+  - {fileID: 2045824081}
+  - {fileID: 2045824082}
+  - {fileID: 2045824083}
+  - {fileID: 2045824085}
+  hasExtracted: 0
+  extractedTreasureValue: 0
+  logExtractionResults: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -873,3 +957,4 @@ SceneRoots:
   - {fileID: 2045824080}
   - {fileID: 2039030423}
   - {fileID: 9823384}
+  - {fileID: 745383671}

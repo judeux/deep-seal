@@ -25,6 +25,7 @@
 |durability_crack_overlay.png|ChatGPT|2026-06-18|ArtSource/prototype_mining_feedback_prompt.md|No|Yes|Assets/_Project/Art/Prototype/UI/Mining/durability_crack_overlay.png|Prototype-only durability overlay sheet; currently unused|
 |enemy_prototype.png|ChatGPT|2026-06-19|ArtSource/prototype_enemy_prompt.md|No|Yes|Assets/_Project/Art/Prototype/Characters/Enemy/enemy_prototype.png|Prototype-only enemy marker sprite|
 |treasure_prototype.png|ChatGPT|2026-06-22|ArtSource/prototype_treasure_prompt.md|No|Yes|Assets/_Project/Art/Prototype/Items/Treasure/treasure_prototype.png|Prototype-only treasure marker sprite|
+|extraction_marker_prototype.png|ChatGPT|2026-06-22|ArtSource/prototype_extraction_marker_prompt.md|No|Yes|Assets/_Project/Art/Prototype/Items/Extraction/extraction_marker_prototype.png|Prototype-only extraction marker sprite|
 
 ## Audio / Fonts
 
