@@ -14,7 +14,7 @@ Build the smallest playable expedition prototype that proves the following loop:
 4. Mine adjacent wall cells.
 5. Update terrain after mining.
 6. Allow the player to move through newly mined paths.
-7. Add basic enemies and automatic combat later.
+7. Validate basic enemies, player damage, and automatic combat.
 8. Add treasure pickup and extraction later.
 
 This roadmap is not the full game roadmap. It is the first playable prototype roadmap.
@@ -49,8 +49,8 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 1-H  | Basic Enemy Domain             | Done        | Added pure C# enemy state and simple MineGrid-based movement rules.                   |
 | 1-I  | Enemy Unity Adapter            | Done        | Rendered and moved simple prototype enemies in the scene.                             |
 | 1-J  | Basic Automatic Attack         | Done        | Added nearest-target automatic attack and prototype enemy defeat/removal.             |
-| 1-K  | Player Damage and Health Loop  | In Progress | Add player health, enemy contact damage, and prototype player defeat handling.        |
-| 1-L  | Treasure Pickup                | Planned     | Add simple treasure pickup and prototype reward marker.                               |
+| 1-K  | Player Damage and Health Loop  | Done        | Added player health, enemy contact damage, and prototype defeat handling.             |
+| 1-L  | Treasure Pickup                | In Progress | Add simple treasure pickup and prototype reward marker.                               |
 | 1-M  | Extraction Marker              | Planned     | Add a simple return/extraction objective.                                             |
 | 1-N  | First Playable Loop Review     | Planned     | Review whether mining, movement, combat, pickup, and extraction form a playable loop. |
 
@@ -163,31 +163,6 @@ Notes:
 
 ## Current Step
 
-### 1-K. Player Damage and Health Loop
-
-Goal:
-
-* Add minimal player health, enemy contact damage, and prototype player defeat handling.
-
-Expected behavior:
-
-* The player has visible or inspectable prototype health.
-* Enemies can damage the player when close enough or on contact.
-* Player defeat is represented in a minimal way suitable for prototype validation.
-* Existing movement, mining, enemy spawning, and automatic attack continue to work.
-
-Explicit exclusions:
-
-* No campaign injury or missing miner system.
-* No permanent death.
-* No expedition result screen.
-* No armor, resistances, status effects, or advanced damage formulas.
-* No polished combat UI, VFX, or audio.
-
----
-
-## Next Planned Step
-
 ### 1-L. Treasure Pickup
 
 Goal:
@@ -206,6 +181,29 @@ Explicit exclusions:
 * No economy.
 * No museum.
 * No campaign persistence.
+* No extraction or return flow yet.
+
+---
+
+## Next Planned Step
+
+### 1-M. Extraction Marker
+
+Goal:
+
+* Add a simple return or extraction objective.
+
+Expected behavior:
+
+* A visible prototype extraction marker exists in the mine.
+* The player can reach it to complete the prototype expedition loop.
+* Completion is represented with a minimal debug result.
+
+Explicit exclusions:
+
+* No final dungeon.
+* No sealstone campaign.
+* No expedition result screen beyond a prototype debug result.
 
 ---
 

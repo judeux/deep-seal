@@ -1,4 +1,5 @@
-﻿using DeepSeal.Combat;
+﻿using System;
+using DeepSeal.Combat;
 using DeepSeal.Core;
 using DeepSeal.Mining;
 using DeepSeal.UnityAdapters.Grid;
@@ -8,7 +9,7 @@ using UnityEngine;
 namespace DeepSeal.UnityAdapters.Enemies
 {
     /// <summary>
-    /// Unity adapter that displays and advances one prototype enemy using pure Combat domain movement rules.
+    /// Unity adapter that displays and advances one prototype enemy using pure Combat domain rules.
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(SpriteRenderer))]
@@ -34,7 +35,7 @@ namespace DeepSeal.UnityAdapters.Enemies
 
         private EnemyState enemyState;
         private bool hasEnemyState;
-        private int currentHitPoints;
+        private HitPointState hitPoints;
         private bool isDefeated;
         private float nextMoveTime;
         private bool warnedMissingBootstrap;
@@ -45,9 +46,9 @@ namespace DeepSeal.UnityAdapters.Enemies
 
         public bool IsDefeated => isDefeated;
 
-        public int CurrentHitPoints => currentHitPoints;
+        public int CurrentHitPoints => hitPoints.IsInitialized ? hitPoints.CurrentHitPoints : maxHitPoints;
 
-        public int MaxHitPoints => maxHitPoints;
+        public int MaxHitPoints => hitPoints.IsInitialized ? hitPoints.MaxHitPoints : maxHitPoints;
 
         public EnemyState CurrentEnemy => enemyState;
 
@@ -61,11 +62,7 @@ namespace DeepSeal.UnityAdapters.Enemies
                 SetEnemyState(new EnemyState(enemyId, initialPosition), placeAtInitialPositionOnStart);
             }
 
-            if (currentHitPoints <= 0)
-            {
-                ResetPrototypeHealth();
-            }
-
+            EnsurePrototypeHealthInitialized();
             ScheduleNextMove();
         }
 
@@ -115,17 +112,25 @@ namespace DeepSeal.UnityAdapters.Enemies
                 return false;
             }
 
-            if (damage <= 0)
+            EnsurePrototypeHealthInitialized();
+
+            DamageResult result;
+
+            try
+            {
+                result = HealthRules.ApplyDamage(hitPoints, damage);
+            }
+            catch (ArgumentException exception)
             {
                 Debug.LogWarning(
-                    $"Ignored prototype enemy damage because damage must be greater than zero. Damage={damage}.",
+                    $"Ignored prototype enemy damage because damage settings are invalid. Damage={damage}. {exception.Message}",
                     this);
                 return false;
             }
 
-            currentHitPoints = Mathf.Max(0, currentHitPoints - damage);
+            hitPoints = result.Current;
 
-            if (currentHitPoints > 0)
+            if (!result.DefeatedThisHit)
             {
                 return false;
             }
@@ -221,9 +226,17 @@ namespace DeepSeal.UnityAdapters.Enemies
             }
         }
 
+        private void EnsurePrototypeHealthInitialized()
+        {
+            if (!hitPoints.IsInitialized)
+            {
+                ResetPrototypeHealth();
+            }
+        }
+
         private void ResetPrototypeHealth()
         {
-            currentHitPoints = maxHitPoints;
+            hitPoints = HitPointState.Full(maxHitPoints);
             isDefeated = false;
         }
 

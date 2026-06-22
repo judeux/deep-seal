@@ -17,12 +17,12 @@ Implemented:
 - Prototype enemy spawning and Unity view adapter.
 - Basic automatic attack targeting and prototype enemy defeat/removal.
 - EditMode tests for core, mining, procedural generation, enemy movement, and attack targeting rules.
+- Prototype player health, enemy contact damage, and player defeat handling.
 
 Not implemented yet:
-- Player health, enemy contact damage, and player defeat.
 - Treasure pickup.
 - Extraction and return flow.
 - Weapon definitions, upgrades, combat UI, and polished combat feedback.
 
 Next:
-- Add a prototype player damage and health loop.
+- Add prototype treasure pickup.
