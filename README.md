@@ -18,11 +18,11 @@ Implemented:
 - Basic automatic attack targeting and prototype enemy defeat/removal.
 - EditMode tests for core, mining, procedural generation, enemy movement, and attack targeting rules.
 - Prototype player health, enemy contact damage, and player defeat handling.
+- Prototype treasure spawning and grid-position pickup tracking.
 
 Not implemented yet:
-- Treasure pickup.
 - Extraction and return flow.
 - Weapon definitions, upgrades, combat UI, and polished combat feedback.
 
 Next:
-- Add prototype treasure pickup.
+- Add a prototype extraction marker.

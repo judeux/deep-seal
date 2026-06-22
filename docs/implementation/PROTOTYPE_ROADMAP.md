@@ -50,8 +50,8 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 1-I  | Enemy Unity Adapter            | Done        | Rendered and moved simple prototype enemies in the scene.                             |
 | 1-J  | Basic Automatic Attack         | Done        | Added nearest-target automatic attack and prototype enemy defeat/removal.             |
 | 1-K  | Player Damage and Health Loop  | Done        | Added player health, enemy contact damage, and prototype defeat handling.             |
-| 1-L  | Treasure Pickup                | In Progress | Add simple treasure pickup and prototype reward marker.                               |
-| 1-M  | Extraction Marker              | Planned     | Add a simple return/extraction objective.                                             |
+| 1-L  | Treasure Pickup                | Done        | Added visible prototype treasures and grid-position pickup tracking.                  |
+| 1-M  | Extraction Marker              | In Progress | Add a simple return/extraction objective.                                             |
 | 1-N  | First Playable Loop Review     | Planned     | Review whether mining, movement, combat, pickup, and extraction form a playable loop. |
 
 ---
@@ -163,30 +163,6 @@ Notes:
 
 ## Current Step
 
-### 1-L. Treasure Pickup
-
-Goal:
-
-* Add a simple collectible treasure or resource marker.
-
-Expected behavior:
-
-* A visible prototype treasure can be placed or spawned in the mine.
-* The player can pick it up by moving onto it or interacting with it.
-* Pickup state is tracked in a minimal prototype form.
-
-Explicit exclusions:
-
-* No full inventory.
-* No economy.
-* No museum.
-* No campaign persistence.
-* No extraction or return flow yet.
-
----
-
-## Next Planned Step
-
 ### 1-M. Extraction Marker
 
 Goal:
@@ -196,14 +172,36 @@ Goal:
 Expected behavior:
 
 * A visible prototype extraction marker exists in the mine.
-* The player can reach it to complete the prototype expedition loop.
+* The player can reach it after collecting treasure.
 * Completion is represented with a minimal debug result.
 
 Explicit exclusions:
 
 * No final dungeon.
 * No sealstone campaign.
-* No expedition result screen beyond a prototype debug result.
+* No full expedition result screen.
+* No campaign persistence.
+
+---
+
+## Next Planned Step
+
+### 1-N. First Playable Loop Review
+
+Goal:
+
+* Review whether movement, mining, combat, treasure pickup, and extraction form a playable prototype loop.
+
+Expected behavior:
+
+* The current prototype can be played end-to-end.
+* Major friction points are identified before adding more content.
+* The next implementation sequence is either confirmed or revised.
+
+Explicit exclusions:
+
+* No new content expansion before review.
+* No campaign systems before the first loop is evaluated.
 
 ---
 
