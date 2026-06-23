@@ -155,14 +155,14 @@ MonoBehaviour:
   generateGridIfMissing: 1
   firstTreasureId: 0
   treasureSpawnPoints:
-  - x: 1
-    y: 1
+  - x: 2
+    y: 2
     value: 1
-  - x: -1
-    y: 1
+  - x: -2
+    y: 2
     value: 1
-  - x: 1
-    y: -1
+  - x: 3
+    y: -2
     value: 2
   logSkippedSpawns: 0
 --- !u!4 &9823384
@@ -373,8 +373,8 @@ MonoBehaviour:
   spawnOnStart: 1
   generateGridIfMissing: 1
   markerId: 0
-  offsetX: -1
-  offsetY: -1
+  offsetX: -2
+  offsetY: -2
   logSkippedSpawn: 0
 --- !u!4 &745383671
 Transform:
@@ -580,14 +580,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Prototype.PrototypeMineGridBootstrap
   mineGridRenderer: {fileID: 924460738}
   generateOnStart: 1
-  seed: 999
-  width: 48
-  height: 32
-  startX: 12
-  startY: 8
-  startClearRadius: 1
+  seed: 1203
+  width: 40
+  height: 36
+  startX: 20
+  startY: 23
+  startClearRadius: 2
   wallDurability: 3
-  randomFloorPercent: 65
+  randomFloorPercent: 55
 --- !u!1 &1562891232
 GameObject:
   m_ObjectHideFlags: 0
@@ -752,12 +752,14 @@ MonoBehaviour:
   generateGridIfMissing: 1
   firstEnemyId: 0
   spawnOffsets:
-  - x: 1
+  - x: 2
     y: 0
   - x: 0
-    y: 1
-  - x: -1
+    y: 2
+  - x: -2
     y: 0
+  - x: 0
+    y: -2
   logSkippedSpawns: 0
 --- !u!4 &2039030423
 Transform:
@@ -871,7 +873,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerMovement
   mineGridBootstrap: {fileID: 1450090157}
   controlledTransform: {fileID: 2045824080}
-  moveSpeed: 4
+  moveSpeed: 3.5
   placeAtStartOnStart: 1
   generateGridIfMissing: 1
   normalizeDiagonalInput: 1
@@ -909,7 +911,7 @@ MonoBehaviour:
   mineGridRenderer: {fileID: 924460738}
   mineKey: 1
   repeatWhileHeld: 1
-  miningIntervalSeconds: 0.25
+  miningIntervalSeconds: 0.22
   miningDamage: 1
   logMiningResults: 0
 --- !u!114 &2045824082
@@ -927,8 +929,8 @@ MonoBehaviour:
   playerMovement: {fileID: 2045824079}
   enemySpawner: {fileID: 2039030422}
   attackOnUpdate: 1
-  attackIntervalSeconds: 0.5
-  attackRangeCells: 4
+  attackIntervalSeconds: 0.6
+  attackRangeCells: 3
   attackDamage: 1
   logAttackResults: 0
 --- !u!114 &2045824083
@@ -947,9 +949,9 @@ MonoBehaviour:
   playerHealth: {fileID: 2045824084}
   enemySpawner: {fileID: 2039030422}
   damageOnUpdate: 1
-  contactRangeCells: 0
+  contactRangeCells: 1
   contactDamage: 1
-  damageIntervalSeconds: 0.75
+  damageIntervalSeconds: 1
   logDamageResults: 0
 --- !u!114 &2045824084
 MonoBehaviour:
@@ -1018,7 +1020,7 @@ MonoBehaviour:
   extractionMarkerSpawner: {fileID: 745383670}
   extractionOnUpdate: 1
   extractionCheckIntervalSeconds: 0.1
-  requiredTreasureValue: 1
+  requiredTreasureValue: 2
   disableBehavioursOnExtraction: 1
   disableOnExtraction:
   - {fileID: 2045824079}

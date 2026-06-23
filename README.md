@@ -22,10 +22,14 @@ Implemented:
 - Prototype extraction marker and simple return completion tracking.
 - Prototype loop feedback HUD for health, treasure, extraction state, defeat, and extraction completion.
 - Prototype wall mining durability overlay.
+- Tuned first playable prototype baseline values for map size, mining pace, enemy pressure, treasure requirement, and extraction pacing.
 
 Not implemented yet:
 - Weapon definitions, upgrades, combat UI, and polished combat feedback.
 - Full expedition result screen, campaign rewards, and persistence.
+- Enemy pathfinding around walls.
+- Runtime enemy spawning based on time or active enemy count.
+- Reward drops from enemy defeat or mining actions.
 
 Next:
-- Tune the first playable prototype loop using the new readable feedback.
+- Improve enemy navigation and runtime spawn pressure before adding reward drops or upgrade selection.

@@ -54,7 +54,9 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 1-M  | Extraction Marker              | Done        | Added a visible prototype extraction marker and simple return completion trigger.     |
 | 1-N  | First Playable Loop Review     | Done        | Recorded first playable loop findings and selected the next prototype direction.      |
 | 1-O  | Prototype Loop Feedback Pass   | Done        | Added minimal readable feedback for health, treasure value, extraction, loop result, and wall mining progress. |
-| 1-P  | Prototype Tuning Pass          | Planned     | Tune movement, mining pacing, enemy pressure, treasure placement, and extraction pacing using readable feedback. |
+| 1-P  | Prototype Tuning Pass          | Done        | Tuned the first playable prototype baseline and identified enemy navigation, runtime spawning, and reward feedback as the next bottlenecks. |
+| 1-Q  | Enemy Navigation and Spawn Pressure Pass | Planned | Improve enemy movement around walls, add movement variation, and add prototype runtime spawning. |
+| 1-R  | Prototype Reward Drops         | Planned     | Add simple drops from enemy defeat and selected mining actions, with short-range pickup. |
 
 ---
 
@@ -165,39 +167,49 @@ Notes:
 
 ## Current Step
 
-### 1-P. Prototype Tuning Pass
+### 1-Q. Enemy Navigation and Spawn Pressure Pass
 
 Goal:
 
-* Tune the first playable prototype loop now that health, treasure, extraction, loop result, and wall mining progress are visible during play.
+* Improve enemy pressure after the tuning pass showed that numeric tuning alone is not enough.
+* Prevent enemies from stalling when walls block direct movement toward the player.
+* Add small movement differences so enemies do not all feel identical.
+* Add prototype runtime spawning based on time interval or minimum active enemy count.
 
 Expected behavior:
 
-* Movement speed, mining interval, wall durability, enemy pressure, treasure placement, and extraction pacing feel readable enough for the next prototype decision.
-* Tuning changes are small and easy to revert.
-* The prototype remains playable end-to-end.
+* Enemies can route around simple wall obstacles when a passable path exists.
+* Enemies feel slightly more varied through movement interval, priority, or simple per-enemy settings.
+* The scene can maintain enemy pressure over time instead of relying only on initial spawns.
+* Existing movement, mining, treasure, extraction, health, HUD, and auto-attack behavior continues to work.
 
 Explicit exclusions:
 
-* No new enemy types.
+* No final enemy AI.
+* No named elites.
+* No bosses.
+* No animation polish.
+* No enemy attack patterns beyond current contact damage.
+* No reward drops in this step.
 * No upgrade selection.
 * No campaign systems.
-* No final UI art.
-* No full expedition result screen.
 
 ---
 
 ## Next Planned Step
 
-### TBD. Post-tuning prototype direction
+### 1-R. Prototype Reward Drops
 
 Goal:
 
-* Decide whether to continue with adapter cleanup, upgrade selection, enemy movement improvements, or another focused loop pass after tuning.
+* Add immediate reward feedback from enemy defeat and selected mining actions.
+* Spawn simple collectible drops on the grid.
+* Pick up nearby drops automatically when the player moves close enough.
 
 Notes:
 
-* Do not start campaign systems before the prototype loop is readable and stable.
+* This should come after enemy navigation and runtime spawning are stable enough to create repeatable combat pressure.
+* Campaign reward settlement, inventory, economy, and permanent progression remain deferred.
 
 ---
 
