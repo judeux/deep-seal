@@ -148,8 +148,14 @@ Current constraints:
 - Treasure pickup is prototype-only and currently tracks only collected count/value, not inventory, economy, campaign persistence, or reward settlement.
 - Extraction is prototype-only and currently represents completion with marker state and component disabling, not a full expedition result screen or campaign reward settlement.
 - Prototype loop feedback currently uses temporary OnGUI adapters and should be replaced by a proper UI stack after the first loop is validated.
+- Prototype tuning values currently live in scene and prefab Inspector settings, not in dedicated balance data assets.
+- Enemy movement is still prototype-oriented and currently needs a grid pathfinding pass before it can reliably pressure the player around mined terrain and walls.
+- Runtime enemy spawning is not yet implemented; current enemy placement is still primarily scene/bootstrap driven.
+- Reward drops from mining and enemy defeat are not yet modeled.
 
 Next planned area:
 
-- Prototype tuning pass.
-- Decide whether enemy movement, mining readability, or adapter cleanup should be prioritized after tuning.
+- Enemy navigation and spawn pressure pass.
+- Keep pathfinding and spawn selection rules in pure C# where practical.
+- Keep Unity adapters responsible only for prefab spawning, transforms, scene references, and runtime presentation.
+- After enemy pressure is reliable, add prototype reward drops from enemy defeat and selected mining actions.

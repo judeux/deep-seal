@@ -110,7 +110,7 @@ MonoBehaviour:
   enemyId: 0
   initialGridPosition: {x: 0, y: 0}
   placeAtInitialPositionOnStart: 1
-  maxHitPoints: 3
+  maxHitPoints: 4
   disableOnDefeat: 1
-  moveIntervalSeconds: 0.5
+  moveIntervalSeconds: 0.45
   logMovementResults: 0
