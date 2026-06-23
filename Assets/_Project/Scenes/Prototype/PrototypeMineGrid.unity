@@ -633,6 +633,88 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
+--- !u!1 &1676594426
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1676594429}
+  - component: {fileID: 1676594428}
+  - component: {fileID: 1676594427}
+  m_Layer: 0
+  m_Name: PrototypeLoopFeedback
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1676594427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1676594426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e06f97024b842dc45b8f281ec0e39e05, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.UI.PrototypeWallMiningFeedbackOverlay
+  playerMovement: {fileID: 2045824079}
+  mineGridBootstrap: {fileID: 1450090157}
+  targetCamera: {fileID: 214386103}
+  showOverlay: 1
+  screenOffset: {x: 0, y: -58}
+  labelSize: {x: 132, y: 44}
+  fontSize: 14
+  backgroundColor: {r: 0, g: 0, b: 0, a: 0.66}
+  textColor: {r: 1, g: 1, b: 1, a: 1}
+  barBackgroundColor: {r: 0.18, g: 0.18, b: 0.18, a: 0.9}
+  durabilityColor: {r: 1, g: 0.68, b: 0.22, a: 1}
+--- !u!114 &1676594428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1676594426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f69376bd1f5a1a4498df6d7f9ef56ecb, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.UI.PrototypeLoopHud
+  playerHealth: {fileID: 2045824084}
+  treasurePickup: {fileID: 2045824085}
+  playerExtraction: {fileID: 2045824086}
+  showHud: 1
+  showCenterLoopResult: 1
+  topLeftOffset: {x: 16, y: 16}
+  panelWidth: 340
+  lineHeight: 28
+  fontSize: 16
+  panelColor: {r: 0, g: 0, b: 0, a: 0.62}
+  normalTextColor: {r: 1, g: 1, b: 1, a: 1}
+  warningTextColor: {r: 1, g: 0.85, b: 0.25, a: 1}
+  successTextColor: {r: 0.35, g: 1, b: 0.45, a: 1}
+  dangerTextColor: {r: 1, g: 0.35, b: 0.35, a: 1}
+--- !u!4 &1676594429
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1676594426}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.04404, y: 8.56093, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2039030421
 GameObject:
   m_ObjectHideFlags: 0
@@ -958,3 +1040,4 @@ SceneRoots:
   - {fileID: 2039030423}
   - {fileID: 9823384}
   - {fileID: 745383671}
+  - {fileID: 1676594429}
