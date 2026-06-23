@@ -20,10 +20,12 @@ Implemented:
 - Prototype player health, enemy contact damage, and player defeat handling.
 - Prototype treasure spawning and grid-position pickup tracking.
 - Prototype extraction marker and simple return completion tracking.
+- Prototype loop feedback HUD for health, treasure, extraction state, defeat, and extraction completion.
+- Prototype wall mining durability overlay.
 
 Not implemented yet:
 - Weapon definitions, upgrades, combat UI, and polished combat feedback.
 - Full expedition result screen, campaign rewards, and persistence.
 
 Next:
-- Add minimal prototype loop feedback for health, treasure value, extraction state, player defeat, extraction completion, and wall mining progress.
+- Tune the first playable prototype loop using the new readable feedback.

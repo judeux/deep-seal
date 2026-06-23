@@ -53,7 +53,8 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 1-L  | Treasure Pickup                | Done        | Added visible prototype treasures and grid-position pickup tracking.                  |
 | 1-M  | Extraction Marker              | Done        | Added a visible prototype extraction marker and simple return completion trigger.     |
 | 1-N  | First Playable Loop Review     | Done        | Recorded first playable loop findings and selected the next prototype direction.      |
-| 1-O  | Prototype Loop Feedback Pass   | In Progress | Add minimal readable feedback for health, treasure value, extraction, and loop result. |
+| 1-O  | Prototype Loop Feedback Pass   | Done        | Added minimal readable feedback for health, treasure value, extraction, loop result, and wall mining progress. |
+| 1-P  | Prototype Tuning Pass          | Planned     | Tune movement, mining pacing, enemy pressure, treasure placement, and extraction pacing using readable feedback. |
 
 ---
 
@@ -164,41 +165,39 @@ Notes:
 
 ## Current Step
 
-### 1-O. Prototype Loop Feedback Pass
+### 1-P. Prototype Tuning Pass
 
 Goal:
 
-* Add minimal readable feedback for player health, collected treasure value, extraction availability, extraction completion, player defeat, and wall mining progress.
+* Tune the first playable prototype loop now that health, treasure, extraction, loop result, and wall mining progress are visible during play.
 
 Expected behavior:
 
-* The player can understand current health without watching the Inspector.
-* The player can understand collected treasure value.
-* The player can understand whether extraction is currently available.
-* Extraction completion and player defeat are visible during play.
-* Mining progress is easier to read before a wall breaks.
+* Movement speed, mining interval, wall durability, enemy pressure, treasure placement, and extraction pacing feel readable enough for the next prototype decision.
+* Tuning changes are small and easy to revert.
+* The prototype remains playable end-to-end.
 
 Explicit exclusions:
 
+* No new enemy types.
+* No upgrade selection.
+* No campaign systems.
 * No final UI art.
 * No full expedition result screen.
-* No campaign reward settlement.
-* No upgrade selection.
-* No localization system.
 
 ---
 
 ## Next Planned Step
 
-### TBD. Post-feedback prototype direction
+### TBD. Post-tuning prototype direction
 
 Goal:
 
-* Decide whether to continue with tuning, upgrade selection, or adapter cleanup after minimal loop feedback is visible.
+* Decide whether to continue with adapter cleanup, upgrade selection, enemy movement improvements, or another focused loop pass after tuning.
 
 Notes:
 
-* Do not start campaign systems before the prototype loop has readable feedback.
+* Do not start campaign systems before the prototype loop is readable and stable.
 
 ---
 

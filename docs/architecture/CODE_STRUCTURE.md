@@ -133,6 +133,10 @@ Implemented Unity adapter areas:
   - Prototype extraction marker view adapter.
   - Prototype extraction marker spawner adapter.
 
+- `DeepSeal.UnityAdapters.UI`
+  - Prototype OnGUI loop HUD for health, treasure, extraction state, defeat, and extraction completion.
+  - Prototype wall mining durability overlay.
+
 Current constraints:
 
 - Pure domain logic must not depend on `UnityEngine`.
@@ -143,8 +147,9 @@ Current constraints:
 - Enemy and player hit point handling now share pure `DeepSeal.Combat` health rules, while Unity adapters remain responsible for scene visibility and component disabling.
 - Treasure pickup is prototype-only and currently tracks only collected count/value, not inventory, economy, campaign persistence, or reward settlement.
 - Extraction is prototype-only and currently represents completion with marker state and component disabling, not a full expedition result screen or campaign reward settlement.
+- Prototype loop feedback currently uses temporary OnGUI adapters and should be replaced by a proper UI stack after the first loop is validated.
 
 Next planned area:
 
-- First playable loop review.
-- Decide the next implementation sequence after the loop review.
+- Prototype tuning pass.
+- Decide whether enemy movement, mining readability, or adapter cleanup should be prioritized after tuning.

@@ -43,6 +43,8 @@ namespace DeepSeal.UnityAdapters.Player
 
         public int ExtractedTreasureValue => extractedTreasureValue;
 
+        public int RequiredTreasureValue => requiredTreasureValue;
+
         private void Update()
         {
             if (!extractionOnUpdate)
