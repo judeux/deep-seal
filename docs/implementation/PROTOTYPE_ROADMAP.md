@@ -51,8 +51,9 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 1-J  | Basic Automatic Attack         | Done        | Added nearest-target automatic attack and prototype enemy defeat/removal.             |
 | 1-K  | Player Damage and Health Loop  | Done        | Added player health, enemy contact damage, and prototype defeat handling.             |
 | 1-L  | Treasure Pickup                | Done        | Added visible prototype treasures and grid-position pickup tracking.                  |
-| 1-M  | Extraction Marker              | Done        | Added a visible prototype extraction marker and simple return completion trigger.      |
-| 1-N  | First Playable Loop Review     | In Progress | Review whether mining, movement, combat, pickup, and extraction form a playable loop. |
+| 1-M  | Extraction Marker              | Done        | Added a visible prototype extraction marker and simple return completion trigger.     |
+| 1-N  | First Playable Loop Review     | Done        | Recorded first playable loop findings and selected the next prototype direction.      |
+| 1-O  | Prototype Loop Feedback Pass   | In Progress | Add minimal readable feedback for health, treasure value, extraction, and loop result. |
 
 ---
 
@@ -163,37 +164,41 @@ Notes:
 
 ## Current Step
 
-### 1-N. First Playable Loop Review
+### 1-O. Prototype Loop Feedback Pass
 
 Goal:
 
-* Review whether movement, mining, combat, treasure pickup, and extraction form a playable prototype loop.
+* Add minimal readable feedback for player health, collected treasure value, extraction availability, extraction completion, player defeat, and wall mining progress.
 
 Expected behavior:
 
-* The current prototype can be played end-to-end.
-* Major friction points are identified before adding more content.
-* The next implementation sequence is either confirmed or revised.
+* The player can understand current health without watching the Inspector.
+* The player can understand collected treasure value.
+* The player can understand whether extraction is currently available.
+* Extraction completion and player defeat are visible during play.
+* Mining progress is easier to read before a wall breaks.
 
 Explicit exclusions:
 
-* No new content expansion before review.
-* No campaign systems before the first loop is evaluated.
+* No final UI art.
+* No full expedition result screen.
+* No campaign reward settlement.
+* No upgrade selection.
+* No localization system.
 
 ---
 
 ## Next Planned Step
 
-### TBD. Post-review implementation sequence
+### TBD. Post-feedback prototype direction
 
 Goal:
 
-* Decide the next implementation step after reviewing the first playable loop.
+* Decide whether to continue with tuning, upgrade selection, or adapter cleanup after minimal loop feedback is visible.
 
 Notes:
 
-* Candidate directions include prototype loop tuning, basic UI feedback, upgrade selection, or restructuring weak prototype adapters.
-* Do not start campaign systems before the first loop review is complete.
+* Do not start campaign systems before the prototype loop has readable feedback.
 
 ---
 
