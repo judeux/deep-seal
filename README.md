@@ -26,4 +26,4 @@ Not implemented yet:
 - Full expedition result screen, campaign rewards, and persistence.
 
 Next:
-- Review the first playable prototype loop.
+- Add minimal prototype loop feedback for health, treasure value, extraction state, player defeat, extraction completion, and wall mining progress.
