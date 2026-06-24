@@ -26,11 +26,12 @@ Implemented:
 - Prototype enemy pathfinding around simple wall obstacles.
 - Runtime prototype enemy spawning based on active enemy pressure.
 - Basic enemy movement and health variation through prototype spawner settings.
+- Prototype reward drops from enemy defeat and selected mining actions.
+- Short-range automatic reward drop pickup.
 
 Not implemented yet:
 - Weapon definitions, upgrades, combat UI, and polished combat feedback.
 - Full expedition result screen, campaign rewards, and persistence.
-- Reward drops from enemy defeat or mining actions.
 
 Next:
-- Add prototype reward drops from enemy defeat and selected mining actions.
+- Add the first temporary upgrade selection prototype using the reward loop as input.

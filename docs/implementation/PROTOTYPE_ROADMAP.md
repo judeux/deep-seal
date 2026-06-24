@@ -56,7 +56,8 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 1-O  | Prototype Loop Feedback Pass   | Done        | Added minimal readable feedback for health, treasure value, extraction, loop result, and wall mining progress. |
 | 1-P  | Prototype Tuning Pass          | Done        | Tuned the first playable prototype baseline and identified enemy navigation, runtime spawning, and reward feedback as the next bottlenecks. |
 | 1-Q  | Enemy Navigation and Spawn Pressure Pass | Done | Added grid pathfinding for enemies, movement variation, and runtime enemy spawning based on active enemy pressure. |
-| 1-R  | Prototype Reward Drops         | Planned     | Add simple drops from enemy defeat and selected mining actions, with short-range pickup. |
+| 1-R  | Prototype Reward Drops         | Done        | Added reward drops from enemy defeat and selected mining actions, with short-range pickup. |
+| 2-A  | Upgrade Selection Prototype    | Planned     | Add the first temporary upgrade choice using prototype rewards as short-run input. |
 
 ---
 
@@ -167,30 +168,27 @@ Notes:
 
 ## Current Step
 
-### 1-R. Prototype Reward Drops
+### 2-A. Upgrade Selection Prototype
 
 Goal:
 
-* Add immediate reward feedback from enemy defeat and selected mining actions.
-* Spawn simple collectible drops on the grid.
-* Pick up nearby drops automatically when the player moves close enough.
+* Add the first temporary upgrade choice after reward drops, combat pressure, mining, and extraction are present.
+* Validate whether reward value can feed into short-run player growth.
+* Keep the system prototype-only and easy to remove or replace.
 
 Expected behavior:
 
-* Defeated enemies can create prototype reward drops.
-* Selected mining actions can create simple prototype reward drops.
-* Reward drops appear on passable grid cells.
-* The player can collect nearby drops without precise manual interaction.
-* Existing movement, mining, combat, health, treasure, extraction, and enemy spawning continue to work.
+* The player can gain reward value during a run.
+* Reward value can trigger or pay for a simple upgrade choice.
+* The first upgrade should affect an existing prototype behavior such as attack damage, attack range, mining speed, or movement speed.
 
 Explicit exclusions:
 
-* No full inventory.
-* No economy.
-* No campaign reward settlement.
 * No permanent progression.
-* No polished reward VFX or audio.
-* No upgrade selection in this step.
+* No campaign upgrades.
+* No save data.
+* No full upgrade tree.
+* No final UI.
 
 ---
 

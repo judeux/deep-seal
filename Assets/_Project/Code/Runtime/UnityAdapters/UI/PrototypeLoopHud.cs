@@ -14,6 +14,7 @@ namespace DeepSeal.UnityAdapters.UI
         [SerializeField] private PrototypePlayerHealth playerHealth;
         [SerializeField] private PrototypePlayerTreasurePickup treasurePickup;
         [SerializeField] private PrototypePlayerExtraction playerExtraction;
+        [SerializeField] private PrototypePlayerRewardDropPickup rewardDropPickup;
 
         [Header("Display")]
         [SerializeField] private bool showHud = true;
@@ -59,7 +60,7 @@ namespace DeepSeal.UnityAdapters.UI
             float rowGap = 2f;
             float paddingX = 10f;
             float paddingY = 10f;
-            float panelHeight = paddingY * 2f + rowHeight * 4f + rowGap * 3f;
+            float panelHeight = paddingY * 2f + rowHeight * 5f + rowGap * 4f;
 
             var panelRect = new Rect(
                 topLeftOffset.x,
@@ -85,6 +86,9 @@ namespace DeepSeal.UnityAdapters.UI
 
             rowRect.y += rowHeight + rowGap;
             DrawHudLine(rowRect, BuildLoopStateText(), statusStyle, GetLoopStateColor());
+
+            rowRect.y += rowHeight + rowGap;
+            DrawHudLine(rowRect, BuildRewardText(), labelStyle, normalTextColor);
         }
 
         private static void DrawHudLine(
@@ -160,6 +164,16 @@ namespace DeepSeal.UnityAdapters.UI
             }
 
             return "Loop: active";
+        }
+
+        private string BuildRewardText()
+        {
+            if (rewardDropPickup == null)
+            {
+                return "Rewards: unassigned";
+            }
+
+            return $"Rewards: {rewardDropPickup.CollectedRewardDropCount} collected, value {rewardDropPickup.CollectedRewardDropValue}";
         }
 
         private Color GetExtractionColor()
@@ -267,7 +281,7 @@ namespace DeepSeal.UnityAdapters.UI
             showHud = true;
             showCenterLoopResult = true;
             topLeftOffset = new Vector2(16f, 16f);
-            panelWidth = 340f;
+            panelWidth = 380f;
             lineHeight = 28f;
             fontSize = 16;
             panelColor = new Color(0f, 0f, 0f, 0.62f);
@@ -279,7 +293,7 @@ namespace DeepSeal.UnityAdapters.UI
 
         private void OnValidate()
         {
-            panelWidth = Mathf.Max(180f, panelWidth);
+            panelWidth = Mathf.Max(220f, panelWidth);
             fontSize = Mathf.Max(10, fontSize);
             lineHeight = Mathf.Max(fontSize + 10f, lineHeight);
 
