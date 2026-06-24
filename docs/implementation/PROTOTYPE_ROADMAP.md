@@ -55,7 +55,7 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 1-N  | First Playable Loop Review     | Done        | Recorded first playable loop findings and selected the next prototype direction.      |
 | 1-O  | Prototype Loop Feedback Pass   | Done        | Added minimal readable feedback for health, treasure value, extraction, loop result, and wall mining progress. |
 | 1-P  | Prototype Tuning Pass          | Done        | Tuned the first playable prototype baseline and identified enemy navigation, runtime spawning, and reward feedback as the next bottlenecks. |
-| 1-Q  | Enemy Navigation and Spawn Pressure Pass | Planned | Improve enemy movement around walls, add movement variation, and add prototype runtime spawning. |
+| 1-Q  | Enemy Navigation and Spawn Pressure Pass | Done | Added grid pathfinding for enemies, movement variation, and runtime enemy spawning based on active enemy pressure. |
 | 1-R  | Prototype Reward Drops         | Planned     | Add simple drops from enemy defeat and selected mining actions, with short-range pickup. |
 
 ---
@@ -167,37 +167,6 @@ Notes:
 
 ## Current Step
 
-### 1-Q. Enemy Navigation and Spawn Pressure Pass
-
-Goal:
-
-* Improve enemy pressure after the tuning pass showed that numeric tuning alone is not enough.
-* Prevent enemies from stalling when walls block direct movement toward the player.
-* Add small movement differences so enemies do not all feel identical.
-* Add prototype runtime spawning based on time interval or minimum active enemy count.
-
-Expected behavior:
-
-* Enemies can route around simple wall obstacles when a passable path exists.
-* Enemies feel slightly more varied through movement interval, priority, or simple per-enemy settings.
-* The scene can maintain enemy pressure over time instead of relying only on initial spawns.
-* Existing movement, mining, treasure, extraction, health, HUD, and auto-attack behavior continues to work.
-
-Explicit exclusions:
-
-* No final enemy AI.
-* No named elites.
-* No bosses.
-* No animation polish.
-* No enemy attack patterns beyond current contact damage.
-* No reward drops in this step.
-* No upgrade selection.
-* No campaign systems.
-
----
-
-## Next Planned Step
-
 ### 1-R. Prototype Reward Drops
 
 Goal:
@@ -206,10 +175,38 @@ Goal:
 * Spawn simple collectible drops on the grid.
 * Pick up nearby drops automatically when the player moves close enough.
 
+Expected behavior:
+
+* Defeated enemies can create prototype reward drops.
+* Selected mining actions can create simple prototype reward drops.
+* Reward drops appear on passable grid cells.
+* The player can collect nearby drops without precise manual interaction.
+* Existing movement, mining, combat, health, treasure, extraction, and enemy spawning continue to work.
+
+Explicit exclusions:
+
+* No full inventory.
+* No economy.
+* No campaign reward settlement.
+* No permanent progression.
+* No polished reward VFX or audio.
+* No upgrade selection in this step.
+
+---
+
+## Next Planned Step
+
+### 2-A. Upgrade Selection Prototype
+
+Goal:
+
+* Add the first temporary upgrade choice after rewards and combat pressure are present.
+* Validate whether combat/mining rewards can feed into short-run player growth.
+
 Notes:
 
-* This should come after enemy navigation and runtime spawning are stable enough to create repeatable combat pressure.
-* Campaign reward settlement, inventory, economy, and permanent progression remain deferred.
+* Only start this after prototype reward drops are stable.
+* Campaign progression, sealstones, miner roster, and persistent upgrades remain deferred.
 
 ---
 

@@ -52,6 +52,57 @@ namespace DeepSeal.Combat
             return secondaryResult.Moved ? secondaryResult : primaryResult;
         }
 
+        public static EnemyMoveResult TryMoveTowardWithPathfinding(
+            MineGrid grid,
+            EnemyState enemy,
+            GridPosition targetPosition,
+            int maxVisitedCells)
+        {
+            if (grid == null)
+            {
+                throw new ArgumentNullException(nameof(grid));
+            }
+
+            if (maxVisitedCells <= 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(maxVisitedCells),
+                    maxVisitedCells,
+                    "Max visited cells must be greater than zero.");
+            }
+
+            if (!grid.Contains(enemy.Position))
+            {
+                return EnemyMoveResult.EnemyOutOfBounds(enemy);
+            }
+
+            if (!grid.Contains(targetPosition))
+            {
+                return EnemyMoveResult.DestinationOutOfBounds(
+                    enemy,
+                    targetPosition,
+                    GridDirection.None);
+            }
+
+            EnemyPathfindingResult pathfindingResult = EnemyPathfindingRules.FindNextStep(
+                grid,
+                enemy.Position,
+                targetPosition,
+                maxVisitedCells);
+
+            if (pathfindingResult.AlreadyAtTarget)
+            {
+                return EnemyMoveResult.AlreadyAtTarget(enemy);
+            }
+
+            if (pathfindingResult.CanMove)
+            {
+                return TryMoveOneCell(grid, enemy, pathfindingResult.Direction);
+            }
+
+            return TryMoveToward(grid, enemy, targetPosition);
+        }
+
         public static EnemyMoveResult TryMoveOneCell(
             MineGrid grid,
             EnemyState enemy,
