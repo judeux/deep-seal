@@ -86,12 +86,16 @@ Implemented pure domain areas:
   - Enemy movement result types.
   - Prototype automatic attack target selection rules.
   - Prototype hit point state and damage application rules.
+  - Prototype enemy grid pathfinding rules.
+  - Prototype enemy spawn position selection rules.
 
 - `DeepSeal.UnityAdapters.Enemies`
   - Prototype enemy view adapter.
   - Prototype enemy spawner adapter.
   - Scene connection between enemy GameObjects and pure Combat movement rules.
   - Prototype-only enemy hit points and defeat handling for automatic attack validation.
+  - Runtime prototype enemy spawning based on active enemy count and spawn interval.
+  - Prototype enemy movement variation through spawner-provided movement interval and hit point values.
 
 - `DeepSeal.Expedition`
   - Prototype treasure state.
@@ -149,13 +153,13 @@ Current constraints:
 - Extraction is prototype-only and currently represents completion with marker state and component disabling, not a full expedition result screen or campaign reward settlement.
 - Prototype loop feedback currently uses temporary OnGUI adapters and should be replaced by a proper UI stack after the first loop is validated.
 - Prototype tuning values currently live in scene and prefab Inspector settings, not in dedicated balance data assets.
-- Enemy movement is still prototype-oriented and currently needs a grid pathfinding pass before it can reliably pressure the player around mined terrain and walls.
-- Runtime enemy spawning is not yet implemented; current enemy placement is still primarily scene/bootstrap driven.
+- Enemy movement now has prototype grid pathfinding, but it is still not final AI and does not include enemy archetypes, attack patterns, or weighted terrain costs.
+- Runtime enemy spawning exists as a prototype pressure tool and is still configured through scene Inspector values rather than production spawn tables.
 - Reward drops from mining and enemy defeat are not yet modeled.
 
 Next planned area:
 
-- Enemy navigation and spawn pressure pass.
-- Keep pathfinding and spawn selection rules in pure C# where practical.
-- Keep Unity adapters responsible only for prefab spawning, transforms, scene references, and runtime presentation.
-- After enemy pressure is reliable, add prototype reward drops from enemy defeat and selected mining actions.
+- Prototype reward drops.
+- Keep reward drop rules in pure C# where practical.
+- Keep Unity adapters responsible for prefab spawning, transforms, pickup presentation, and scene wiring.
+- Upgrade selection should wait until reward drops provide a basic short-run reward source.

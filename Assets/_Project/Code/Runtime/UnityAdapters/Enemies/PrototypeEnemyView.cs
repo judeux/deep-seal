@@ -31,6 +31,8 @@ namespace DeepSeal.UnityAdapters.Enemies
 
         [Header("Movement")]
         [SerializeField] private float moveIntervalSeconds = 0.5f;
+        [SerializeField] private bool usePathfinding = true;
+        [SerializeField] private int maxPathVisitedCells = 512;
         [SerializeField] private bool logMovementResults;
 
         private EnemyState enemyState;
@@ -88,10 +90,23 @@ namespace DeepSeal.UnityAdapters.Enemies
             PrototypeMineGridBootstrap bootstrap,
             Transform moveTarget)
         {
+            Initialize(id, position, bootstrap, moveTarget, maxHitPoints, moveIntervalSeconds);
+        }
+
+        public void Initialize(
+            int id,
+            GridPosition position,
+            PrototypeMineGridBootstrap bootstrap,
+            Transform moveTarget,
+            int configuredMaxHitPoints,
+            float configuredMoveIntervalSeconds)
+        {
             enemyId = Mathf.Max(0, id);
             initialGridPosition = new Vector2Int(position.X, position.Y);
             mineGridBootstrap = bootstrap;
             target = moveTarget;
+            maxHitPoints = Mathf.Max(1, configuredMaxHitPoints);
+            moveIntervalSeconds = Mathf.Max(0.05f, configuredMoveIntervalSeconds);
 
             EnsureControlledTransform();
             SetEnemyState(new EnemyState(enemyId, position), true);
@@ -166,7 +181,13 @@ namespace DeepSeal.UnityAdapters.Enemies
             warnedMissingTarget = false;
 
             GridPosition targetPosition = GridCoordinateConverter.WorldToGridPosition(target.position);
-            EnemyMoveResult result = EnemyMovementRules.TryMoveToward(grid, enemyState, targetPosition);
+            EnemyMoveResult result = usePathfinding
+                ? EnemyMovementRules.TryMoveTowardWithPathfinding(
+                    grid,
+                    enemyState,
+                    targetPosition,
+                    maxPathVisitedCells)
+                : EnemyMovementRules.TryMoveToward(grid, enemyState, targetPosition);
 
             if (result.Moved)
             {
@@ -282,6 +303,8 @@ namespace DeepSeal.UnityAdapters.Enemies
             maxHitPoints = 3;
             disableOnDefeat = true;
             moveIntervalSeconds = 0.5f;
+            usePathfinding = true;
+            maxPathVisitedCells = 512;
             placeAtInitialPositionOnStart = true;
         }
 
@@ -290,6 +313,7 @@ namespace DeepSeal.UnityAdapters.Enemies
             enemyId = Mathf.Max(0, enemyId);
             maxHitPoints = Mathf.Max(1, maxHitPoints);
             moveIntervalSeconds = Mathf.Max(0.05f, moveIntervalSeconds);
+            maxPathVisitedCells = Mathf.Max(1, maxPathVisitedCells);
         }
     }
 }
