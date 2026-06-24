@@ -26,6 +26,7 @@
 |enemy_prototype.png|ChatGPT|2026-06-19|ArtSource/prototype_enemy_prompt.md|No|Yes|Assets/_Project/Art/Prototype/Characters/Enemy/enemy_prototype.png|Prototype-only enemy marker sprite|
 |treasure_prototype.png|ChatGPT|2026-06-22|ArtSource/prototype_treasure_prompt.md|No|Yes|Assets/_Project/Art/Prototype/Items/Treasure/treasure_prototype.png|Prototype-only treasure marker sprite|
 |extraction_marker_prototype.png|ChatGPT|2026-06-22|ArtSource/prototype_extraction_marker_prompt.md|No|Yes|Assets/_Project/Art/Prototype/Items/Extraction/extraction_marker_prototype.png|Prototype-only extraction marker sprite|
+|reward_drop_prototype.png|ChatGPT|2026-06-24|ArtSource/prototype_reward_drop_prompt.md|No|Yes|Assets/_Project/Art/Prototype/Items/Rewards/reward_drop_prototype.png|Prototype-only reward drop sprite|
 
 ## Audio / Fonts
 

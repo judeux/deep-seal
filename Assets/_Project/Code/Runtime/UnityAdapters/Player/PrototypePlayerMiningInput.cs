@@ -1,6 +1,7 @@
 ﻿using DeepSeal.Core;
 using DeepSeal.Mining;
 using DeepSeal.UnityAdapters.Prototype;
+using DeepSeal.UnityAdapters.RewardDrops;
 using DeepSeal.UnityAdapters.Tilemaps;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -20,6 +21,7 @@ namespace DeepSeal.UnityAdapters.Player
         [SerializeField] private PrototypePlayerMovement playerMovement;
         [SerializeField] private PrototypeMineGridBootstrap mineGridBootstrap;
         [SerializeField] private MineGridTilemapRenderer mineGridRenderer;
+        [SerializeField] private PrototypeRewardDropSpawner rewardDropSpawner;
 
         [Header("Input")]
         [SerializeField] private Key mineKey = Key.Space;
@@ -29,9 +31,11 @@ namespace DeepSeal.UnityAdapters.Player
         [Header("Mining")]
         [SerializeField] private int miningDamage = 1;
         [SerializeField] private bool logMiningResults;
+        [SerializeField] private bool spawnRewardDropsOnWallDestroyed = true;
 
         private float nextAllowedMiningTime;
         private bool wasMineInputPressedLastFrame;
+        private bool warnedMissingRewardDropSpawner;
 
         private void Update()
         {
@@ -111,6 +115,11 @@ namespace DeepSeal.UnityAdapters.Player
                 mineGridRenderer.Render(grid);
             }
 
+            if (result.WasDestroyed && spawnRewardDropsOnWallDestroyed)
+            {
+                TrySpawnMiningRewardDrop(result.Position);
+            }
+
             if (logMiningResults)
             {
                 Debug.Log(
@@ -169,6 +178,7 @@ namespace DeepSeal.UnityAdapters.Player
         private void Reset()
         {
             playerMovement = GetComponent<PrototypePlayerMovement>();
+            spawnRewardDropsOnWallDestroyed = true;
         }
 
         private void OnValidate()
@@ -180,6 +190,23 @@ namespace DeepSeal.UnityAdapters.Player
             {
                 mineKey = Key.Space;
             }
+        }
+
+        private void TrySpawnMiningRewardDrop(GridPosition position)
+        {
+            if (rewardDropSpawner == null)
+            {
+                if (!warnedMissingRewardDropSpawner)
+                {
+                    Debug.LogWarning("Mining reward drops are enabled, but Prototype Reward Drop Spawner is not assigned.", this);
+                    warnedMissingRewardDropSpawner = true;
+                }
+
+                return;
+            }
+
+            warnedMissingRewardDropSpawner = false;
+            rewardDropSpawner.TrySpawnMiningRewardDrop(position);
         }
     }
 }

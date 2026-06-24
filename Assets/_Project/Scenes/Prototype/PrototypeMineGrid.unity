@@ -338,6 +338,60 @@ MonoBehaviour:
   maxFollowSpeed: 50
   followX: 1
   followY: 1
+--- !u!1 &583619461
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 583619463}
+  - component: {fileID: 583619462}
+  m_Layer: 0
+  m_Name: PrototypeRewardDropSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &583619462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583619461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b91e9bdfb0326f44bda99e2269c990e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.RewardDrops.PrototypeRewardDropSpawner
+  mineGridBootstrap: {fileID: 1450090157}
+  rewardDropPrefab: {fileID: 6998698575517673242, guid: 214cd285a8b6b3c409213a55cb39f502, type: 3}
+  spawnParent: {fileID: 583619463}
+  firstRewardDropId: 0
+  enemyDefeatRewardValue: 1
+  miningRewardValue: 1
+  miningDropChancePercent: 35
+  randomSeed: 2401
+  preventDuplicateActiveDropOnSameCell: 1
+  logSpawnResults: 0
+--- !u!4 &583619463
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583619461}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.04404, y: 8.56093, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &745383669
 GameObject:
   m_ObjectHideFlags: 0
@@ -689,10 +743,11 @@ MonoBehaviour:
   playerHealth: {fileID: 2045824084}
   treasurePickup: {fileID: 2045824085}
   playerExtraction: {fileID: 2045824086}
+  rewardDropPickup: {fileID: 2045824087}
   showHud: 1
   showCenterLoopResult: 1
   topLeftOffset: {x: 16, y: 16}
-  panelWidth: 340
+  panelWidth: 380
   lineHeight: 28
   fontSize: 16
   panelColor: {r: 0, g: 0, b: 0, a: 0.62}
@@ -760,7 +815,19 @@ MonoBehaviour:
     y: 0
   - x: 0
     y: -2
+  spawnOverTime: 1
+  spawnIntervalSeconds: 4
+  minimumActiveEnemies: 4
+  maximumActiveEnemies: 10
+  randomSpawnSeed: 1401
+  minimumSpawnDistanceFromTarget: 5
+  maximumSpawnDistanceFromTarget: 14
+  minimumEnemyHitPoints: 3
+  maximumEnemyHitPoints: 5
+  minimumMoveIntervalSeconds: 0.35
+  maximumMoveIntervalSeconds: 0.7
   logSkippedSpawns: 0
+  logRuntimeSpawns: 0
 --- !u!4 &2039030423
 Transform:
   m_ObjectHideFlags: 0
@@ -793,6 +860,7 @@ GameObject:
   - component: {fileID: 2045824083}
   - component: {fileID: 2045824085}
   - component: {fileID: 2045824086}
+  - component: {fileID: 2045824087}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -909,11 +977,13 @@ MonoBehaviour:
   playerMovement: {fileID: 2045824079}
   mineGridBootstrap: {fileID: 1450090157}
   mineGridRenderer: {fileID: 924460738}
+  rewardDropSpawner: {fileID: 583619462}
   mineKey: 1
   repeatWhileHeld: 1
   miningIntervalSeconds: 0.22
   miningDamage: 1
   logMiningResults: 0
+  spawnRewardDropsOnWallDestroyed: 1
 --- !u!114 &2045824082
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -928,10 +998,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerAutoAttack
   playerMovement: {fileID: 2045824079}
   enemySpawner: {fileID: 2039030422}
+  rewardDropSpawner: {fileID: 583619462}
   attackOnUpdate: 1
   attackIntervalSeconds: 0.6
   attackRangeCells: 3
   attackDamage: 1
+  spawnRewardDropsOnEnemyDefeat: 1
   logAttackResults: 0
 --- !u!114 &2045824083
 MonoBehaviour:
@@ -981,6 +1053,7 @@ MonoBehaviour:
   - {fileID: 2045824083}
   - {fileID: 2045824085}
   - {fileID: 2045824086}
+  - {fileID: 2045824087}
   logHealthChanges: 0
 --- !u!114 &2045824085
 MonoBehaviour:
@@ -1028,9 +1101,31 @@ MonoBehaviour:
   - {fileID: 2045824082}
   - {fileID: 2045824083}
   - {fileID: 2045824085}
+  - {fileID: 2045824087}
   hasExtracted: 0
   extractedTreasureValue: 0
   logExtractionResults: 0
+--- !u!114 &2045824087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045824077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dd8261b9ae89d34081396974c9471be, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerRewardDropPickup
+  playerMovement: {fileID: 2045824079}
+  playerHealth: {fileID: 2045824084}
+  rewardDropSpawner: {fileID: 583619462}
+  pickupOnUpdate: 1
+  pickupIntervalSeconds: 0.1
+  pickupRangeCells: 1
+  collectedRewardDropCount: 0
+  collectedRewardDropValue: 0
+  logPickupResults: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1043,3 +1138,4 @@ SceneRoots:
   - {fileID: 9823384}
   - {fileID: 745383671}
   - {fileID: 1676594429}
+  - {fileID: 583619463}

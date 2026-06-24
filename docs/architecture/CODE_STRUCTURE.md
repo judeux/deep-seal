@@ -102,6 +102,8 @@ Implemented pure domain areas:
   - Grid-position treasure pickup rules.
   - Prototype extraction marker state.
   - Simple extraction completion rules.
+  - Prototype reward drop state.
+  - Short-range reward drop pickup rules.
 
 Implemented Unity adapter areas:
 
@@ -125,6 +127,7 @@ Implemented Unity adapter areas:
   - Minimal player defeat behavior for prototype combat validation.
   - Prototype treasure pickup adapter.
   - Prototype extraction completion adapter.
+  - Prototype reward drop pickup adapter.
 
 - `DeepSeal.UnityAdapters.Cameras`
   - Prototype camera follow adapter for keeping the player visible during movement and mining.
@@ -141,6 +144,10 @@ Implemented Unity adapter areas:
   - Prototype OnGUI loop HUD for health, treasure, extraction state, defeat, and extraction completion.
   - Prototype wall mining durability overlay.
 
+- `DeepSeal.UnityAdapters.RewardDrops`
+  - Prototype reward drop view adapter.
+  - Prototype reward drop spawner for enemy defeat and mining rewards.
+
 Current constraints:
 
 - Pure domain logic must not depend on `UnityEngine`.
@@ -155,11 +162,10 @@ Current constraints:
 - Prototype tuning values currently live in scene and prefab Inspector settings, not in dedicated balance data assets.
 - Enemy movement now has prototype grid pathfinding, but it is still not final AI and does not include enemy archetypes, attack patterns, or weighted terrain costs.
 - Runtime enemy spawning exists as a prototype pressure tool and is still configured through scene Inspector values rather than production spawn tables.
-- Reward drops from mining and enemy defeat are not yet modeled.
+- Reward drops are prototype-only and currently track only collected count/value, not inventory, economy, campaign settlement, or permanent progression.
 
 Next planned area:
 
-- Prototype reward drops.
-- Keep reward drop rules in pure C# where practical.
-- Keep Unity adapters responsible for prefab spawning, transforms, pickup presentation, and scene wiring.
-- Upgrade selection should wait until reward drops provide a basic short-run reward source.
+- Upgrade selection prototype.
+- Use prototype reward value only as short-run upgrade input.
+- Campaign progression, persistent upgrades, sealstones, and miner roster systems remain deferred.

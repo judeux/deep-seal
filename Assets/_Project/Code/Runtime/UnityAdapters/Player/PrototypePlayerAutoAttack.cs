@@ -2,6 +2,7 @@
 using DeepSeal.Combat;
 using DeepSeal.Core;
 using DeepSeal.UnityAdapters.Enemies;
+using DeepSeal.UnityAdapters.RewardDrops;
 using UnityEngine;
 
 namespace DeepSeal.UnityAdapters.Player
@@ -16,12 +17,14 @@ namespace DeepSeal.UnityAdapters.Player
         [Header("References")]
         [SerializeField] private PrototypePlayerMovement playerMovement;
         [SerializeField] private PrototypeEnemySpawner enemySpawner;
+        [SerializeField] private PrototypeRewardDropSpawner rewardDropSpawner;
 
         [Header("Attack")]
         [SerializeField] private bool attackOnUpdate = true;
         [SerializeField] private float attackIntervalSeconds = 0.5f;
         [SerializeField] private int attackRangeCells = 4;
         [SerializeField] private int attackDamage = 1;
+        [SerializeField] private bool spawnRewardDropsOnEnemyDefeat = true;
 
         [Header("Debug")]
         [SerializeField] private bool logAttackResults;
@@ -30,6 +33,7 @@ namespace DeepSeal.UnityAdapters.Player
         private float nextAttackTime;
         private bool warnedMissingPlayerMovement;
         private bool warnedMissingEnemySpawner;
+        private bool warnedMissingRewardDropSpawner;
 
         private void Start()
         {
@@ -112,6 +116,11 @@ namespace DeepSeal.UnityAdapters.Player
 
             bool defeated = targetView.TryApplyPrototypeDamage(attackDamage);
 
+            if (defeated && spawnRewardDropsOnEnemyDefeat)
+            {
+                TrySpawnEnemyDefeatRewardDrop(targetEnemy.Position);
+            }
+
             if (logAttackResults)
             {
                 Debug.Log(
@@ -186,6 +195,7 @@ namespace DeepSeal.UnityAdapters.Player
             attackIntervalSeconds = 0.5f;
             attackRangeCells = 4;
             attackDamage = 1;
+            spawnRewardDropsOnEnemyDefeat = true;
         }
 
         private void OnValidate()
@@ -193,6 +203,23 @@ namespace DeepSeal.UnityAdapters.Player
             attackIntervalSeconds = Mathf.Max(0.05f, attackIntervalSeconds);
             attackRangeCells = Mathf.Max(0, attackRangeCells);
             attackDamage = Mathf.Max(1, attackDamage);
+        }
+
+        private void TrySpawnEnemyDefeatRewardDrop(GridPosition position)
+        {
+            if (rewardDropSpawner == null)
+            {
+                if (!warnedMissingRewardDropSpawner)
+                {
+                    Debug.LogWarning("Enemy defeat reward drops are enabled, but Prototype Reward Drop Spawner is not assigned.", this);
+                    warnedMissingRewardDropSpawner = true;
+                }
+
+                return;
+            }
+
+            warnedMissingRewardDropSpawner = false;
+            rewardDropSpawner.TrySpawnEnemyDefeatRewardDrop(position);
         }
     }
 }
