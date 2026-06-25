@@ -35,6 +35,9 @@ namespace DeepSeal.UnityAdapters.Player
         private bool warnedMissingEnemySpawner;
         private bool warnedMissingRewardDropSpawner;
 
+        public int AttackDamage => attackDamage;
+        public int AttackRangeCells => attackRangeCells;
+
         private void Start()
         {
             ScheduleNextAttack();
@@ -196,6 +199,28 @@ namespace DeepSeal.UnityAdapters.Player
             attackRangeCells = 4;
             attackDamage = 1;
             spawnRewardDropsOnEnemyDefeat = true;
+        }
+
+        public void AddAttackDamage(int amount)
+        {
+            if (amount <= 0)
+            {
+                Debug.LogWarning($"Ignored attack damage upgrade because amount must be positive. Amount={amount}.", this);
+                return;
+            }
+
+            attackDamage += amount;
+        }
+
+        public void AddAttackRangeCells(int amount)
+        {
+            if (amount <= 0)
+            {
+                Debug.LogWarning($"Ignored attack range upgrade because amount must be positive. Amount={amount}.", this);
+                return;
+            }
+
+            attackRangeCells += amount;
         }
 
         private void OnValidate()

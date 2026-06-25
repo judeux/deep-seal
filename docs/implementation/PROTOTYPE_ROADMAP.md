@@ -57,7 +57,10 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 1-P  | Prototype Tuning Pass          | Done        | Tuned the first playable prototype baseline and identified enemy navigation, runtime spawning, and reward feedback as the next bottlenecks. |
 | 1-Q  | Enemy Navigation and Spawn Pressure Pass | Done | Added grid pathfinding for enemies, movement variation, and runtime enemy spawning based on active enemy pressure. |
 | 1-R  | Prototype Reward Drops         | Done        | Added reward drops from enemy defeat and selected mining actions, with short-range pickup. |
-| 2-A  | Upgrade Selection Prototype    | Planned     | Add the first temporary upgrade choice using prototype rewards as short-run input. |
+| 2-A  | Upgrade Selection Prototype    | Done        | Added temporary reward-funded upgrade choices that modify attack, mining, and movement during a run. |
+| 2-B  | Procedural Mine Shape Pass | Planned | Make generated mine maps less rectangular by adding irregular walkable regions while keeping current terrain cell types. |
+| 2-C  | Terrain Wall Type Pass | Planned | Introduce terrain distinctions needed for mineable walls, unmineable walls, boundary walls, and future wall variants. |
+| 2-D  | Procedural Preset Placement Pass | Planned | Blend hand-authored terrain presets into generated mine maps after base shape and terrain semantics are stable. |
 
 ---
 
@@ -168,43 +171,46 @@ Notes:
 
 ## Current Step
 
-### 2-A. Upgrade Selection Prototype
+### 2-B. Procedural Mine Shape Pass
 
 Goal:
 
-* Add the first temporary upgrade choice after reward drops, combat pressure, mining, and extraction are present.
-* Validate whether reward value can feed into short-run player growth.
-* Keep the system prototype-only and easy to remove or replace.
+* Improve the prototype mine generator so maps are not limited to rectangular random floor fields.
+* Create more varied walkable shapes inspired by roguelike cave and dungeon layouts.
+* Keep the result compatible with the current MineGrid, MiningRules, Tilemap renderer, enemy spawning, treasure spawning, extraction marker, reward drops, and upgrade selection.
+* Keep this pass limited to the current terrain model: floor and mineable wall.
 
 Expected behavior:
 
-* The player can gain reward value during a run.
-* Reward value can trigger or pay for a simple upgrade choice.
-* The first upgrade should affect an existing prototype behavior such as attack damage, attack range, mining speed, or movement speed.
+* The same seed and settings still generate the same map.
+* The playable area has a less rectangular silhouette or more room/corridor-like variation.
+* The start area remains passable.
+* The outer edge remains wall for now.
+* Existing prototype loop behavior continues to work.
 
 Explicit exclusions:
 
-* No permanent progression.
-* No campaign upgrades.
-* No save data.
-* No full upgrade tree.
-* No final UI.
+* No new tile assets.
+* No unmineable wall type yet.
+* No multiple wall durability/material classes yet.
+* No hand-authored preset or vault injection yet.
+* No biome system.
+* No enemy, treasure, reward, upgrade, or extraction overhaul beyond compatibility fixes.
 
 ---
 
 ## Next Planned Step
 
-### 2-A. Upgrade Selection Prototype
+### 2-C. Terrain Wall Type Pass
 
 Goal:
 
-* Add the first temporary upgrade choice after rewards and combat pressure are present.
-* Validate whether combat/mining rewards can feed into short-run player growth.
+* Expand terrain semantics enough to distinguish mineable walls, unmineable walls, boundary walls, and future wall durability/material variants.
 
 Notes:
 
-* Only start this after prototype reward drops are stable.
-* Campaign progression, sealstones, miner roster, and persistent upgrades remain deferred.
+* This should happen after the generator shape pass proves useful with the existing terrain model.
+* Preset placement should wait until terrain semantics are stable.
 
 ---
 
