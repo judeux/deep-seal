@@ -1,12 +1,10 @@
-using System;
+癤퓎sing System;
 
 namespace DeepSeal.Mining
 {
     /// <summary>
     /// Stores the terrain state of a single mine grid cell.
-    /// 하나의 지형 셀이 가진 타입과 내구도를 나타낸다.
-    /// Floor는 통과 가능하고 채굴은 불가능.
-    /// Wall은 통과 불가능하고 채굴은 가능.
+    /// Floor is passable, Wall is mineable, and Void is outside the generated map footprint.
     /// </summary>
     public readonly struct TerrainCell : IEquatable<TerrainCell>
     {
@@ -17,6 +15,7 @@ namespace DeepSeal.Mining
         }
 
         public TerrainCellType Type { get; }
+
         public int Durability { get; }
 
         public bool IsPassable => Type == TerrainCellType.Floor;
@@ -24,6 +23,8 @@ namespace DeepSeal.Mining
         public bool IsMineable => Type == TerrainCellType.Wall && Durability > 0;
 
         public static TerrainCell Floor => new TerrainCell(TerrainCellType.Floor, 0);
+
+        public static TerrainCell Void => new TerrainCell(TerrainCellType.Void, 0);
 
         public static TerrainCell Wall(int durability)
         {
@@ -70,6 +71,5 @@ namespace DeepSeal.Mining
         {
             return !left.Equals(right);
         }
-
     }
 }

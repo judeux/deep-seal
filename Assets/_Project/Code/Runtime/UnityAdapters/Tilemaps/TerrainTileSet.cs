@@ -6,7 +6,7 @@ namespace DeepSeal.UnityAdapters.Tilemaps
 {
     /// <summary>
     /// TerrainCellType을 Unity TileBase로 매핑하는 Inspector 설정 asset.
-    /// Floor/Wall 타일을 Unity Editor에서 할당할 수 있게 한다.
+    /// Void는 의도적으로 Tilemap에 아무 타일도 표시하지 않는다.
     /// </summary>
     [CreateAssetMenu(
         fileName = "TerrainTileSet",
@@ -34,11 +34,14 @@ namespace DeepSeal.UnityAdapters.Tilemaps
                     tile = wallTile;
                     return tile != null;
 
+                case TerrainCellType.Void:
+                    tile = null;
+                    return true;
+
                 default:
                     tile = null;
                     return false;
             }
         }
-    
     }
 }

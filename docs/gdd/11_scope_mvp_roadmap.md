@@ -122,6 +122,9 @@
   - 외곽 벽 유지.
   - 시작 위치 주변 통과 가능 영역 보장.
   - 생성 결과 검증.
+  - Seed-based mine generation now supports irregular visible mine silhouettes using non-rendered outside-footprint cells.
+  - The main passable mine area remains connected.
+  - Connected mine layouts can include mineable internal wall obstacles that preserve overall floor connectivity.
 - Unity Tilemap prototype display
   - MineGrid 데이터를 Unity Tilemap에 표시.
   - 프로토타입 씬에서 seed/settings 기반 광산 맵 확인 가능.
@@ -172,20 +175,20 @@
 - 정식 업그레이드 트리.
 - 영구 성장과 캠페인 업그레이드.
 - 저장 데이터와 보상 정산.
-- Irregular procedural mine shapes beyond the current rectangular prototype layout.
-- Separate terrain semantics for mineable walls, unmineable walls, and boundary walls.
+- Distinct mineable wall, unmineable wall, and boundary wall semantics.
+- Wall durability/material variants.
 - Hand-authored terrain presets or vaults blended into procedural generation.
+- Minimap or exploration map UI after procedural generation, terrain semantics, and discovery rules are more stable.
 
 다음 구현 후보:
 
-1. Procedural mine shape pass
-   - Improve generated mine layouts beyond simple rectangular random floor fields.
-   - Keep the current floor/wall terrain model for this pass.
-   - Verify that movement, mining, enemy spawning, rewards, upgrades, treasure pickup, and extraction still work on less regular maps.
-
-2. Terrain wall type pass
+1. Terrain wall type pass
    - Add terrain distinctions for mineable walls, unmineable walls, boundary walls, and future durability/material variants.
+   - Keep the connected mine shape generator compatible with the expanded terrain model.
 
-3. Procedural preset placement pass
+2. Procedural preset placement pass
    - Blend hand-authored terrain presets, rooms, or vault-like chunks into seed-based generated maps.
    - Add placement and connection rules after terrain semantics are stable.
+
+3. Minimap or exploration map UI
+   - DEFERRED until procedural generation, terrain semantics, and discovery rules are more stable.

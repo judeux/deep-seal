@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DeepSeal.Core;
 using DeepSeal.Mining;
 
@@ -11,7 +12,11 @@ namespace DeepSeal.ProceduralGeneration
         InvalidSettings = 2,
         SizeMismatch = 3,
         BoundaryNotWall = 4,
-        StartAreaBlocked = 5
+        StartAreaBlocked = 5,
+        DisconnectedPassableArea = 6,
+        InsufficientPassableCells = 7,
+        OuterFrameNotVoid = 8,
+        PassableAreaTouchesVoid = 9
     }
 
     public readonly struct MineGridValidationResult
@@ -68,6 +73,14 @@ namespace DeepSeal.ProceduralGeneration
 
     public static class MineGridValidator
     {
+        private static readonly GridPosition[] CardinalOffsets =
+        {
+            new GridPosition(0, 1),
+            new GridPosition(1, 0),
+            new GridPosition(0, -1),
+            new GridPosition(-1, 0)
+        };
+
         public static MineGridValidationResult Validate(MineGenerationResult result)
         {
             return Validate(result.Grid, result.Settings);
@@ -77,7 +90,7 @@ namespace DeepSeal.ProceduralGeneration
             MineGrid grid,
             MineGenerationSettings settings)
         {
-            if(grid == null)
+            if (grid == null)
             {
                 return MineGridValidationResult.Invalid(MineGridValidationIssue.GridIsNull);
             }
@@ -86,27 +99,48 @@ namespace DeepSeal.ProceduralGeneration
             {
                 settings.Validate();
             }
-            catch(ArgumentException)
+            catch (ArgumentException)
             {
                 return MineGridValidationResult.Invalid(MineGridValidationIssue.InvalidSettings);
             }
 
-            if(grid.Width != settings.Width || grid.Height != settings.Height)
+            if (grid.Width != settings.Width || grid.Height != settings.Height)
             {
                 return MineGridValidationResult.Invalid(MineGridValidationIssue.SizeMismatch);
             }
-            
-            MineGridValidationResult boundaryResult = ValidateBoundary(grid);
 
-            if(!boundaryResult.IsValid)
+            MineGridValidationResult shapeBoundaryResult = settings.ShapeMode == MineGenerationShapeMode.ConnectedCavern
+                ? ValidateOuterFrameVoid(grid)
+                : ValidateBoundaryWalls(grid);
+
+            if (!shapeBoundaryResult.IsValid)
             {
-                return boundaryResult;
+                return shapeBoundaryResult;
             }
 
-            return ValidateStartArea(grid, settings);
+            MineGridValidationResult startAreaResult = ValidateStartArea(grid, settings);
+
+            if (!startAreaResult.IsValid)
+            {
+                return startAreaResult;
+            }
+
+            if (settings.ShapeMode == MineGenerationShapeMode.ConnectedCavern)
+            {
+                MineGridValidationResult connectedResult = ValidateConnectedPassableArea(grid, settings);
+
+                if (!connectedResult.IsValid)
+                {
+                    return connectedResult;
+                }
+
+                return ValidatePassableAreaDoesNotTouchVoid(grid);
+            }
+
+            return MineGridValidationResult.Valid();
         }
 
-        private static MineGridValidationResult ValidateBoundary(MineGrid grid)
+        private static MineGridValidationResult ValidateBoundaryWalls(MineGrid grid)
         {
             for (int x = 0; x < grid.Width; x++)
             {
@@ -151,6 +185,51 @@ namespace DeepSeal.ProceduralGeneration
             return MineGridValidationResult.Valid();
         }
 
+        private static MineGridValidationResult ValidateOuterFrameVoid(MineGrid grid)
+        {
+            for (int x = 0; x < grid.Width; x++)
+            {
+                var bottom = new GridPosition(x, 0);
+                var top = new GridPosition(x, grid.Height - 1);
+
+                if (!IsVoid(grid, bottom))
+                {
+                    return MineGridValidationResult.Invalid(
+                        MineGridValidationIssue.OuterFrameNotVoid,
+                        bottom);
+                }
+
+                if (!IsVoid(grid, top))
+                {
+                    return MineGridValidationResult.Invalid(
+                        MineGridValidationIssue.OuterFrameNotVoid,
+                        top);
+                }
+            }
+
+            for (int y = 1; y < grid.Height - 1; y++)
+            {
+                var left = new GridPosition(0, y);
+                var right = new GridPosition(grid.Width - 1, y);
+
+                if (!IsVoid(grid, left))
+                {
+                    return MineGridValidationResult.Invalid(
+                        MineGridValidationIssue.OuterFrameNotVoid,
+                        left);
+                }
+
+                if (!IsVoid(grid, right))
+                {
+                    return MineGridValidationResult.Invalid(
+                        MineGridValidationIssue.OuterFrameNotVoid,
+                        right);
+                }
+            }
+
+            return MineGridValidationResult.Valid();
+        }
+
         private static MineGridValidationResult ValidateStartArea(
             MineGrid grid,
             MineGenerationSettings settings)
@@ -177,6 +256,131 @@ namespace DeepSeal.ProceduralGeneration
             return MineGridValidationResult.Valid();
         }
 
+        private static MineGridValidationResult ValidateConnectedPassableArea(
+            MineGrid grid,
+            MineGenerationSettings settings)
+        {
+            int passableCellCount = CountPassableCells(grid);
+
+            if (passableCellCount < settings.TargetFloorCellCount)
+            {
+                return MineGridValidationResult.Invalid(
+                    MineGridValidationIssue.InsufficientPassableCells);
+            }
+
+            var visited = new bool[grid.Width, grid.Height];
+            var queue = new Queue<GridPosition>();
+
+            TryVisitPassable(grid, visited, queue, settings.StartPosition);
+
+            while (queue.Count > 0)
+            {
+                GridPosition current = queue.Dequeue();
+
+                for (int i = 0; i < CardinalOffsets.Length; i++)
+                {
+                    TryVisitPassable(
+                        grid,
+                        visited,
+                        queue,
+                        current + CardinalOffsets[i]);
+                }
+            }
+
+            for (int y = 0; y < grid.Height; y++)
+            {
+                for (int x = 0; x < grid.Width; x++)
+                {
+                    var position = new GridPosition(x, y);
+
+                    if (!grid.TryGetCell(position, out TerrainCell cell))
+                    {
+                        continue;
+                    }
+
+                    if (cell.IsPassable && !visited[x, y])
+                    {
+                        return MineGridValidationResult.Invalid(
+                            MineGridValidationIssue.DisconnectedPassableArea,
+                            position);
+                    }
+                }
+            }
+
+            return MineGridValidationResult.Valid();
+        }
+
+        private static MineGridValidationResult ValidatePassableAreaDoesNotTouchVoid(MineGrid grid)
+        {
+            for (int y = 0; y < grid.Height; y++)
+            {
+                for (int x = 0; x < grid.Width; x++)
+                {
+                    var position = new GridPosition(x, y);
+
+                    if (!grid.TryGetCell(position, out TerrainCell cell) || !cell.IsPassable)
+                    {
+                        continue;
+                    }
+
+                    for (int i = 0; i < CardinalOffsets.Length; i++)
+                    {
+                        GridPosition neighbor = position + CardinalOffsets[i];
+
+                        if (grid.Contains(neighbor)
+                            && grid.TryGetCell(neighbor, out TerrainCell neighborCell)
+                            && neighborCell.Type == TerrainCellType.Void)
+                        {
+                            return MineGridValidationResult.Invalid(
+                                MineGridValidationIssue.PassableAreaTouchesVoid,
+                                position);
+                        }
+                    }
+                }
+            }
+
+            return MineGridValidationResult.Valid();
+        }
+
+        private static int CountPassableCells(MineGrid grid)
+        {
+            int count = 0;
+
+            for (int y = 0; y < grid.Height; y++)
+            {
+                for (int x = 0; x < grid.Width; x++)
+                {
+                    if (grid.TryGetCell(new GridPosition(x, y), out TerrainCell cell)
+                        && cell.IsPassable)
+                    {
+                        count++;
+                    }
+                }
+            }
+
+            return count;
+        }
+
+        private static void TryVisitPassable(
+            MineGrid grid,
+            bool[,] visited,
+            Queue<GridPosition> queue,
+            GridPosition position)
+        {
+            if (!grid.Contains(position) || visited[position.X, position.Y])
+            {
+                return;
+            }
+
+            if (!grid.TryGetCell(position, out TerrainCell cell) || !cell.IsPassable)
+            {
+                return;
+            }
+
+            visited[position.X, position.Y] = true;
+            queue.Enqueue(position);
+        }
+
         private static bool IsBoundaryWall(MineGrid grid, GridPosition position)
         {
             if (!grid.TryGetCell(position, out TerrainCell cell))
@@ -185,6 +389,16 @@ namespace DeepSeal.ProceduralGeneration
             }
 
             return cell.Type == TerrainCellType.Wall && cell.Durability > 0;
+        }
+
+        private static bool IsVoid(MineGrid grid, GridPosition position)
+        {
+            if (!grid.TryGetCell(position, out TerrainCell cell))
+            {
+                return false;
+            }
+
+            return cell.Type == TerrainCellType.Void;
         }
     }
 }

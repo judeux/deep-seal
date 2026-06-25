@@ -253,3 +253,4 @@ What should stay deferred:
 - Campaign rewards and persistence.
 - Upgrade selection.
 - Final art, animation, VFX, and audio polish.
+- Minimap or exploration map UI after procedural generation, terrain semantics, and discovery rules are more stable.
