@@ -58,7 +58,7 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 1-Q  | Enemy Navigation and Spawn Pressure Pass | Done | Added grid pathfinding for enemies, movement variation, and runtime enemy spawning based on active enemy pressure. |
 | 1-R  | Prototype Reward Drops         | Done        | Added reward drops from enemy defeat and selected mining actions, with short-range pickup. |
 | 2-A  | Upgrade Selection Prototype    | Done        | Added temporary reward-funded upgrade choices that modify attack, mining, and movement during a run. |
-| 2-B  | Procedural Mine Shape Pass | Planned | Make generated mine maps less rectangular by adding irregular walkable regions while keeping current terrain cell types. |
+| 2-B  | Procedural Mine Shape Pass | Done | Added connected cavern-style mine generation with invisible Void footprint cells, irregular visible silhouettes, and optional mineable internal wall obstacles. |
 | 2-C  | Terrain Wall Type Pass | Planned | Introduce terrain distinctions needed for mineable walls, unmineable walls, boundary walls, and future wall variants. |
 | 2-D  | Procedural Preset Placement Pass | Planned | Blend hand-authored terrain presets into generated mine maps after base shape and terrain semantics are stable. |
 
@@ -171,46 +171,35 @@ Notes:
 
 ## Current Step
 
-### 2-B. Procedural Mine Shape Pass
-
-Goal:
-
-* Improve the prototype mine generator so maps are not limited to rectangular random floor fields.
-* Create more varied walkable shapes inspired by roguelike cave and dungeon layouts.
-* Keep the result compatible with the current MineGrid, MiningRules, Tilemap renderer, enemy spawning, treasure spawning, extraction marker, reward drops, and upgrade selection.
-* Keep this pass limited to the current terrain model: floor and mineable wall.
-
-Expected behavior:
-
-* The same seed and settings still generate the same map.
-* The playable area has a less rectangular silhouette or more room/corridor-like variation.
-* The start area remains passable.
-* The outer edge remains wall for now.
-* Existing prototype loop behavior continues to work.
-
-Explicit exclusions:
-
-* No new tile assets.
-* No unmineable wall type yet.
-* No multiple wall durability/material classes yet.
-* No hand-authored preset or vault injection yet.
-* No biome system.
-* No enemy, treasure, reward, upgrade, or extraction overhaul beyond compatibility fixes.
-
----
-
-## Next Planned Step
-
 ### 2-C. Terrain Wall Type Pass
 
 Goal:
 
 * Expand terrain semantics enough to distinguish mineable walls, unmineable walls, boundary walls, and future wall durability/material variants.
+* Keep the connected mine shape generator compatible with the expanded terrain model.
+* Preserve movement, mining, enemy navigation, spawning, reward drops, treasure pickup, extraction, and upgrade behavior.
+
+Explicit exclusions:
+
+* No hand-authored preset or vault injection yet.
+* No biome system.
+* No minimap or exploration UI yet.
+* No final terrain art pass.
+
+---
+
+## Next Planned Step
+
+### 2-D. Procedural Preset Placement Pass
+
+Goal:
+
+* Blend hand-authored terrain presets, rooms, or vault-like chunks into seed-based generated maps after terrain semantics are stable.
 
 Notes:
 
-* This should happen after the generator shape pass proves useful with the existing terrain model.
-* Preset placement should wait until terrain semantics are stable.
+* Preset placement should wait until terrain wall semantics are stable enough to describe mineable, unmineable, and boundary cells.
+* Minimap or exploration map UI remains deferred until generation, terrain semantics, and discovery rules are more stable.
 
 ---
 

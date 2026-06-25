@@ -4,6 +4,7 @@ using DeepSeal.Mining;
 using DeepSeal.ProceduralGeneration;
 using DeepSeal.UnityAdapters.Tilemaps;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace DeepSeal.UnityAdapters.Prototype
 {
@@ -26,9 +27,13 @@ namespace DeepSeal.UnityAdapters.Prototype
         [SerializeField] private int startY = 8;
         [SerializeField] private int startClearRadius = 1;
         [SerializeField] private int wallDurability = 3;
+        [SerializeField] private MineGenerationShapeMode shapeMode = MineGenerationShapeMode.ConnectedCavern;
 
+        [FormerlySerializedAs("randomFloorPercent")]
         [Range(0, 100)]
-        [SerializeField] private int randomFloorPercent = 35;
+        [SerializeField] private int targetFloorPercent = 45;
+        [Range(0, 100)]
+        [SerializeField] private int internalWallPercent = 8;
 
         private MineGenerationResult currentResult;
         private bool hasCurrentResult;
@@ -142,7 +147,9 @@ namespace DeepSeal.UnityAdapters.Prototype
                     new GridPosition(startX, startY),
                     startClearRadius,
                     wallDurability,
-                    randomFloorPercent);
+                    targetFloorPercent,
+                    shapeMode,
+                    internalWallPercent);
 
                 return true;
             }
@@ -187,12 +194,14 @@ namespace DeepSeal.UnityAdapters.Prototype
             height = Mathf.Max(3, height);
             startClearRadius = Mathf.Max(0, startClearRadius);
             wallDurability = Mathf.Max(1, wallDurability);
-            randomFloorPercent = Mathf.Clamp(randomFloorPercent, 0, 100);
+            targetFloorPercent = Mathf.Clamp(targetFloorPercent, 0, 100);
+            internalWallPercent = Mathf.Clamp(internalWallPercent, 0, 100);
 
-            int minStartX = 1 + startClearRadius;
-            int maxStartX = width - 2 - startClearRadius;
-            int minStartY = 1 + startClearRadius;
-            int maxStartY = height - 2 - startClearRadius;
+            int carveInset = MineGenerationSettings.GetCarveInset(shapeMode);
+            int minStartX = carveInset + startClearRadius;
+            int maxStartX = width - 1 - carveInset - startClearRadius;
+            int minStartY = carveInset + startClearRadius;
+            int maxStartY = height - 1 - carveInset - startClearRadius;
 
             if (minStartX <= maxStartX)
             {

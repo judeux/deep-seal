@@ -10,7 +10,7 @@ namespace DeepSeal.Tests.ProceduralGeneration
         [Test]
         public void Validate_ReturnsValidForGeneratedGrid()
         {
-            MineGenerationSettings settings = CreateSettings();
+            MineGenerationSettings settings = CreateConnectedSettings();
             MineGenerationResult generationResult = MineGridGenerator.Generate(settings);
 
             MineGridValidationResult validationResult = MineGridValidator.Validate(generationResult);
@@ -23,7 +23,7 @@ namespace DeepSeal.Tests.ProceduralGeneration
         [Test]
         public void Validate_ReturnsInvalidForNullGrid()
         {
-            MineGridValidationResult validationResult = MineGridValidator.Validate(null, CreateSettings());
+            MineGridValidationResult validationResult = MineGridValidator.Validate(null, CreateConnectedSettings());
 
             Assert.That(validationResult.IsValid, Is.False);
             Assert.That(validationResult.Issue, Is.EqualTo(MineGridValidationIssue.GridIsNull));
@@ -47,7 +47,7 @@ namespace DeepSeal.Tests.ProceduralGeneration
         [Test]
         public void Validate_ReturnsInvalidForSizeMismatch()
         {
-            MineGenerationSettings settings = CreateSettings();
+            MineGenerationSettings settings = CreateConnectedSettings();
             var grid = new MineGrid(settings.Width + 1, settings.Height, TerrainCell.Wall(3));
 
             MineGridValidationResult validationResult = MineGridValidator.Validate(grid, settings);
@@ -58,9 +58,9 @@ namespace DeepSeal.Tests.ProceduralGeneration
         }
 
         [Test]
-        public void Validate_ReturnsInvalidWhenBoundaryIsNotWall()
+        public void Validate_ReturnsInvalidWhenRandomScatterBoundaryIsNotWall()
         {
-            MineGenerationSettings settings = CreateSettings();
+            MineGenerationSettings settings = CreateRandomScatterSettings();
             MineGenerationResult generationResult = MineGridGenerator.Generate(settings);
             var brokenPosition = new GridPosition(0, 2);
 
@@ -77,7 +77,7 @@ namespace DeepSeal.Tests.ProceduralGeneration
         [Test]
         public void Validate_ReturnsInvalidWhenStartAreaIsBlocked()
         {
-            MineGenerationSettings settings = CreateSettings();
+            MineGenerationSettings settings = CreateConnectedSettings();
             MineGenerationResult generationResult = MineGridGenerator.Generate(settings);
 
             generationResult.Grid.TrySetCell(settings.StartPosition, TerrainCell.Wall(3));
@@ -90,7 +90,144 @@ namespace DeepSeal.Tests.ProceduralGeneration
             Assert.That(validationResult.Position, Is.EqualTo(settings.StartPosition));
         }
 
-        private static MineGenerationSettings CreateSettings()
+        [Test]
+        public void Validate_ReturnsInvalidWhenConnectedCavernHasTooFewPassableCells()
+        {
+            var settings = new MineGenerationSettings(
+                7,
+                7,
+                123,
+                new GridPosition(3, 3),
+                0,
+                3,
+                40,
+                MineGenerationShapeMode.ConnectedCavern);
+
+            var grid = new MineGrid(settings.Width, settings.Height, TerrainCell.Void);
+            grid.TrySetCell(settings.StartPosition, TerrainCell.Floor);
+
+            MineGridValidationResult validationResult = MineGridValidator.Validate(grid, settings);
+
+            Assert.That(validationResult.IsValid, Is.False);
+            Assert.That(validationResult.Issue, Is.EqualTo(MineGridValidationIssue.InsufficientPassableCells));
+            Assert.That(validationResult.HasPosition, Is.False);
+        }
+
+        [Test]
+        public void Validate_ReturnsInvalidWhenConnectedCavernHasDisconnectedPassableArea()
+        {
+            var settings = new MineGenerationSettings(
+                7,
+                7,
+                123,
+                new GridPosition(3, 3),
+                0,
+                3,
+                0,
+                MineGenerationShapeMode.ConnectedCavern);
+
+            var grid = new MineGrid(settings.Width, settings.Height, TerrainCell.Void);
+            var disconnectedPosition = new GridPosition(1, 1);
+
+            grid.TrySetCell(settings.StartPosition, TerrainCell.Floor);
+            grid.TrySetCell(disconnectedPosition, TerrainCell.Floor);
+
+            MineGridValidationResult validationResult = MineGridValidator.Validate(grid, settings);
+
+            Assert.That(validationResult.IsValid, Is.False);
+            Assert.That(validationResult.Issue, Is.EqualTo(MineGridValidationIssue.DisconnectedPassableArea));
+            Assert.That(validationResult.HasPosition, Is.True);
+            Assert.That(validationResult.Position, Is.EqualTo(disconnectedPosition));
+        }
+
+        [Test]
+        public void Validate_AllowsDisconnectedPassableAreaForRandomScatter()
+        {
+            var settings = new MineGenerationSettings(
+                7,
+                7,
+                123,
+                new GridPosition(3, 3),
+                0,
+                3,
+                0,
+                MineGenerationShapeMode.RandomScatter);
+
+            var grid = new MineGrid(settings.Width, settings.Height, TerrainCell.Wall(settings.WallDurability));
+
+            grid.TrySetCell(settings.StartPosition, TerrainCell.Floor);
+            grid.TrySetCell(new GridPosition(1, 1), TerrainCell.Floor);
+
+            MineGridValidationResult validationResult = MineGridValidator.Validate(grid, settings);
+
+            Assert.That(validationResult.IsValid, Is.True);
+            Assert.That(validationResult.Issue, Is.EqualTo(MineGridValidationIssue.None));
+        }
+
+        [Test]
+        public void Validate_ReturnsInvalidWhenConnectedCavernOuterFrameIsNotVoid()
+        {
+            MineGenerationSettings settings = CreateConnectedSettings();
+            MineGenerationResult generationResult = MineGridGenerator.Generate(settings);
+            var brokenPosition = new GridPosition(0, 2);
+
+            generationResult.Grid.TrySetCell(brokenPosition, TerrainCell.Wall(settings.WallDurability));
+
+            MineGridValidationResult validationResult = MineGridValidator.Validate(generationResult);
+
+            Assert.That(validationResult.IsValid, Is.False);
+            Assert.That(validationResult.Issue, Is.EqualTo(MineGridValidationIssue.OuterFrameNotVoid));
+            Assert.That(validationResult.HasPosition, Is.True);
+            Assert.That(validationResult.Position, Is.EqualTo(brokenPosition));
+        }
+
+        [Test]
+        public void Validate_ReturnsInvalidWhenPassableCellTouchesVoid()
+        {
+            var settings = new MineGenerationSettings(
+                7,
+                7,
+                123,
+                new GridPosition(3, 3),
+                0,
+                3,
+                0,
+                MineGenerationShapeMode.ConnectedCavern);
+
+            var grid = new MineGrid(settings.Width, settings.Height, TerrainCell.Void);
+            grid.TrySetCell(settings.StartPosition, TerrainCell.Floor);
+
+            MineGridValidationResult validationResult = MineGridValidator.Validate(grid, settings);
+
+            Assert.That(validationResult.IsValid, Is.False);
+            Assert.That(validationResult.Issue, Is.EqualTo(MineGridValidationIssue.PassableAreaTouchesVoid));
+            Assert.That(validationResult.HasPosition, Is.True);
+            Assert.That(validationResult.Position, Is.EqualTo(settings.StartPosition));
+        }
+
+        [Test]
+        public void Validate_ReturnsValidForConnectedCavernWithInternalWalls()
+        {
+            var settings = new MineGenerationSettings(
+                24,
+                18,
+                800,
+                new GridPosition(12, 9),
+                1,
+                3,
+                45,
+                MineGenerationShapeMode.ConnectedCavern,
+                10);
+
+            MineGenerationResult generationResult = MineGridGenerator.Generate(settings);
+
+            MineGridValidationResult validationResult = MineGridValidator.Validate(generationResult);
+
+            Assert.That(validationResult.IsValid, Is.True);
+            Assert.That(validationResult.Issue, Is.EqualTo(MineGridValidationIssue.None));
+        }
+
+        private static MineGenerationSettings CreateConnectedSettings()
         {
             return new MineGenerationSettings(
                 7,
@@ -99,7 +236,21 @@ namespace DeepSeal.Tests.ProceduralGeneration
                 new GridPosition(3, 3),
                 1,
                 3,
-                35);
+                35,
+                MineGenerationShapeMode.ConnectedCavern);
+        }
+
+        private static MineGenerationSettings CreateRandomScatterSettings()
+        {
+            return new MineGenerationSettings(
+                7,
+                7,
+                1234,
+                new GridPosition(3, 3),
+                1,
+                3,
+                35,
+                MineGenerationShapeMode.RandomScatter);
         }
     }
 }

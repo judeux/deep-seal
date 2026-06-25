@@ -72,12 +72,17 @@ Implemented pure domain areas:
 - `DeepSeal.Mining`
   - Terrain cell type.
   - Terrain cell state.
+  - Floor, wall, and void terrain semantics.
   - Mine grid storage and safe cell access.
   - Basic mining rule calculation.
 
 - `DeepSeal.ProceduralGeneration`
   - Seed-based prototype mine map generation.
+  - Random scatter generation mode retained for compatibility.
+  - Connected cavern-style generation mode for less rectangular prototype maps.
+  - Void footprint cells for irregular visible mine silhouettes.
   - Basic generated mine grid validation.
+  - Validation for start area passability, connected passable areas, and generated footprint rules.
   - Deterministic generation tests for repeated seed/settings.
 
 - `DeepSeal.Combat`
@@ -174,9 +179,10 @@ Current constraints:
 - Reward drops are prototype-only and currently track only collected count/value, not inventory, economy, campaign settlement, or permanent progression.
 - Upgrade selection is prototype-only and currently uses temporary OnGUI plus scene references, not final UI, save data, or content tables.
 - Upgrade effects currently modify live prototype adapter values directly and should be replaced by a cleaner stat/effect model if the loop proves useful.
-- Procedural generation currently creates simple rectangular prototype maps and does not yet model irregular cave/dungeon silhouettes.
-- Terrain cells currently distinguish only floor and mineable wall; unmineable boundary walls and wall material variants are deferred.
-- Procedural preset/vault placement is not yet implemented.
+- Procedural generation now supports a connected cavern-style prototype shape with invisible `Void` footprint cells, but wall semantics are still limited.
+- `Void` means outside the generated mine footprint; it is not a wall and is not mineable.
+- Terrain walls currently do not yet distinguish mineable boundary walls, unmineable walls, durability classes, or material variants.
+- Procedural preset/vault placement and minimap/exploration map UI are not yet implemented.
 
 Next planned area:
 

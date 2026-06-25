@@ -5,6 +5,9 @@ namespace DeepSeal.ProceduralGeneration
 {
     public readonly struct MineGenerationSettings
     {
+        public const int RectangularBoundaryInset = 1;
+        public const int ConnectedCavernCarveInset = 2;
+
         public MineGenerationSettings(
             int width,
             int height,
@@ -13,6 +16,51 @@ namespace DeepSeal.ProceduralGeneration
             int startClearRadius,
             int wallDurability,
             int randomFloorPercent)
+            : this(
+                width,
+                height,
+                seed,
+                startPosition,
+                startClearRadius,
+                wallDurability,
+                randomFloorPercent,
+                MineGenerationShapeMode.RandomScatter,
+                0)
+        {
+        }
+
+        public MineGenerationSettings(
+            int width,
+            int height,
+            int seed,
+            GridPosition startPosition,
+            int startClearRadius,
+            int wallDurability,
+            int targetFloorPercent,
+            MineGenerationShapeMode shapeMode)
+            : this(
+                width,
+                height,
+                seed,
+                startPosition,
+                startClearRadius,
+                wallDurability,
+                targetFloorPercent,
+                shapeMode,
+                0)
+        {
+        }
+
+        public MineGenerationSettings(
+            int width,
+            int height,
+            int seed,
+            GridPosition startPosition,
+            int startClearRadius,
+            int wallDurability,
+            int targetFloorPercent,
+            MineGenerationShapeMode shapeMode,
+            int internalWallPercent)
         {
             ValidateArguments(
                 width,
@@ -20,7 +68,9 @@ namespace DeepSeal.ProceduralGeneration
                 startPosition,
                 startClearRadius,
                 wallDurability,
-                randomFloorPercent);
+                targetFloorPercent,
+                shapeMode,
+                internalWallPercent);
 
             Width = width;
             Height = height;
@@ -28,16 +78,86 @@ namespace DeepSeal.ProceduralGeneration
             StartPosition = startPosition;
             StartClearRadius = startClearRadius;
             WallDurability = wallDurability;
-            RandomFloorPercent = randomFloorPercent;
+            TargetFloorPercent = targetFloorPercent;
+            ShapeMode = shapeMode;
+            InternalWallPercent = internalWallPercent;
         }
 
         public int Width { get; }
+
         public int Height { get; }
+
         public int Seed { get; }
+
         public GridPosition StartPosition { get; }
+
         public int StartClearRadius { get; }
+
         public int WallDurability { get; }
-        public int RandomFloorPercent { get; }
+
+        public int TargetFloorPercent { get; }
+
+        public int RandomFloorPercent => TargetFloorPercent;
+
+        public MineGenerationShapeMode ShapeMode { get; }
+
+        public int InternalWallPercent { get; }
+
+        public int InteriorCellCount => (Width - 2) * (Height - 2);
+
+        public int CarvableInteriorCellCount
+        {
+            get
+            {
+                int inset = GetCarveInset(ShapeMode);
+                return (Width - inset * 2) * (Height - inset * 2);
+            }
+        }
+
+        public int StartClearCellCount
+        {
+            get
+            {
+                int diameter = StartClearRadius * 2 + 1;
+                return diameter * diameter;
+            }
+        }
+
+        public int TargetFloorCellCount
+        {
+            get
+            {
+                int baseCellCount = ShapeMode == MineGenerationShapeMode.ConnectedCavern
+                    ? CarvableInteriorCellCount
+                    : InteriorCellCount;
+
+                int requestedFloorCount = (baseCellCount * TargetFloorPercent + 50) / 100;
+
+                return Math.Min(
+                    baseCellCount,
+                    Math.Max(StartClearCellCount, requestedFloorCount));
+            }
+        }
+
+        public int TargetInternalWallCellCount
+        {
+            get
+            {
+                if (ShapeMode != MineGenerationShapeMode.ConnectedCavern || InternalWallPercent <= 0)
+                {
+                    return 0;
+                }
+
+                int requestedWallCount = (TargetFloorCellCount * InternalWallPercent + 50) / 100;
+                int availableExtraCells = Math.Max(0, CarvableInteriorCellCount - TargetFloorCellCount);
+
+                return Math.Min(availableExtraCells, requestedWallCount);
+            }
+        }
+
+        public int TargetCarvedCellCount => Math.Min(
+            CarvableInteriorCellCount,
+            TargetFloorCellCount + TargetInternalWallCellCount);
 
         public void Validate()
         {
@@ -47,7 +167,9 @@ namespace DeepSeal.ProceduralGeneration
                 StartPosition,
                 StartClearRadius,
                 WallDurability,
-                RandomFloorPercent);
+                TargetFloorPercent,
+                ShapeMode,
+                InternalWallPercent);
         }
 
         public bool IsInStartClearArea(GridPosition position)
@@ -56,20 +178,47 @@ namespace DeepSeal.ProceduralGeneration
                 && Math.Abs(position.Y - StartPosition.Y) <= StartClearRadius;
         }
 
+        public bool IsInCarvableArea(GridPosition position)
+        {
+            int inset = GetCarveInset(ShapeMode);
+
+            return position.X >= inset
+                && position.Y >= inset
+                && position.X < Width - inset
+                && position.Y < Height - inset;
+        }
+
+        public static int GetCarveInset(MineGenerationShapeMode shapeMode)
+        {
+            return shapeMode == MineGenerationShapeMode.ConnectedCavern
+                ? ConnectedCavernCarveInset
+                : RectangularBoundaryInset;
+        }
+
         private static void ValidateArguments(
             int width,
             int height,
             GridPosition startPosition,
             int startClearRadius,
             int wallDurability,
-            int randomFloorPercent)
+            int targetFloorPercent,
+            MineGenerationShapeMode shapeMode,
+            int internalWallPercent)
         {
+            if (!IsValidShapeMode(shapeMode))
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(shapeMode),
+                    shapeMode,
+                    "Unsupported mine generation shape mode.");
+            }
+
             if (width < 3)
             {
                 throw new ArgumentOutOfRangeException(
                     nameof(width),
                     width,
-                    "Mine width must be at least 3 so an outer wall can exist.");
+                    "Mine width must be at least 3.");
             }
 
             if (height < 3)
@@ -77,7 +226,7 @@ namespace DeepSeal.ProceduralGeneration
                 throw new ArgumentOutOfRangeException(
                     nameof(height),
                     height,
-                    "Mine height must be at least 3 so an outer wall can exist.");
+                    "Mine height must be at least 3.");
             }
 
             if (startClearRadius < 0)
@@ -96,25 +245,34 @@ namespace DeepSeal.ProceduralGeneration
                     "Wall durability must be greater than zero.");
             }
 
-            if (randomFloorPercent < 0 || randomFloorPercent > 100)
+            if (targetFloorPercent < 0 || targetFloorPercent > 100)
             {
                 throw new ArgumentOutOfRangeException(
-                    nameof(randomFloorPercent),
-                    randomFloorPercent,
-                    "Random floor percent must be between 0 and 100.");
+                    nameof(targetFloorPercent),
+                    targetFloorPercent,
+                    "Target floor percent must be between 0 and 100.");
             }
 
-            int minStartX = 1 + startClearRadius;
-            int maxStartX = width - 2 - startClearRadius;
-            int minStartY = 1 + startClearRadius;
-            int maxStartY = height - 2 - startClearRadius;
+            if (internalWallPercent < 0 || internalWallPercent > 100)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(internalWallPercent),
+                    internalWallPercent,
+                    "Internal wall percent must be between 0 and 100.");
+            }
+
+            int inset = GetCarveInset(shapeMode);
+            int minStartX = inset + startClearRadius;
+            int maxStartX = width - 1 - inset - startClearRadius;
+            int minStartY = inset + startClearRadius;
+            int maxStartY = height - 1 - inset - startClearRadius;
 
             if (minStartX > maxStartX || minStartY > maxStartY)
             {
                 throw new ArgumentOutOfRangeException(
                     nameof(startClearRadius),
                     startClearRadius,
-                    "Start clear radius is too large for this grid size.");
+                    "Start clear radius is too large for this grid size and shape mode.");
             }
 
             if (startPosition.X < minStartX
@@ -125,8 +283,14 @@ namespace DeepSeal.ProceduralGeneration
                 throw new ArgumentOutOfRangeException(
                     nameof(startPosition),
                     startPosition,
-                    "Start position and clear radius must stay inside the outer boundary.");
+                    "Start position and clear radius must stay inside the carveable area.");
             }
+        }
+
+        private static bool IsValidShapeMode(MineGenerationShapeMode shapeMode)
+        {
+            return shapeMode == MineGenerationShapeMode.RandomScatter
+                || shapeMode == MineGenerationShapeMode.ConnectedCavern;
         }
     }
 }

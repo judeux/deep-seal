@@ -20,21 +20,21 @@ The current prototype validates the first playable loop, but the mine shape is s
 
 ### 2-B. Procedural Mine Shape Pass
 
-Included:
+Status: Done
 
-- Seed-stable irregular floor regions.
-- Start area remains passable.
-- Outer border remains wall.
-- Generated result remains compatible with current MineGrid consumers.
-- EditMode tests for determinism, bounds, start passability, and minimum usable floor area.
+Completed:
+- Added seed-stable connected cavern-style floor generation.
+- Added `Void` cells to represent space outside the generated mine footprint.
+- Kept the visible mine silhouette irregular by rendering `Void` as empty Tilemap space.
+- Kept the start area passable.
+- Kept the main passable area connected.
+- Added EditMode tests for determinism, visible footprint behavior, start passability, and connected passable cells.
+- Added optional mineable internal wall obstacles while preserving passable area connectivity.
 
-Excluded:
-
-- New wall types.
-- Unmineable boundaries.
-- Tile asset changes.
-- Hand-authored presets.
-- Biomes.
+Decision:
+- The main passable area should be connected during 2-B.
+- Isolated hidden spaces are deferred until a later discovery/mining-focused generation pass.
+- `Void` represents outside-map footprint space, not an unmineable wall.
 
 ### 2-C. Terrain Wall Type Pass
 
@@ -44,6 +44,10 @@ Candidate additions:
 - Unmineable wall.
 - Boundary wall.
 - Durability/material variants.
+
+Notes:
+- `Void` is already used for outside-map footprint space.
+- 2-C should focus on wall semantics inside the generated footprint, such as mineable walls, unmineable walls, boundary walls, durability variants, and material variants.
 
 ### 2-D. Procedural Preset Placement Pass
 
