@@ -105,6 +105,11 @@ Implemented pure domain areas:
   - Prototype reward drop state.
   - Short-range reward drop pickup rules.
 
+- `DeepSeal.Upgrades`
+  - Prototype upgrade option definitions.
+  - Prototype upgrade spending state.
+  - Reward-funded upgrade purchase rules.
+
 Implemented Unity adapter areas:
 
 - `DeepSeal.UnityAdapters.Tilemaps`
@@ -148,6 +153,10 @@ Implemented Unity adapter areas:
   - Prototype reward drop view adapter.
   - Prototype reward drop spawner for enemy defeat and mining rewards.
 
+- `DeepSeal.UnityAdapters.Upgrades`
+  - Prototype OnGUI upgrade selection controller.
+  - Scene wiring from reward value to temporary attack, mining, and movement upgrades.
+
 Current constraints:
 
 - Pure domain logic must not depend on `UnityEngine`.
@@ -163,9 +172,15 @@ Current constraints:
 - Enemy movement now has prototype grid pathfinding, but it is still not final AI and does not include enemy archetypes, attack patterns, or weighted terrain costs.
 - Runtime enemy spawning exists as a prototype pressure tool and is still configured through scene Inspector values rather than production spawn tables.
 - Reward drops are prototype-only and currently track only collected count/value, not inventory, economy, campaign settlement, or permanent progression.
+- Upgrade selection is prototype-only and currently uses temporary OnGUI plus scene references, not final UI, save data, or content tables.
+- Upgrade effects currently modify live prototype adapter values directly and should be replaced by a cleaner stat/effect model if the loop proves useful.
+- Procedural generation currently creates simple rectangular prototype maps and does not yet model irregular cave/dungeon silhouettes.
+- Terrain cells currently distinguish only floor and mineable wall; unmineable boundary walls and wall material variants are deferred.
+- Procedural preset/vault placement is not yet implemented.
 
 Next planned area:
 
-- Upgrade selection prototype.
-- Use prototype reward value only as short-run upgrade input.
-- Campaign progression, persistent upgrades, sealstones, and miner roster systems remain deferred.
+- Procedural mine shape pass.
+- Keep generator changes in pure `DeepSeal.ProceduralGeneration`.
+- Keep `DeepSeal.Mining` terrain semantics unchanged during 2-B unless shape generation absolutely requires a domain change.
+- Defer unmineable wall types and preset placement to separate follow-up steps.

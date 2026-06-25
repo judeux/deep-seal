@@ -29,6 +29,7 @@ namespace DeepSeal.UnityAdapters.Player
         [SerializeField] private GridDirection initialFacingDirection = GridDirection.Right;
 
         private GridDirection facingDirection = GridDirection.Right;
+        public float MoveSpeed => moveSpeed;
         private bool warnedMissingBootstrap;
         private bool warnedMissingGrid;
 
@@ -101,6 +102,17 @@ namespace DeepSeal.UnityAdapters.Player
 
             position = GridCoordinateConverter.WorldToGridPosition(controlledTransform.position);
             return true;
+        }
+
+        public void AddMoveSpeed(float amount)
+        {
+            if (float.IsNaN(amount) || float.IsInfinity(amount) || amount <= 0f)
+            {
+                Debug.LogWarning($"Ignored move speed upgrade because amount must be a positive finite value. Amount={amount}.", this);
+                return;
+            }
+
+            moveSpeed += amount;
         }
 
         private void PlaceAtMineStartPosition()

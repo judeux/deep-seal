@@ -770,6 +770,91 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1928348728
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1928348730}
+  - component: {fileID: 1928348729}
+  m_Layer: 0
+  m_Name: PrototypeUpgradeSelectionController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1928348729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928348728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cce02dd9bc2aeba419a47f59410e6fd7, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Upgrades.PrototypeUpgradeSelectionController
+  rewardDropPickup: {fileID: 2045824087}
+  autoAttack: {fileID: 2045824082}
+  miningInput: {fileID: 2045824081}
+  playerMovement: {fileID: 2045824079}
+  playerHealth: {fileID: 2045824084}
+  playerExtraction: {fileID: 2045824086}
+  selectionOnUpdate: 1
+  showUpgradePanel: 1
+  upgradeOptions:
+  - displayName: Sharper Strike
+    effectType: 1
+    cost: 3
+    effectValue: 1
+    description: +1 auto attack damage
+  - displayName: Longer Reach
+    effectType: 2
+    cost: 3
+    effectValue: 1
+    description: +1 auto attack range
+  - displayName: Faster Mining
+    effectType: 3
+    cost: 2
+    effectValue: 0.85
+    description: Mining interval x0.85
+  - displayName: Quick Step
+    effectType: 4
+    cost: 2
+    effectValue: 0.35
+    description: +0.35 move speed
+  spentRewardValue: 0
+  purchasedUpgradeCount: 0
+  lastUpgradeMessage:
+  panelOffset: {x: 16, y: 178}
+  panelWidth: 460
+  rowHeight: 24
+  fontSize: 15
+  panelColor: {r: 0, g: 0, b: 0, a: 0.64}
+  normalTextColor: {r: 1, g: 1, b: 1, a: 1}
+  unavailableTextColor: {r: 0.65, g: 0.65, b: 0.65, a: 1}
+  successTextColor: {r: 0.35, g: 1, b: 0.45, a: 1}
+  warningTextColor: {r: 1, g: 0.85, b: 0.25, a: 1}
+--- !u!4 &1928348730
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928348728}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2039030421
 GameObject:
   m_ObjectHideFlags: 0
@@ -1054,6 +1139,7 @@ MonoBehaviour:
   - {fileID: 2045824085}
   - {fileID: 2045824086}
   - {fileID: 2045824087}
+  - {fileID: 1928348729}
   logHealthChanges: 0
 --- !u!114 &2045824085
 MonoBehaviour:
@@ -1102,6 +1188,7 @@ MonoBehaviour:
   - {fileID: 2045824083}
   - {fileID: 2045824085}
   - {fileID: 2045824087}
+  - {fileID: 1928348729}
   hasExtracted: 0
   extractedTreasureValue: 0
   logExtractionResults: 0
@@ -1139,3 +1226,4 @@ SceneRoots:
   - {fileID: 745383671}
   - {fileID: 1676594429}
   - {fileID: 583619463}
+  - {fileID: 1928348730}

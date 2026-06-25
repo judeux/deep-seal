@@ -28,10 +28,15 @@ Implemented:
 - Basic enemy movement and health variation through prototype spawner settings.
 - Prototype reward drops from enemy defeat and selected mining actions.
 - Short-range automatic reward drop pickup.
+- Temporary reward-funded upgrade selection.
+- Prototype upgrades that modify attack damage, attack range, mining speed, and movement speed during a run.
 
 Not implemented yet:
 - Weapon definitions, upgrades, combat UI, and polished combat feedback.
 - Full expedition result screen, campaign rewards, and persistence.
+- Irregular mine layouts beyond rectangular prototype generation.
+- Unmineable boundary walls and wall material variants.
+- Hand-authored terrain presets blended into procedural generation.
 
 Next:
-- Add the first temporary upgrade selection prototype using the reward loop as input.
+- Improve procedural mine generation so maps have less rectangular, more varied shapes while preserving the current prototype loop.

@@ -162,17 +162,30 @@
   - 적 처치와 일부 채굴 행동에서 프로토타입 보상 드랍 생성.
   - 플레이어가 일정 거리 안으로 접근하면 자동 획득.
   - 현재는 획득 개수와 가치만 추적하며, 정식 인벤토리나 캠페인 정산은 없음.
+- Prototype upgrade selection
+  - reward drop value를 사용한 임시 업그레이드 선택 추가.
+  - 자동공격 피해, 자동공격 사거리, 채굴 속도, 이동 속도에 직접 연결.
+  - 현재는 런 중 임시 효과이며, 영구 성장이나 저장 데이터는 없음.
 
 아직 미구현:
 
-- 정식 원정 결과 화면과 보상 정산.
-- 캠페인 귀환, 저장, 봉인석 진행.
+- 정식 업그레이드 트리.
+- 영구 성장과 캠페인 업그레이드.
+- 저장 데이터와 보상 정산.
+- Irregular procedural mine shapes beyond the current rectangular prototype layout.
+- Separate terrain semantics for mineable walls, unmineable walls, and boundary walls.
+- Hand-authored terrain presets or vaults blended into procedural generation.
 
 다음 구현 후보:
 
-1. Upgrade selection prototype
-   - 전투와 채굴 보상을 사용해 첫 임시 강화 선택을 검증.
-2. Enemy variety pass
-   - 보상과 강화 루프가 붙은 뒤 적 종류, 속도, 내구도, 압박 방식을 확장.
-3. Expedition result prototype
-   - 탈출/패배 결과를 임시 결과 화면으로 정리.
+1. Procedural mine shape pass
+   - Improve generated mine layouts beyond simple rectangular random floor fields.
+   - Keep the current floor/wall terrain model for this pass.
+   - Verify that movement, mining, enemy spawning, rewards, upgrades, treasure pickup, and extraction still work on less regular maps.
+
+2. Terrain wall type pass
+   - Add terrain distinctions for mineable walls, unmineable walls, boundary walls, and future durability/material variants.
+
+3. Procedural preset placement pass
+   - Blend hand-authored terrain presets, rooms, or vault-like chunks into seed-based generated maps.
+   - Add placement and connection rules after terrain semantics are stable.

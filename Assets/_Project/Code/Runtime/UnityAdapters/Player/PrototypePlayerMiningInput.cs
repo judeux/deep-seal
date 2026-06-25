@@ -37,6 +37,8 @@ namespace DeepSeal.UnityAdapters.Player
         private bool wasMineInputPressedLastFrame;
         private bool warnedMissingRewardDropSpawner;
 
+        public float MiningIntervalSeconds => miningIntervalSeconds;
+
         private void Update()
         {
             bool isMineInputPressed = IsMineInputPressed();
@@ -179,6 +181,17 @@ namespace DeepSeal.UnityAdapters.Player
         {
             playerMovement = GetComponent<PrototypePlayerMovement>();
             spawnRewardDropsOnWallDestroyed = true;
+        }
+
+        public void MultiplyMiningInterval(float multiplier)
+        {
+            if (float.IsNaN(multiplier) || float.IsInfinity(multiplier) || multiplier <= 0f)
+            {
+                Debug.LogWarning($"Ignored mining interval upgrade because multiplier must be a positive finite value. Multiplier={multiplier}.", this);
+                return;
+            }
+
+            miningIntervalSeconds = Mathf.Max(0.01f, miningIntervalSeconds * multiplier);
         }
 
         private void OnValidate()
