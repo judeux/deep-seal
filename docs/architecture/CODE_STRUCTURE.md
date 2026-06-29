@@ -72,7 +72,7 @@ Implemented pure domain areas:
 - `DeepSeal.Mining`
   - Terrain cell type.
   - Terrain cell state.
-  - Floor, wall, and void terrain semantics.
+  - Floor, mineable wall, unmineable wall, boundary wall, and void terrain semantics.
   - Mine grid storage and safe cell access.
   - Basic mining rule calculation.
 
@@ -179,14 +179,15 @@ Current constraints:
 - Reward drops are prototype-only and currently track only collected count/value, not inventory, economy, campaign settlement, or permanent progression.
 - Upgrade selection is prototype-only and currently uses temporary OnGUI plus scene references, not final UI, save data, or content tables.
 - Upgrade effects currently modify live prototype adapter values directly and should be replaced by a cleaner stat/effect model if the loop proves useful.
-- Procedural generation now supports a connected cavern-style prototype shape with invisible `Void` footprint cells, but wall semantics are still limited.
+- Procedural generation supports connected cavern-style prototype shapes with invisible `Void` footprint cells.
 - `Void` means outside the generated mine footprint; it is not a wall and is not mineable.
-- Terrain walls currently do not yet distinguish mineable boundary walls, unmineable walls, durability classes, or material variants.
+- Terrain cells now distinguish floor, mineable wall, unmineable wall, boundary wall, and void.
+- Wall material variants and final terrain art are still deferred.
 - Procedural preset/vault placement and minimap/exploration map UI are not yet implemented.
 
 Next planned area:
 
-- Procedural mine shape pass.
-- Keep generator changes in pure `DeepSeal.ProceduralGeneration`.
-- Keep `DeepSeal.Mining` terrain semantics unchanged during 2-B unless shape generation absolutely requires a domain change.
-- Defer unmineable wall types and preset placement to separate follow-up steps.
+- Procedural preset placement pass.
+- Keep preset placement in pure `DeepSeal.ProceduralGeneration`.
+- Preserve compatibility with terrain wall semantics introduced in 2-C.
+- Keep minimap and exploration map UI deferred.

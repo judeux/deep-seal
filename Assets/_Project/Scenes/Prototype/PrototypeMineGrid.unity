@@ -643,7 +643,8 @@ MonoBehaviour:
   wallDurability: 3
   shapeMode: 1
   targetFloorPercent: 45
-  internalWallPercent: 8
+  internalWallPercent: 10
+  internalUnmineableWallPercent: 25
 --- !u!1 &1562891232
 GameObject:
   m_ObjectHideFlags: 0

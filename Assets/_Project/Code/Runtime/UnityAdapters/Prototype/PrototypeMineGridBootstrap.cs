@@ -34,6 +34,10 @@ namespace DeepSeal.UnityAdapters.Prototype
         [SerializeField] private int targetFloorPercent = 45;
         [Range(0, 100)]
         [SerializeField] private int internalWallPercent = 8;
+        [Range(0, 100)]
+        [SerializeField] private int internalUnmineableWallPercent = 25;
+        [Range(0, MineGenerationSettings.MaxEdgeMineableWallThickness)]
+        [SerializeField] private int edgeMineableWallThickness = 1;
 
         private MineGenerationResult currentResult;
         private bool hasCurrentResult;
@@ -149,7 +153,9 @@ namespace DeepSeal.UnityAdapters.Prototype
                     wallDurability,
                     targetFloorPercent,
                     shapeMode,
-                    internalWallPercent);
+                    internalWallPercent,
+                    internalUnmineableWallPercent,
+                    edgeMineableWallThickness);
 
                 return true;
             }
@@ -196,8 +202,15 @@ namespace DeepSeal.UnityAdapters.Prototype
             wallDurability = Mathf.Max(1, wallDurability);
             targetFloorPercent = Mathf.Clamp(targetFloorPercent, 0, 100);
             internalWallPercent = Mathf.Clamp(internalWallPercent, 0, 100);
+            internalUnmineableWallPercent = Mathf.Clamp(internalUnmineableWallPercent, 0, 100);
+            edgeMineableWallThickness = Mathf.Clamp(
+                edgeMineableWallThickness,
+                0,
+                MineGenerationSettings.MaxEdgeMineableWallThickness);
 
-            int carveInset = MineGenerationSettings.GetCarveInset(shapeMode);
+            int carveInset = MineGenerationSettings.GetCarveInset(
+                shapeMode,
+                edgeMineableWallThickness);
             int minStartX = carveInset + startClearRadius;
             int maxStartX = width - 1 - carveInset - startClearRadius;
             int minStartY = carveInset + startClearRadius;

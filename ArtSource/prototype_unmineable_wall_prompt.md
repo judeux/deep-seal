@@ -1,0 +1,1 @@
+unmineable_wall_prototype.png은 채굴(파괴)이 불가능한 벽이야. 지금까지 만든 다른 벽 및 바닥과 잘 구분되도록 만들어줘. 해상도: 16x16 PNG Pixels Per Unit: 16 Pivot: Center Sprite Mode: Single Filter Mode: Point Compression: None 가로세로 비율을 1:1로 설정해줘

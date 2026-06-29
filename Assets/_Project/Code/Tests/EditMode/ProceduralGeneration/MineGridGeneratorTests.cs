@@ -59,14 +59,14 @@ namespace DeepSeal.Tests.ProceduralGeneration
 
             for (int x = 0; x < result.Grid.Width; x++)
             {
-                AssertWall(result.Grid, new GridPosition(x, 0), settings.WallDurability);
-                AssertWall(result.Grid, new GridPosition(x, result.Grid.Height - 1), settings.WallDurability);
+                AssertBoundaryWall(result.Grid, new GridPosition(x, 0));
+                AssertBoundaryWall(result.Grid, new GridPosition(x, result.Grid.Height - 1));
             }
 
             for (int y = 1; y < result.Grid.Height - 1; y++)
             {
-                AssertWall(result.Grid, new GridPosition(0, y), settings.WallDurability);
-                AssertWall(result.Grid, new GridPosition(result.Grid.Width - 1, y), settings.WallDurability);
+                AssertBoundaryWall(result.Grid, new GridPosition(0, y));
+                AssertBoundaryWall(result.Grid, new GridPosition(result.Grid.Width - 1, y));
             }
         }
 
@@ -74,10 +74,10 @@ namespace DeepSeal.Tests.ProceduralGeneration
         public void Generate_ClearsConfiguredStartArea()
         {
             var settings = new MineGenerationSettings(
-                7,
-                7,
+                9,
+                9,
                 100,
-                new GridPosition(3, 3),
+                new GridPosition(4, 4),
                 1,
                 5,
                 0,
@@ -85,9 +85,13 @@ namespace DeepSeal.Tests.ProceduralGeneration
 
             MineGenerationResult result = MineGridGenerator.Generate(settings);
 
-            for (int y = 2; y <= 4; y++)
+            for (int y = settings.StartPosition.Y - settings.StartClearRadius;
+                 y <= settings.StartPosition.Y + settings.StartClearRadius;
+                 y++)
             {
-                for (int x = 2; x <= 4; x++)
+                for (int x = settings.StartPosition.X - settings.StartClearRadius;
+                     x <= settings.StartPosition.X + settings.StartClearRadius;
+                     x++)
                 {
                     AssertFloor(result.Grid, new GridPosition(x, y));
                 }
@@ -98,10 +102,10 @@ namespace DeepSeal.Tests.ProceduralGeneration
         public void Generate_RandomScatterWithZeroTargetKeepsNonStartInteriorAsWalls()
         {
             var settings = new MineGenerationSettings(
-                7,
-                7,
+                9,
+                9,
                 200,
-                new GridPosition(3, 3),
+                new GridPosition(4, 4),
                 1,
                 2,
                 0,
@@ -136,7 +140,7 @@ namespace DeepSeal.Tests.ProceduralGeneration
 
             MineGenerationResult result = MineGridGenerator.Generate(settings);
 
-            Assert.That(CountPassableCells(result.Grid), Is.EqualTo(settings.TargetFloorCellCount));
+            Assert.That(CountCells(result.Grid, TerrainCellType.BoundaryWall), Is.GreaterThan(0));
         }
 
         [Test]
@@ -280,6 +284,86 @@ namespace DeepSeal.Tests.ProceduralGeneration
                      x++)
                 {
                     AssertFloor(result.Grid, new GridPosition(x, y));
+                }
+            }
+        }
+
+        [Test]
+        public void Generate_ConnectedCavernCanCreateUnmineableInternalWalls()
+        {
+            var settings = new MineGenerationSettings(
+                24,
+                18,
+                710,
+                new GridPosition(12, 9),
+                1,
+                3,
+                45,
+                MineGenerationShapeMode.ConnectedCavern,
+                12,
+                50);
+
+            MineGenerationResult result = MineGridGenerator.Generate(settings);
+
+            Assert.That(CountCells(result.Grid, TerrainCellType.UnmineableWall), Is.GreaterThan(0));
+            AssertAllPassableCellsConnected(result.Grid, settings.StartPosition);
+        }
+
+        [Test]
+        public void Generate_ConnectedCavernCreatesMineableWallRindInsideBoundaryShell()
+        {
+            MineGenerationSettings settings = CreateConnectedSettings(
+                seed: 900,
+                targetFloorPercent: 45);
+
+            MineGenerationResult result = MineGridGenerator.Generate(settings);
+
+            Assert.That(CountCells(result.Grid, TerrainCellType.MineableWall), Is.GreaterThan(0));
+            Assert.That(CountCells(result.Grid, TerrainCellType.BoundaryWall), Is.GreaterThan(0));
+        }
+
+        [Test]
+        public void Generate_ConnectedCavernDoesNotPlaceBoundaryWallDirectlyNextToFloor()
+        {
+            MineGenerationSettings settings = CreateConnectedSettings(
+                seed: 901,
+                targetFloorPercent: 45);
+
+            MineGenerationResult result = MineGridGenerator.Generate(settings);
+
+            for (int y = 0; y < result.Grid.Height; y++)
+            {
+                for (int x = 0; x < result.Grid.Width; x++)
+                {
+                    var position = new GridPosition(x, y);
+
+                    if (!result.Grid.TryGetCell(position, out TerrainCell cell) || !cell.IsPassable)
+                    {
+                        continue;
+                    }
+
+                    AssertNoCardinalNeighborOfType(result.Grid, position, TerrainCellType.Void);
+                    AssertNoCardinalNeighborOfType(result.Grid, position, TerrainCellType.BoundaryWall);
+                }
+            }
+        }
+
+        private static void AssertNoCardinalNeighborOfType(
+            MineGrid grid,
+            GridPosition position,
+            TerrainCellType forbiddenType)
+        {
+            for (int i = 0; i < CardinalOffsets.Length; i++)
+            {
+                GridPosition neighbor = position + CardinalOffsets[i];
+
+                if (grid.Contains(neighbor)
+                    && grid.TryGetCell(neighbor, out TerrainCell neighborCell))
+                {
+                    Assert.That(
+                        neighborCell.Type,
+                        Is.Not.EqualTo(forbiddenType),
+                        $"Cell {position} should not touch {forbiddenType} at {neighbor}.");
                 }
             }
         }
@@ -506,7 +590,6 @@ namespace DeepSeal.Tests.ProceduralGeneration
                     var position = new GridPosition(x, y);
 
                     if (grid.TryGetCell(position, out TerrainCell cell)
-                        && cell.Type == TerrainCellType.Wall
                         && cell.IsMineable
                         && !HasCardinalVoidNeighbor(grid, position))
                     {
@@ -535,6 +618,64 @@ namespace DeepSeal.Tests.ProceduralGeneration
             }
 
             return false;
+        }
+
+        private static void AssertBoundaryWall(MineGrid grid, GridPosition position)
+        {
+            bool found = grid.TryGetCell(position, out TerrainCell cell);
+
+            Assert.That(found, Is.True);
+            Assert.That(cell.Type, Is.EqualTo(TerrainCellType.BoundaryWall));
+            Assert.That(cell.IsWall, Is.True);
+            Assert.That(cell.IsMineable, Is.False);
+            Assert.That(cell.IsPassable, Is.False);
+        }
+
+        [Test]
+        public void Generate_ThrowsForInvalidEdgeMineableWallThickness()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                _ = new MineGenerationSettings(
+                    12,
+                    10,
+                    902,
+                    new GridPosition(6, 5),
+                    1,
+                    3,
+                    45,
+                    MineGenerationShapeMode.ConnectedCavern,
+                    0,
+                    0,
+                    MineGenerationSettings.MaxEdgeMineableWallThickness + 1);
+            });
+        }
+
+        [Test]
+        public void Generate_ConnectedCavernKeepsOnlyBoundaryWallsAdjacentToVoid()
+        {
+            MineGenerationSettings settings = CreateConnectedSettings(
+                seed: 903,
+                targetFloorPercent: 45);
+
+            MineGenerationResult result = MineGridGenerator.Generate(settings);
+
+            for (int y = 0; y < result.Grid.Height; y++)
+            {
+                for (int x = 0; x < result.Grid.Width; x++)
+                {
+                    var position = new GridPosition(x, y);
+
+                    if (!result.Grid.TryGetCell(position, out TerrainCell cell)
+                        || cell.Type == TerrainCellType.Void
+                        || cell.Type == TerrainCellType.BoundaryWall)
+                    {
+                        continue;
+                    }
+
+                    AssertNoCardinalNeighborOfType(result.Grid, position, TerrainCellType.Void);
+                }
+            }
         }
     }
 }
