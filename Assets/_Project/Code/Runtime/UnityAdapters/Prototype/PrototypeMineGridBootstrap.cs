@@ -39,6 +39,12 @@ namespace DeepSeal.UnityAdapters.Prototype
         [Range(0, MineGenerationSettings.MaxEdgeMineableWallThickness)]
         [SerializeField] private int edgeMineableWallThickness = 1;
 
+        [Range(0, MineGenerationSettings.MaxPresetPlacementCount)]
+        [SerializeField] private int presetPlacementCount = 2;
+
+        [Range(0, MineGenerationSettings.MaxPresetPlacementAttempts)]
+        [SerializeField] private int presetPlacementAttempts = 60;
+
         private MineGenerationResult currentResult;
         private bool hasCurrentResult;
 
@@ -155,7 +161,9 @@ namespace DeepSeal.UnityAdapters.Prototype
                     shapeMode,
                     internalWallPercent,
                     internalUnmineableWallPercent,
-                    edgeMineableWallThickness);
+                    edgeMineableWallThickness,
+                    presetPlacementCount,
+                    presetPlacementAttempts);
 
                 return true;
             }
@@ -207,6 +215,20 @@ namespace DeepSeal.UnityAdapters.Prototype
                 edgeMineableWallThickness,
                 0,
                 MineGenerationSettings.MaxEdgeMineableWallThickness);
+            presetPlacementCount = Mathf.Clamp(
+                presetPlacementCount,
+                0,
+                MineGenerationSettings.MaxPresetPlacementCount);
+
+            presetPlacementAttempts = Mathf.Clamp(
+                presetPlacementAttempts,
+                0,
+                MineGenerationSettings.MaxPresetPlacementAttempts);
+
+            if (presetPlacementCount > 0 && presetPlacementAttempts == 0)
+            {
+                presetPlacementAttempts = presetPlacementCount;
+            }
 
             int carveInset = MineGenerationSettings.GetCarveInset(
                 shapeMode,

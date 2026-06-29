@@ -125,6 +125,9 @@
   - Seed-based mine generation now supports irregular visible mine silhouettes using non-rendered outside-footprint cells.
   - The main passable mine area remains connected.
   - Connected mine layouts can include mineable internal wall obstacles that preserve overall floor connectivity.
+  - Hand-authored prototype terrain presets can be blended into generated maps.
+  - Preset placement is seed-stable and preserves the connected main passable area.
+  - Presets currently use pure C# pattern data, not Unity Prefabs or Tilemap chunks.
 - Terrain wall semantics
   - 채굴 가능한 벽.
   - 채굴 불가능한 내부 벽.
@@ -182,19 +185,18 @@
 - 저장 데이터와 보상 정산.
 - Wall durability/material variants.
 - Wall material variants and final terrain art.
-- Hand-authored terrain presets or vaults blended into procedural generation.
+- Asset-authored terrain presets, vault chunks, or room authoring tools.
 - Minimap or exploration map UI after procedural generation, terrain semantics, and discovery rules are more stable.
 
 
 다음 구현 후보:
 
-1. Terrain wall type pass
-   - Add terrain distinctions for mineable walls, unmineable walls, boundary walls, and future durability/material variants.
-   - Keep the connected mine shape generator compatible with the expanded terrain model.
+1. Generation spawn rule review pass
+   - Review treasure, extraction, enemy, and reward placement against irregular generated maps with terrain presets.
+   - Move fragile spawn assumptions into pure domain placement rules if needed.
 
-2. Procedural preset placement pass
-   - Blend hand-authored terrain presets, rooms, or vault-like chunks into seed-based generated maps.
-   - Add placement and connection rules after terrain semantics are stable.
+2. Asset-authored preset or vault authoring
+   - DEFERRED until code-authored preset placement proves useful.
 
 3. Minimap or exploration map UI
-   - DEFERRED until procedural generation, terrain semantics, and discovery rules are more stable.
+   - DEFERRED until procedural generation, terrain semantics, preset placement, and discovery rules are more stable.

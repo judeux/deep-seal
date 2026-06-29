@@ -60,7 +60,8 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 2-A  | Upgrade Selection Prototype    | Done        | Added temporary reward-funded upgrade choices that modify attack, mining, and movement during a run. |
 | 2-B  | Procedural Mine Shape Pass | Done | Added connected cavern-style mine generation with invisible Void footprint cells, irregular visible silhouettes, and optional mineable internal wall obstacles. |
 | 2-C  | Terrain Wall Type Pass | Done | Added explicit mineable, unmineable, boundary, and void terrain semantics while preserving the prototype mining and movement loop. |
-| 2-D  | Procedural Preset Placement Pass | Planned | Blend hand-authored terrain presets into generated mine maps after base shape and terrain semantics are stable. |
+| 2-D  | Procedural Preset Placement Pass | Done | Added seed-stable pure C# terrain preset placement for generated mine maps while preserving terrain semantics and passable connectivity. |
+| 2-E  | Generation Spawn Rule Review Pass | Planned | Review treasure, extraction, reward, and enemy spawn rules against irregular generated maps with terrain presets. |
 
 ---
 
@@ -167,41 +168,60 @@ Notes:
 * Movement should not include mining, combat, animation, or campaign logic.
 * Keyboard-based temporary input may later be replaced with InputActions.
 
----
-
-## Current Step
-
 ### 2-D. Procedural Preset Placement Pass
 
 Goal:
 
-* Blend hand-authored terrain presets, rooms, or vault-like chunks into seed-based generated maps.
-* Keep preset placement compatible with floor, mineable wall, unmineable wall, boundary wall, and void terrain semantics.
-* Preserve deterministic seed behavior.
+* Blend hand-authored terrain patterns into seed-based generated mine maps.
+
+Completed:
+
+* Added pure C# terrain preset data.
+* Added deterministic preset placement rules.
+* Added placement validation and rollback when a preset blocks start area or disconnects passable cells.
+* Integrated preset placement into connected cavern generation before boundary/rind shell construction.
+* Added EditMode tests for direct placement, deterministic placement, generator validity, and connectivity preservation.
+
+Notes:
+
+* Presets are currently code-authored prototype data, not Unity assets or Tilemap chunks.
+* Presets place only Floor, MineableWall, and UnmineableWall cells.
+* Void and BoundaryWall remain controlled by the generator footprint and shell rules.
+
+---
+
+## Current Step
+
+### 2-E. Generation Spawn Rule Review Pass
+
+Goal:
+
+* Review treasure, extraction, reward, and enemy spawn placement against irregular generated mines with terrain presets.
+* Keep spawn rules compatible with Floor, MineableWall, UnmineableWall, BoundaryWall, and Void terrain semantics.
+* Identify whether current prototype spawn adapters need pure domain placement rules.
 
 Explicit exclusions:
 
 * No minimap or exploration UI yet.
 * No biome system yet.
 * No final terrain art pass.
+* No campaign reward settlement.
 
 ---
 
 ## Next Planned Step
 
-### 2-D. Procedural Preset Placement Pass
+### 2-E. Generation Spawn Rule Review Pass
 
 Goal:
 
-* Blend hand-authored terrain presets, rooms, or vault-like chunks into seed-based generated maps.
-* Keep preset placement compatible with Void, BoundaryWall, MineableWall, UnmineableWall, and Floor semantics.
-* Preserve deterministic seed behavior and the connected main passable area.
+* Review whether treasure, extraction marker, reward drops, and enemy spawns still choose good positions after irregular shapes and terrain presets.
+* Move any fragile spawn assumptions into pure domain placement rules if needed.
 
 Notes:
 
-* Presets should be represented as pure C# terrain pattern data first, not Unity Tilemap chunks or Prefabs.
-* Placement rules should validate footprint, terrain compatibility, and connection points before rendering.
-* Minimap or exploration map UI remains deferred until generation, terrain semantics, and discovery rules are more stable.
+* Minimap or exploration map UI remains deferred.
+* Biome and final terrain art remain deferred.
 
 ---
 

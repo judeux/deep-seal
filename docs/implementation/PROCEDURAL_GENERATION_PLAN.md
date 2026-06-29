@@ -53,23 +53,22 @@ Notes:
 
 ### 2-D. Procedural Preset Placement Pass
 
+Status: Done
+
+Completed:
+- Added pure C# terrain preset pattern data.
+- Added seed-stable preset placement attempts.
+- Kept presets independent from Unity Tilemaps, Prefabs, and ScriptableObjects.
+- Preserved start area passability and main passable-area connectivity.
+- Kept Void and BoundaryWall ownership in the generator footprint/shell rules.
+
+Decision:
+- First preset pass uses code-authored prototype patterns.
+- Asset-authored room/vault chunks are deferred until the gameplay value of presets is confirmed.
+
+### 2-E. Generation Spawn Rule Review Pass
+
 Candidate additions:
-
-- Preset footprint data.
-- Placement validation.
-- Connection rules.
-- Seed-stable preset selection.
-
-## Design Notes
-
-- Shape generation should remain pure C# and deterministic.
-- The generator should not depend on UnityEngine.
-- Connectivity requirements should be explicit per step.
-- All generator changes should preserve compatibility with movement, mining, enemies, treasure, extraction, rewards, and upgrades.
-
-## Open Questions For Implementation
-
-- Should 2-B guarantee one connected walkable region, or allow isolated pockets for mining discovery?
-- Should the first shape algorithm be cellular automata, drunkard walk, room/corridor carving, or a hybrid?
-- What minimum floor percentage is required for the current prototype loop?
-- Should extraction, treasure, reward, and enemy spawners be adjusted after irregular shape generation?
+- Review treasure/extraction/enemy/reward spawn assumptions.
+- Add pure domain spawn candidate filters if current scene adapters are too fragile.
+- Keep spawn placement independent from Unity scene objects where possible.
