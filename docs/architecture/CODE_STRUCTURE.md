@@ -84,6 +84,9 @@ Implemented pure domain areas:
   - Basic generated mine grid validation.
   - Validation for start area passability, connected passable areas, and generated footprint rules.
   - Deterministic generation tests for repeated seed/settings.
+  - Pure C# terrain preset pattern data.
+  - Deterministic terrain preset placement rules.
+  - Preset placement validation that preserves start passability and connected passable areas.
 
 - `DeepSeal.Combat`
   - Prototype enemy state.
@@ -184,10 +187,11 @@ Current constraints:
 - Terrain cells now distinguish floor, mineable wall, unmineable wall, boundary wall, and void.
 - Wall material variants and final terrain art are still deferred.
 - Procedural preset/vault placement and minimap/exploration map UI are not yet implemented.
+- Procedural terrain presets are currently code-authored prototype data, not Unity assets, Prefabs, or Tilemap chunks.
+- Preset placement must stay in pure `DeepSeal.ProceduralGeneration` unless asset authoring becomes necessary later.
 
 Next planned area:
 
-- Procedural preset placement pass.
-- Keep preset placement in pure `DeepSeal.ProceduralGeneration`.
-- Preserve compatibility with terrain wall semantics introduced in 2-C.
+- Generation spawn rule review pass.
+- Check treasure, extraction, reward drop, and enemy spawn assumptions against irregular maps with presets.
 - Keep minimap and exploration map UI deferred.

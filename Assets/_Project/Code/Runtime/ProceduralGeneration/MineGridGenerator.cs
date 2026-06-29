@@ -132,6 +132,12 @@ namespace DeepSeal.ProceduralGeneration
                 floorFlags,
                 ref floorCount);
 
+            MineTerrainPresetPlacementRules.PlacePresets(
+                grid,
+                settings,
+                random,
+                MineTerrainPresetLibrary.CreatePrototypePresets());
+
             BuildMineableWallRind(grid, settings);
             BuildBoundaryWallShell(grid, settings);
         }

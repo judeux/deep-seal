@@ -9,6 +9,11 @@ namespace DeepSeal.ProceduralGeneration
         public const int ConnectedCavernCarveInset = 2;
         public const int DefaultEdgeMineableWallThickness = 1;
         public const int MaxEdgeMineableWallThickness = 3;
+        public const int DefaultPresetPlacementCount = 0;
+        public const int DefaultPresetPlacementAttempts = 0;
+        public const int MaxPresetPlacementCount = 8;
+        public const int MaxPresetPlacementAttempts = 200;
+        public const int MaxPresetBlockedCellBudget = 13;
 
         public MineGenerationSettings(
             int width,
@@ -120,6 +125,37 @@ namespace DeepSeal.ProceduralGeneration
             int internalWallPercent,
             int internalUnmineableWallPercent,
             int edgeMineableWallThickness)
+            : this(
+                width,
+                height,
+                seed,
+                startPosition,
+                startClearRadius,
+                wallDurability,
+                targetFloorPercent,
+                shapeMode,
+                internalWallPercent,
+                internalUnmineableWallPercent,
+                edgeMineableWallThickness,
+                DefaultPresetPlacementCount,
+                DefaultPresetPlacementAttempts)
+        {
+        }
+
+        public MineGenerationSettings(
+            int width,
+            int height,
+            int seed,
+            GridPosition startPosition,
+            int startClearRadius,
+            int wallDurability,
+            int targetFloorPercent,
+            MineGenerationShapeMode shapeMode,
+            int internalWallPercent,
+            int internalUnmineableWallPercent,
+            int edgeMineableWallThickness,
+            int presetPlacementCount,
+            int presetPlacementAttempts)
         {
             ValidateArguments(
                 width,
@@ -131,7 +167,9 @@ namespace DeepSeal.ProceduralGeneration
                 shapeMode,
                 internalWallPercent,
                 internalUnmineableWallPercent,
-                edgeMineableWallThickness);
+                edgeMineableWallThickness,
+                presetPlacementCount,
+                presetPlacementAttempts);
 
             Width = width;
             Height = height;
@@ -144,6 +182,8 @@ namespace DeepSeal.ProceduralGeneration
             InternalWallPercent = internalWallPercent;
             InternalUnmineableWallPercent = internalUnmineableWallPercent;
             EdgeMineableWallThickness = edgeMineableWallThickness;
+            PresetPlacementCount = presetPlacementCount;
+            PresetPlacementAttempts = presetPlacementAttempts;
         }
 
         public int Width { get; }
@@ -171,6 +211,10 @@ namespace DeepSeal.ProceduralGeneration
         public int InteriorCellCount => (Width - 2) * (Height - 2);
 
         public int EdgeMineableWallThickness { get; }
+
+        public int PresetPlacementCount { get; }
+
+        public int PresetPlacementAttempts { get; }
 
         public int CarvableInteriorCellCount
         {
@@ -241,6 +285,29 @@ namespace DeepSeal.ProceduralGeneration
 
         public int CarveInset => GetCarveInset(ShapeMode, EdgeMineableWallThickness);
 
+        public int PresetBlockedCellBudget
+        {
+            get
+            {
+                if (ShapeMode != MineGenerationShapeMode.ConnectedCavern || PresetPlacementCount <= 0)
+                {
+                    return 0;
+                }
+
+                return PresetPlacementCount * MaxPresetBlockedCellBudget;
+            }
+        }
+
+        public int MinimumPassableCellCount
+        {
+            get
+            {
+                return Math.Max(
+                    StartClearCellCount,
+                    TargetFloorCellCount - PresetBlockedCellBudget);
+            }
+        }
+
         public void Validate()
         {
             ValidateArguments(
@@ -253,7 +320,9 @@ namespace DeepSeal.ProceduralGeneration
                 ShapeMode,
                 InternalWallPercent,
                 InternalUnmineableWallPercent,
-                EdgeMineableWallThickness);
+                EdgeMineableWallThickness,
+                PresetPlacementCount,
+                PresetPlacementAttempts);
         }
 
         public bool IsInStartClearArea(GridPosition position)
@@ -298,7 +367,9 @@ namespace DeepSeal.ProceduralGeneration
             MineGenerationShapeMode shapeMode,
             int internalWallPercent,
             int internalUnmineableWallPercent,
-            int edgeMineableWallThickness)
+            int edgeMineableWallThickness,
+            int presetPlacementCount,
+            int presetPlacementAttempts)
         {
             if (!IsValidShapeMode(shapeMode))
             {
@@ -370,6 +441,30 @@ namespace DeepSeal.ProceduralGeneration
                     nameof(edgeMineableWallThickness),
                     edgeMineableWallThickness,
                     $"Edge mineable wall thickness must be between 0 and {MaxEdgeMineableWallThickness}.");
+            }
+
+            if (presetPlacementCount < 0 || presetPlacementCount > MaxPresetPlacementCount)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(presetPlacementCount),
+                    presetPlacementCount,
+                    $"Preset placement count must be between 0 and {MaxPresetPlacementCount}.");
+            }
+
+            if (presetPlacementAttempts < 0 || presetPlacementAttempts > MaxPresetPlacementAttempts)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(presetPlacementAttempts),
+                    presetPlacementAttempts,
+                    $"Preset placement attempts must be between 0 and {MaxPresetPlacementAttempts}.");
+            }
+
+            if (presetPlacementCount > 0 && presetPlacementAttempts <= 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(presetPlacementAttempts),
+                    presetPlacementAttempts,
+                    "Preset placement attempts must be greater than zero when preset placement count is greater than zero.");
             }
 
             int inset = GetCarveInset(shapeMode, edgeMineableWallThickness);

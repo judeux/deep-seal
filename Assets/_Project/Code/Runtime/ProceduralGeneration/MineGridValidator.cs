@@ -270,7 +270,7 @@ namespace DeepSeal.ProceduralGeneration
         {
             int passableCellCount = CountPassableCells(grid);
 
-            if (passableCellCount < settings.TargetFloorCellCount)
+            if (passableCellCount < settings.MinimumPassableCellCount)
             {
                 return MineGridValidationResult.Invalid(
                     MineGridValidationIssue.InsufficientPassableCells);

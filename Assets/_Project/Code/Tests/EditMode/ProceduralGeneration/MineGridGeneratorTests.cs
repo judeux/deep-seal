@@ -677,5 +677,99 @@ namespace DeepSeal.Tests.ProceduralGeneration
                 }
             }
         }
+
+        [Test]
+        public void Generate_WithPresetPlacementProducesDeterministicLayout()
+        {
+            MineGenerationSettings settings = CreateLargeConnectedSettingsWithPresets(
+                seed: 910,
+                targetFloorPercent: 55,
+                presetPlacementCount: 2);
+
+            MineGenerationResult first = MineGridGenerator.Generate(settings);
+            MineGenerationResult second = MineGridGenerator.Generate(settings);
+
+            AssertLayoutsEqual(first.Grid, second.Grid);
+        }
+
+        [Test]
+        public void Generate_WithPresetPlacementKeepsGeneratedGridValid()
+        {
+            MineGenerationSettings settings = CreateLargeConnectedSettingsWithPresets(
+                seed: 911,
+                targetFloorPercent: 55,
+                presetPlacementCount: 2);
+
+            MineGenerationResult result = MineGridGenerator.Generate(settings);
+            MineGridValidationResult validationResult = MineGridValidator.Validate(result);
+
+            Assert.That(validationResult.IsValid, Is.True);
+            AssertAllPassableCellsConnected(result.Grid, settings.StartPosition);
+        }
+
+        [Test]
+        public void Generate_WithPresetPlacementCanChangeTerrainLayout()
+        {
+            MineGenerationSettings withPresets = CreateLargeConnectedSettingsWithPresets(
+                seed: 912,
+                targetFloorPercent: 70,
+                presetPlacementCount: 4);
+
+            MineGenerationSettings withoutPresets = CreateLargeConnectedSettingsWithPresets(
+                seed: 912,
+                targetFloorPercent: 70,
+                presetPlacementCount: 0);
+
+            MineGenerationResult withPresetResult = MineGridGenerator.Generate(withPresets);
+            MineGenerationResult withoutPresetResult = MineGridGenerator.Generate(withoutPresets);
+
+            AssertLayoutsNotEqual(withoutPresetResult.Grid, withPresetResult.Grid);
+        }
+
+        private static MineGenerationSettings CreateLargeConnectedSettingsWithPresets(
+            int seed,
+            int targetFloorPercent = 55,
+            int internalWallPercent = 0,
+            int presetPlacementCount = 2)
+        {
+            return new MineGenerationSettings(
+                24,
+                18,
+                seed,
+                new GridPosition(12, 9),
+                1,
+                3,
+                targetFloorPercent,
+                MineGenerationShapeMode.ConnectedCavern,
+                internalWallPercent,
+                0,
+                1,
+                presetPlacementCount,
+                200);
+        }
+
+        private static void AssertLayoutsNotEqual(MineGrid first, MineGrid second)
+        {
+            Assert.That(second.Width, Is.EqualTo(first.Width));
+            Assert.That(second.Height, Is.EqualTo(first.Height));
+
+            for (int y = 0; y < first.Height; y++)
+            {
+                for (int x = 0; x < first.Width; x++)
+                {
+                    var position = new GridPosition(x, y);
+
+                    first.TryGetCell(position, out TerrainCell firstCell);
+                    second.TryGetCell(position, out TerrainCell secondCell);
+
+                    if (firstCell != secondCell)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            Assert.Fail("Expected preset placement to change at least one terrain cell.");
+        }
     }
 }
