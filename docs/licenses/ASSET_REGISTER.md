@@ -27,6 +27,8 @@
 |treasure_prototype.png|ChatGPT|2026-06-22|ArtSource/prototype_treasure_prompt.md|No|Yes|Assets/_Project/Art/Prototype/Items/Treasure/treasure_prototype.png|Prototype-only treasure marker sprite|
 |extraction_marker_prototype.png|ChatGPT|2026-06-22|ArtSource/prototype_extraction_marker_prompt.md|No|Yes|Assets/_Project/Art/Prototype/Items/Extraction/extraction_marker_prototype.png|Prototype-only extraction marker sprite|
 |reward_drop_prototype.png|ChatGPT|2026-06-24|ArtSource/prototype_reward_drop_prompt.md|No|Yes|Assets/_Project/Art/Prototype/Items/Rewards/reward_drop_prototype.png|Prototype-only reward drop sprite|
+|reward_drop_prototype.png|ChatGPT|2026-06-26|ArtSource/prototype_unmineable_wall_prompt.md|No|Yes|Assets/_Project/Art/Prototype/Tiles/Mine/unmineable_wall_prototype.png|Prototype-only unmineable wall tile|
+|reward_drop_prototype.png|ChatGPT|2026-06-26|ArtSource/prototype_boundary_wall_prompt.md|No|Yes|Assets/_Project/Art/Prototype/Tiles/Mine/boundary_wall_prototype.png|Prototype-only boundary wall tile|
 
 ## Audio / Fonts
 

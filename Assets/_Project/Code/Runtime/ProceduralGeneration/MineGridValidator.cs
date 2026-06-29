@@ -16,7 +16,8 @@ namespace DeepSeal.ProceduralGeneration
         DisconnectedPassableArea = 6,
         InsufficientPassableCells = 7,
         OuterFrameNotVoid = 8,
-        PassableAreaTouchesVoid = 9
+        PassableAreaTouchesVoid = 9,
+        NonBoundaryTerrainTouchesVoid = 10
     }
 
     public readonly struct MineGridValidationResult
@@ -134,7 +135,14 @@ namespace DeepSeal.ProceduralGeneration
                     return connectedResult;
                 }
 
-                return ValidatePassableAreaDoesNotTouchVoid(grid);
+                MineGridValidationResult passableBoundaryResult = ValidatePassableAreaDoesNotTouchVoid(grid);
+
+                if (!passableBoundaryResult.IsValid)
+                {
+                    return passableBoundaryResult;
+                }
+
+                return ValidateOnlyBoundaryWallsTouchVoid(grid);
             }
 
             return MineGridValidationResult.Valid();
@@ -342,6 +350,40 @@ namespace DeepSeal.ProceduralGeneration
             return MineGridValidationResult.Valid();
         }
 
+        private static MineGridValidationResult ValidateOnlyBoundaryWallsTouchVoid(MineGrid grid)
+        {
+            for (int y = 0; y < grid.Height; y++)
+            {
+                for (int x = 0; x < grid.Width; x++)
+                {
+                    var position = new GridPosition(x, y);
+
+                    if (!grid.TryGetCell(position, out TerrainCell cell)
+                        || cell.Type == TerrainCellType.Void
+                        || cell.Type == TerrainCellType.BoundaryWall)
+                    {
+                        continue;
+                    }
+
+                    for (int i = 0; i < CardinalOffsets.Length; i++)
+                    {
+                        GridPosition neighbor = position + CardinalOffsets[i];
+
+                        if (grid.Contains(neighbor)
+                            && grid.TryGetCell(neighbor, out TerrainCell neighborCell)
+                            && neighborCell.Type == TerrainCellType.Void)
+                        {
+                            return MineGridValidationResult.Invalid(
+                                MineGridValidationIssue.NonBoundaryTerrainTouchesVoid,
+                                position);
+                        }
+                    }
+                }
+            }
+
+            return MineGridValidationResult.Valid();
+        }
+
         private static int CountPassableCells(MineGrid grid)
         {
             int count = 0;
@@ -388,7 +430,7 @@ namespace DeepSeal.ProceduralGeneration
                 return false;
             }
 
-            return cell.Type == TerrainCellType.Wall && cell.Durability > 0;
+            return cell.Type == TerrainCellType.BoundaryWall;
         }
 
         private static bool IsVoid(MineGrid grid, GridPosition position)

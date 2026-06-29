@@ -128,7 +128,7 @@ namespace DeepSeal.UnityAdapters.UI
                 return false;
             }
 
-            if (wallCell.Type != TerrainCellType.Wall)
+            if (!wallCell.IsMineable)
             {
                 return false;
             }

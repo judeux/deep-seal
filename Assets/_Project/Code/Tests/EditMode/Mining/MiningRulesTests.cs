@@ -195,5 +195,39 @@ namespace DeepSeal.Tests.Mining
             grid.TryGetCell(position, out TerrainCell currentCell);
             Assert.That(currentCell.Type, Is.EqualTo(TerrainCellType.Void));
         }
+
+        [Test]
+        public void ApplyMiningDamage_ReturnsNotMineableForUnmineableWall()
+        {
+            var grid = new MineGrid(1, 1, TerrainCell.UnmineableWall);
+
+            MiningResult result = MiningRules.ApplyMiningDamage(
+                grid,
+                GridPosition.Zero,
+                damage: 1);
+
+            Assert.That(result.Type, Is.EqualTo(MiningResultType.NotMineable));
+            Assert.That(result.ChangedCell, Is.False);
+
+            grid.TryGetCell(GridPosition.Zero, out TerrainCell currentCell);
+            Assert.That(currentCell, Is.EqualTo(TerrainCell.UnmineableWall));
+        }
+
+        [Test]
+        public void ApplyMiningDamage_ReturnsNotMineableForBoundaryWall()
+        {
+            var grid = new MineGrid(1, 1, TerrainCell.BoundaryWall);
+
+            MiningResult result = MiningRules.ApplyMiningDamage(
+                grid,
+                GridPosition.Zero,
+                damage: 1);
+
+            Assert.That(result.Type, Is.EqualTo(MiningResultType.NotMineable));
+            Assert.That(result.ChangedCell, Is.False);
+
+            grid.TryGetCell(GridPosition.Zero, out TerrainCell currentCell);
+            Assert.That(currentCell, Is.EqualTo(TerrainCell.BoundaryWall));
+        }
     }
 }

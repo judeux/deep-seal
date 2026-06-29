@@ -38,12 +38,14 @@ Decision:
 
 ### 2-C. Terrain Wall Type Pass
 
-Candidate additions:
+Status: Done
 
-- Mineable wall.
-- Unmineable wall.
-- Boundary wall.
-- Durability/material variants.
+Completed:
+- Added explicit terrain semantics for mineable wall, unmineable wall, boundary wall, floor, and void.
+- Kept `Void` as outside-footprint space.
+- Kept boundary walls unmineable.
+- Allowed generated connected caverns to include both mineable and unmineable internal wall obstacles.
+- Preserved passable area connectivity and existing prototype loop behavior.
 
 Notes:
 - `Void` is already used for outside-map footprint space.

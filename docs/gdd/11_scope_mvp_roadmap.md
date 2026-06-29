@@ -125,6 +125,11 @@
   - Seed-based mine generation now supports irregular visible mine silhouettes using non-rendered outside-footprint cells.
   - The main passable mine area remains connected.
   - Connected mine layouts can include mineable internal wall obstacles that preserve overall floor connectivity.
+- Terrain wall semantics
+  - 채굴 가능한 벽.
+  - 채굴 불가능한 내부 벽.
+  - 광산 footprint 경계 벽.
+  - 맵 바깥을 나타내는 Void 셀.
 - Unity Tilemap prototype display
   - MineGrid 데이터를 Unity Tilemap에 표시.
   - 프로토타입 씬에서 seed/settings 기반 광산 맵 확인 가능.
@@ -175,10 +180,11 @@
 - 정식 업그레이드 트리.
 - 영구 성장과 캠페인 업그레이드.
 - 저장 데이터와 보상 정산.
-- Distinct mineable wall, unmineable wall, and boundary wall semantics.
 - Wall durability/material variants.
+- Wall material variants and final terrain art.
 - Hand-authored terrain presets or vaults blended into procedural generation.
 - Minimap or exploration map UI after procedural generation, terrain semantics, and discovery rules are more stable.
+
 
 다음 구현 후보:
 

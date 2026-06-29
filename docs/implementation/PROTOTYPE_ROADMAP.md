@@ -59,7 +59,7 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 1-R  | Prototype Reward Drops         | Done        | Added reward drops from enemy defeat and selected mining actions, with short-range pickup. |
 | 2-A  | Upgrade Selection Prototype    | Done        | Added temporary reward-funded upgrade choices that modify attack, mining, and movement during a run. |
 | 2-B  | Procedural Mine Shape Pass | Done | Added connected cavern-style mine generation with invisible Void footprint cells, irregular visible silhouettes, and optional mineable internal wall obstacles. |
-| 2-C  | Terrain Wall Type Pass | Planned | Introduce terrain distinctions needed for mineable walls, unmineable walls, boundary walls, and future wall variants. |
+| 2-C  | Terrain Wall Type Pass | Done | Added explicit mineable, unmineable, boundary, and void terrain semantics while preserving the prototype mining and movement loop. |
 | 2-D  | Procedural Preset Placement Pass | Planned | Blend hand-authored terrain presets into generated mine maps after base shape and terrain semantics are stable. |
 
 ---
@@ -171,19 +171,18 @@ Notes:
 
 ## Current Step
 
-### 2-C. Terrain Wall Type Pass
+### 2-D. Procedural Preset Placement Pass
 
 Goal:
 
-* Expand terrain semantics enough to distinguish mineable walls, unmineable walls, boundary walls, and future wall durability/material variants.
-* Keep the connected mine shape generator compatible with the expanded terrain model.
-* Preserve movement, mining, enemy navigation, spawning, reward drops, treasure pickup, extraction, and upgrade behavior.
+* Blend hand-authored terrain presets, rooms, or vault-like chunks into seed-based generated maps.
+* Keep preset placement compatible with floor, mineable wall, unmineable wall, boundary wall, and void terrain semantics.
+* Preserve deterministic seed behavior.
 
 Explicit exclusions:
 
-* No hand-authored preset or vault injection yet.
-* No biome system.
 * No minimap or exploration UI yet.
+* No biome system yet.
 * No final terrain art pass.
 
 ---
@@ -194,11 +193,14 @@ Explicit exclusions:
 
 Goal:
 
-* Blend hand-authored terrain presets, rooms, or vault-like chunks into seed-based generated maps after terrain semantics are stable.
+* Blend hand-authored terrain presets, rooms, or vault-like chunks into seed-based generated maps.
+* Keep preset placement compatible with Void, BoundaryWall, MineableWall, UnmineableWall, and Floor semantics.
+* Preserve deterministic seed behavior and the connected main passable area.
 
 Notes:
 
-* Preset placement should wait until terrain wall semantics are stable enough to describe mineable, unmineable, and boundary cells.
+* Presets should be represented as pure C# terrain pattern data first, not Unity Tilemap chunks or Prefabs.
+* Placement rules should validate footprint, terrain compatibility, and connection points before rendering.
 * Minimap or exploration map UI remains deferred until generation, terrain semantics, and discovery rules are more stable.
 
 ---

@@ -15,10 +15,16 @@ namespace DeepSeal.UnityAdapters.Tilemaps
     {
         [SerializeField] private TileBase floorTile;
         [SerializeField] private TileBase wallTile;
+        [SerializeField] private TileBase unmineableWallTile;
+        [SerializeField] private TileBase boundaryWallTile;
 
         public TileBase FloorTile => floorTile;
 
         public TileBase WallTile => wallTile;
+
+        public TileBase UnmineableWallTile => unmineableWallTile;
+
+        public TileBase BoundaryWallTile => boundaryWallTile;
 
         public bool HasRequiredTiles => floorTile != null && wallTile != null;
 
@@ -32,6 +38,14 @@ namespace DeepSeal.UnityAdapters.Tilemaps
 
                 case TerrainCellType.Wall:
                     tile = wallTile;
+                    return tile != null;
+
+                case TerrainCellType.UnmineableWall:
+                    tile = unmineableWallTile != null ? unmineableWallTile : wallTile;
+                    return tile != null;
+
+                case TerrainCellType.BoundaryWall:
+                    tile = boundaryWallTile != null ? boundaryWallTile : wallTile;
                     return tile != null;
 
                 case TerrainCellType.Void:

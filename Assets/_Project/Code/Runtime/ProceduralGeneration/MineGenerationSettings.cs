@@ -7,6 +7,8 @@ namespace DeepSeal.ProceduralGeneration
     {
         public const int RectangularBoundaryInset = 1;
         public const int ConnectedCavernCarveInset = 2;
+        public const int DefaultEdgeMineableWallThickness = 1;
+        public const int MaxEdgeMineableWallThickness = 3;
 
         public MineGenerationSettings(
             int width,
@@ -25,6 +27,8 @@ namespace DeepSeal.ProceduralGeneration
                 wallDurability,
                 randomFloorPercent,
                 MineGenerationShapeMode.RandomScatter,
+                0,
+                0,
                 0)
         {
         }
@@ -47,7 +51,9 @@ namespace DeepSeal.ProceduralGeneration
                 wallDurability,
                 targetFloorPercent,
                 shapeMode,
-                0)
+                0,
+                0,
+                GetDefaultEdgeMineableWallThickness(shapeMode))
         {
         }
 
@@ -61,6 +67,59 @@ namespace DeepSeal.ProceduralGeneration
             int targetFloorPercent,
             MineGenerationShapeMode shapeMode,
             int internalWallPercent)
+            : this(
+                width,
+                height,
+                seed,
+                startPosition,
+                startClearRadius,
+                wallDurability,
+                targetFloorPercent,
+                shapeMode,
+                internalWallPercent,
+                0,
+                GetDefaultEdgeMineableWallThickness(shapeMode))
+        {
+        }
+
+        public MineGenerationSettings(
+            int width,
+            int height,
+            int seed,
+            GridPosition startPosition,
+            int startClearRadius,
+            int wallDurability,
+            int targetFloorPercent,
+            MineGenerationShapeMode shapeMode,
+            int internalWallPercent,
+            int internalUnmineableWallPercent)
+            : this(
+                width,
+                height,
+                seed,
+                startPosition,
+                startClearRadius,
+                wallDurability,
+                targetFloorPercent,
+                shapeMode,
+                internalWallPercent,
+                internalUnmineableWallPercent,
+                GetDefaultEdgeMineableWallThickness(shapeMode))
+        {
+        }
+
+        public MineGenerationSettings(
+            int width,
+            int height,
+            int seed,
+            GridPosition startPosition,
+            int startClearRadius,
+            int wallDurability,
+            int targetFloorPercent,
+            MineGenerationShapeMode shapeMode,
+            int internalWallPercent,
+            int internalUnmineableWallPercent,
+            int edgeMineableWallThickness)
         {
             ValidateArguments(
                 width,
@@ -70,7 +129,9 @@ namespace DeepSeal.ProceduralGeneration
                 wallDurability,
                 targetFloorPercent,
                 shapeMode,
-                internalWallPercent);
+                internalWallPercent,
+                internalUnmineableWallPercent,
+                edgeMineableWallThickness);
 
             Width = width;
             Height = height;
@@ -81,6 +142,8 @@ namespace DeepSeal.ProceduralGeneration
             TargetFloorPercent = targetFloorPercent;
             ShapeMode = shapeMode;
             InternalWallPercent = internalWallPercent;
+            InternalUnmineableWallPercent = internalUnmineableWallPercent;
+            EdgeMineableWallThickness = edgeMineableWallThickness;
         }
 
         public int Width { get; }
@@ -97,6 +160,8 @@ namespace DeepSeal.ProceduralGeneration
 
         public int TargetFloorPercent { get; }
 
+        public int InternalUnmineableWallPercent { get; }
+
         public int RandomFloorPercent => TargetFloorPercent;
 
         public MineGenerationShapeMode ShapeMode { get; }
@@ -105,11 +170,13 @@ namespace DeepSeal.ProceduralGeneration
 
         public int InteriorCellCount => (Width - 2) * (Height - 2);
 
+        public int EdgeMineableWallThickness { get; }
+
         public int CarvableInteriorCellCount
         {
             get
             {
-                int inset = GetCarveInset(ShapeMode);
+                int inset = CarveInset;
                 return (Width - inset * 2) * (Height - inset * 2);
             }
         }
@@ -155,9 +222,24 @@ namespace DeepSeal.ProceduralGeneration
             }
         }
 
+        public int TargetInternalUnmineableWallCellCount
+        {
+            get
+            {
+                if (TargetInternalWallCellCount <= 0 || InternalUnmineableWallPercent <= 0)
+                {
+                    return 0;
+                }
+
+                return (TargetInternalWallCellCount * InternalUnmineableWallPercent + 50) / 100;
+            }
+        }
+
         public int TargetCarvedCellCount => Math.Min(
             CarvableInteriorCellCount,
             TargetFloorCellCount + TargetInternalWallCellCount);
+
+        public int CarveInset => GetCarveInset(ShapeMode, EdgeMineableWallThickness);
 
         public void Validate()
         {
@@ -169,7 +251,9 @@ namespace DeepSeal.ProceduralGeneration
                 WallDurability,
                 TargetFloorPercent,
                 ShapeMode,
-                InternalWallPercent);
+                InternalWallPercent,
+                InternalUnmineableWallPercent,
+                EdgeMineableWallThickness);
         }
 
         public bool IsInStartClearArea(GridPosition position)
@@ -180,7 +264,7 @@ namespace DeepSeal.ProceduralGeneration
 
         public bool IsInCarvableArea(GridPosition position)
         {
-            int inset = GetCarveInset(ShapeMode);
+            int inset = CarveInset;
 
             return position.X >= inset
                 && position.Y >= inset
@@ -195,6 +279,15 @@ namespace DeepSeal.ProceduralGeneration
                 : RectangularBoundaryInset;
         }
 
+        public static int GetCarveInset(
+            MineGenerationShapeMode shapeMode,
+            int edgeMineableWallThickness)
+        {
+            return shapeMode == MineGenerationShapeMode.ConnectedCavern
+                ? ConnectedCavernCarveInset + edgeMineableWallThickness
+                : RectangularBoundaryInset;
+        }
+
         private static void ValidateArguments(
             int width,
             int height,
@@ -203,7 +296,9 @@ namespace DeepSeal.ProceduralGeneration
             int wallDurability,
             int targetFloorPercent,
             MineGenerationShapeMode shapeMode,
-            int internalWallPercent)
+            int internalWallPercent,
+            int internalUnmineableWallPercent,
+            int edgeMineableWallThickness)
         {
             if (!IsValidShapeMode(shapeMode))
             {
@@ -261,7 +356,23 @@ namespace DeepSeal.ProceduralGeneration
                     "Internal wall percent must be between 0 and 100.");
             }
 
-            int inset = GetCarveInset(shapeMode);
+            if (internalUnmineableWallPercent < 0 || internalUnmineableWallPercent > 100)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(internalUnmineableWallPercent),
+                    internalUnmineableWallPercent,
+                    "Internal unmineable wall percent must be between 0 and 100.");
+            }
+
+            if (edgeMineableWallThickness < 0 || edgeMineableWallThickness > MaxEdgeMineableWallThickness)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(edgeMineableWallThickness),
+                    edgeMineableWallThickness,
+                    $"Edge mineable wall thickness must be between 0 and {MaxEdgeMineableWallThickness}.");
+            }
+
+            int inset = GetCarveInset(shapeMode, edgeMineableWallThickness);
             int minStartX = inset + startClearRadius;
             int maxStartX = width - 1 - inset - startClearRadius;
             int minStartY = inset + startClearRadius;
@@ -291,6 +402,13 @@ namespace DeepSeal.ProceduralGeneration
         {
             return shapeMode == MineGenerationShapeMode.RandomScatter
                 || shapeMode == MineGenerationShapeMode.ConnectedCavern;
+        }
+
+        private static int GetDefaultEdgeMineableWallThickness(MineGenerationShapeMode shapeMode)
+        {
+            return shapeMode == MineGenerationShapeMode.ConnectedCavern
+                ? DefaultEdgeMineableWallThickness
+                : 0;
         }
     }
 }

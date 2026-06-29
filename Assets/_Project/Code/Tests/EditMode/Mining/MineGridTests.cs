@@ -173,6 +173,43 @@ namespace DeepSeal.Tests.Mining
             Assert.That(cell.IsPassable, Is.True);
             Assert.That(cell.IsMineable, Is.False);
         }
-               
+
+        [Test]
+        public void MineableWallCell_IsMineableAndNotPassable()
+        {
+            TerrainCell cell = TerrainCell.MineableWall(5);
+
+            Assert.That(cell.Type, Is.EqualTo(TerrainCellType.MineableWall));
+            Assert.That(cell.Durability, Is.EqualTo(5));
+            Assert.That(cell.IsWall, Is.True);
+            Assert.That(cell.IsPassable, Is.False);
+            Assert.That(cell.IsMineable, Is.True);
+        }
+
+        [Test]
+        public void UnmineableWallCell_IsWallButNotMineable()
+        {
+            TerrainCell cell = TerrainCell.UnmineableWall;
+
+            Assert.That(cell.Type, Is.EqualTo(TerrainCellType.UnmineableWall));
+            Assert.That(cell.Durability, Is.EqualTo(0));
+            Assert.That(cell.IsWall, Is.True);
+            Assert.That(cell.IsPassable, Is.False);
+            Assert.That(cell.IsMineable, Is.False);
+        }
+
+        [Test]
+        public void BoundaryWallCell_IsWallButNotMineable()
+        {
+            TerrainCell cell = TerrainCell.BoundaryWall;
+
+            Assert.That(cell.Type, Is.EqualTo(TerrainCellType.BoundaryWall));
+            Assert.That(cell.Durability, Is.EqualTo(0));
+            Assert.That(cell.IsWall, Is.True);
+            Assert.That(cell.IsBoundaryWall, Is.True);
+            Assert.That(cell.IsPassable, Is.False);
+            Assert.That(cell.IsMineable, Is.False);
+        }
+
     }
 }

@@ -34,7 +34,7 @@ namespace DeepSeal.ProceduralGeneration
             var random = new Random(settings.Seed);
             TerrainCell defaultCell = settings.ShapeMode == MineGenerationShapeMode.ConnectedCavern
                 ? TerrainCell.Void
-                : TerrainCell.Wall(settings.WallDurability);
+                : TerrainCell.MineableWall(settings.WallDurability);
 
             var grid = new MineGrid(
                 settings.Width,
@@ -79,6 +79,7 @@ namespace DeepSeal.ProceduralGeneration
                     }
                 }
             }
+            SetRectangularBoundaryWalls(grid, settings);
         }
 
         private static void CarveConnectedCavern(
@@ -124,14 +125,15 @@ namespace DeepSeal.ProceduralGeneration
                 }
             }
 
-            PlaceInternalMineableWalls(
+            PlaceInternalWalls(
                 grid,
                 settings,
                 random,
                 floorFlags,
                 ref floorCount);
 
-            BuildWallShell(grid, settings, floorFlags);
+            BuildMineableWallRind(grid, settings);
+            BuildBoundaryWallShell(grid, settings);
         }
 
         private static int CarveStartArea(
@@ -240,7 +242,7 @@ namespace DeepSeal.ProceduralGeneration
             return true;
         }
 
-        private static void PlaceInternalMineableWalls(
+        private static void PlaceInternalWalls(
             MineGrid grid,
             MineGenerationSettings settings,
             Random random,
@@ -256,6 +258,10 @@ namespace DeepSeal.ProceduralGeneration
                 return;
             }
 
+            int targetUnmineableWallCount = Math.Min(
+                settings.TargetInternalUnmineableWallCellCount,
+                targetInternalWallCount);
+
             List<GridPosition> candidates = CollectInternalWallCandidates(
                 settings,
                 floorFlags);
@@ -263,6 +269,7 @@ namespace DeepSeal.ProceduralGeneration
             Shuffle(random, candidates);
 
             int placedWallCount = 0;
+            int placedUnmineableWallCount = 0;
 
             for (int i = 0; i < candidates.Count && placedWallCount < targetInternalWallCount; i++)
             {
@@ -289,9 +296,18 @@ namespace DeepSeal.ProceduralGeneration
                     continue;
                 }
 
-                grid.TrySetCell(candidate, TerrainCell.Wall(settings.WallDurability));
+                TerrainCell wallCell = placedUnmineableWallCount < targetUnmineableWallCount
+                    ? TerrainCell.UnmineableWall
+                    : TerrainCell.MineableWall(settings.WallDurability);
+
+                grid.TrySetCell(candidate, wallCell);
                 floorCount--;
                 placedWallCount++;
+
+                if (wallCell.Type == TerrainCellType.UnmineableWall)
+                {
+                    placedUnmineableWallCount++;
+                }
             }
         }
 
@@ -418,53 +434,92 @@ namespace DeepSeal.ProceduralGeneration
             }
         }
 
-        private static void BuildWallShell(
+        private static void BuildMineableWallRind(
             MineGrid grid,
-            MineGenerationSettings settings,
-            bool[,] floorFlags)
+            MineGenerationSettings settings)
+        {
+            for (int layer = 0; layer < settings.EdgeMineableWallThickness; layer++)
+            {
+                var positionsToFill = new List<GridPosition>();
+
+                for (int y = 1; y < settings.Height - 1; y++)
+                {
+                    for (int x = 1; x < settings.Width - 1; x++)
+                    {
+                        var position = new GridPosition(x, y);
+
+                        if (IsVoid(grid, position) && HasNeighborVisibleTerrain(grid, position))
+                        {
+                            positionsToFill.Add(position);
+                        }
+                    }
+                }
+
+                for (int i = 0; i < positionsToFill.Count; i++)
+                {
+                    grid.TrySetCell(
+                        positionsToFill[i],
+                        TerrainCell.MineableWall(settings.WallDurability));
+                }
+            }
+        }
+
+        private static void BuildBoundaryWallShell(
+            MineGrid grid,
+            MineGenerationSettings settings)
         {
             for (int y = 1; y < settings.Height - 1; y++)
             {
                 for (int x = 1; x < settings.Width - 1; x++)
                 {
-                    if (floorFlags[x, y])
-                    {
-                        continue;
-                    }
-
                     var position = new GridPosition(x, y);
 
-                    if (HasNeighborFloor(floorFlags, position))
+                    if (IsVoid(grid, position) && HasNeighborVisibleTerrain(grid, position))
                     {
-                        grid.TrySetCell(position, TerrainCell.Wall(settings.WallDurability));
+                        grid.TrySetCell(position, TerrainCell.BoundaryWall);
                     }
                 }
             }
         }
 
-        private static bool HasNeighborFloor(
-            bool[,] floorFlags,
-            GridPosition position)
+        private static bool IsVoid(MineGrid grid, GridPosition position)
+        {
+            return grid.TryGetCell(position, out TerrainCell cell)
+                && cell.Type == TerrainCellType.Void;
+        }
+
+        private static bool HasNeighborVisibleTerrain(MineGrid grid, GridPosition position)
         {
             for (int i = 0; i < NeighborOffsets.Length; i++)
             {
                 GridPosition neighbor = position + NeighborOffsets[i];
 
-                if (neighbor.X < 0
-                    || neighbor.Y < 0
-                    || neighbor.X >= floorFlags.GetLength(0)
-                    || neighbor.Y >= floorFlags.GetLength(1))
-                {
-                    continue;
-                }
-
-                if (floorFlags[neighbor.X, neighbor.Y])
+                if (grid.Contains(neighbor)
+                    && grid.TryGetCell(neighbor, out TerrainCell neighborCell)
+                    && neighborCell.Type != TerrainCellType.Void)
                 {
                     return true;
                 }
             }
 
             return false;
+        }
+
+        private static void SetRectangularBoundaryWalls(
+            MineGrid grid,
+            MineGenerationSettings settings)
+        {
+            for (int x = 0; x < settings.Width; x++)
+            {
+                grid.TrySetCell(new GridPosition(x, 0), TerrainCell.BoundaryWall);
+                grid.TrySetCell(new GridPosition(x, settings.Height - 1), TerrainCell.BoundaryWall);
+            }
+
+            for (int y = 1; y < settings.Height - 1; y++)
+            {
+                grid.TrySetCell(new GridPosition(0, y), TerrainCell.BoundaryWall);
+                grid.TrySetCell(new GridPosition(settings.Width - 1, y), TerrainCell.BoundaryWall);
+            }
         }
     }
 }
