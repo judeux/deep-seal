@@ -68,7 +68,10 @@ Decision:
 
 ### 2-E. Generation Spawn Rule Review Pass
 
-Candidate additions:
-- Review treasure/extraction/enemy/reward spawn assumptions.
-- Add pure domain spawn candidate filters if current scene adapters are too fragile.
-- Keep spawn placement independent from Unity scene objects where possible.
+Status: Done
+
+Completed:
+- Added pure expedition spawn placement rules for passable, occupied, distance, and reachability checks.
+- Updated prototype treasure and extraction placement to fall back to valid reachable floor cells.
+- Kept enemy runtime spawn in `DeepSeal.Combat` while adding terrain semantics coverage.
+- Kept spawn tables, biome weighting, and authored spawn zones deferred.

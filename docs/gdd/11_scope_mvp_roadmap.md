@@ -161,6 +161,7 @@
   - 보물 획득 후 도달할 수 있는 프로토타입 귀환 마커.
   - 플레이어 GridPosition 기준 탈출 완료 판정.
   - 완료 후 프로토타입 입력/전투 컴포넌트 정지.
+  - Treasure and extraction marker placement can fall back to valid reachable floor cells on irregular generated maps.
 - Prototype loop feedback and tuning
   - 체력, 보물, 탈출 상태, 루프 결과, 벽 내구도 피드백을 기준으로 1차 튜닝 진행.
   - 현재 튜닝 값은 다음 프로토타입 단계의 임시 기준선으로 사용.
@@ -169,10 +170,12 @@
   - 적이 단순 직선 이동에서 막힐 때 통과 가능한 경로를 찾는 그리드 기반 경로 탐색 추가.
   - 적별 이동 간격과 체력 차이를 통해 임시적인 움직임 다양성 추가.
   - 시간 간격과 최소 활성 적 수 기준의 런타임 적 스폰 추가.
+  - Enemy spawn tests explicitly cover void and non-passable terrain semantics.
 - Prototype reward drops
   - 적 처치와 일부 채굴 행동에서 프로토타입 보상 드랍 생성.
   - 플레이어가 일정 거리 안으로 접근하면 자동 획득.
   - 현재는 획득 개수와 가치만 추적하며, 정식 인벤토리나 캠페인 정산은 없음.
+  - Reward drop spawn validation uses the same passable terrain semantics as expedition object placement.
 - Prototype upgrade selection
   - reward drop value를 사용한 임시 업그레이드 선택 추가.
   - 자동공격 피해, 자동공격 사거리, 채굴 속도, 이동 속도에 직접 연결.
@@ -187,6 +190,7 @@
 - Wall material variants and final terrain art.
 - Asset-authored terrain presets, vault chunks, or room authoring tools.
 - Minimap or exploration map UI after procedural generation, terrain semantics, and discovery rules are more stable.
+- Final spawn tables, biome-specific spawn weighting, authored spawn zones, and campaign reward settlement.
 
 
 다음 구현 후보:

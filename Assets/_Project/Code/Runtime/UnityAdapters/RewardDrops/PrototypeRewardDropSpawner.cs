@@ -167,7 +167,7 @@ namespace DeepSeal.UnityAdapters.RewardDrops
                 return false;
             }
 
-            return grid.TryGetCell(position, out TerrainCell cell) && cell.IsPassable;
+            return ExpeditionSpawnRules.CanSpawnAt(grid, position);
         }
 
         private bool HasActiveDropAt(GridPosition position)
