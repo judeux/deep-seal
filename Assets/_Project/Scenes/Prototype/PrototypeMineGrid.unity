@@ -164,6 +164,10 @@ MonoBehaviour:
   - x: 3
     y: -2
     value: 2
+  useFallbackSpawnRules: 1
+  fallbackSpawnMinDistanceFromStart: 2
+  fallbackSpawnMaxDistanceFromStart: 10
+  fallbackSpawnRandomSeed: 1701
   logSkippedSpawns: 0
 --- !u!4 &9823384
 Transform:
@@ -429,6 +433,10 @@ MonoBehaviour:
   markerId: 0
   offsetX: -2
   offsetY: -2
+  useFallbackSpawnRules: 1
+  fallbackSpawnMinDistanceFromStart: 1
+  fallbackSpawnMaxDistanceFromStart: 6
+  fallbackSpawnRandomSeed: 1801
   logSkippedSpawn: 0
 --- !u!4 &745383671
 Transform:
@@ -645,6 +653,9 @@ MonoBehaviour:
   targetFloorPercent: 45
   internalWallPercent: 10
   internalUnmineableWallPercent: 25
+  edgeMineableWallThickness: 1
+  presetPlacementCount: 2
+  presetPlacementAttempts: 60
 --- !u!1 &1562891232
 GameObject:
   m_ObjectHideFlags: 0

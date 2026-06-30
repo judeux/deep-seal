@@ -61,7 +61,8 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 2-B  | Procedural Mine Shape Pass | Done | Added connected cavern-style mine generation with invisible Void footprint cells, irregular visible silhouettes, and optional mineable internal wall obstacles. |
 | 2-C  | Terrain Wall Type Pass | Done | Added explicit mineable, unmineable, boundary, and void terrain semantics while preserving the prototype mining and movement loop. |
 | 2-D  | Procedural Preset Placement Pass | Done | Added seed-stable pure C# terrain preset placement for generated mine maps while preserving terrain semantics and passable connectivity. |
-| 2-E  | Generation Spawn Rule Review Pass | Planned | Review treasure, extraction, reward, and enemy spawn rules against irregular generated maps with terrain presets. |
+| 2-E  | Generation Spawn Rule Review Pass | Done | Added pure expedition spawn placement rules and connected treasure/extraction fallback placement to irregular generated maps. |
+| 2-F  | Generation and Spawn Tuning Review | Planned | Playtest irregular maps, terrain presets, and spawn placement together to tune density, readability, pressure, and reward pacing. |
 
 ---
 
@@ -188,40 +189,63 @@ Notes:
 * Presets place only Floor, MineableWall, and UnmineableWall cells.
 * Void and BoundaryWall remain controlled by the generator footprint and shell rules.
 
----
-
-## Current Step
-
 ### 2-E. Generation Spawn Rule Review Pass
 
 Goal:
 
-* Review treasure, extraction, reward, and enemy spawn placement against irregular generated mines with terrain presets.
-* Keep spawn rules compatible with Floor, MineableWall, UnmineableWall, BoundaryWall, and Void terrain semantics.
-* Identify whether current prototype spawn adapters need pure domain placement rules.
+* Keep treasure, extraction, reward, and enemy spawn placement compatible with irregular generated maps and terrain presets.
+
+Completed:
+
+* Added pure C# expedition spawn placement rules.
+* Added passable, occupied, distance, and reachability checks for expedition object placement.
+* Updated treasure and extraction marker spawners to fall back to valid reachable floor cells.
+* Reused the same passable spawn validation for reward drops.
+* Added terrain semantics coverage for enemy spawn rules.
+
+Notes:
+
+* Enemy runtime spawn remains owned by `DeepSeal.Combat.EnemySpawnRules`.
+* Treasure, extraction marker, and reward drop placement are expedition loop concerns and use `DeepSeal.Expedition` rules.
+* Spawn tables, biome-specific weighting, and final content authoring remain deferred.
+
+---
+
+## Current Step
+
+### 2-F. Generation and Spawn Tuning Review
+
+Goal:
+
+* Playtest irregular generated maps with terrain presets and updated spawn placement.
+* Tune spawn distance, treasure distribution, extraction readability, enemy pressure, and reward pacing.
+* Identify whether spawn placement needs weighted candidate scoring or authored spawn zones.
 
 Explicit exclusions:
 
-* No minimap or exploration UI yet.
 * No biome system yet.
-* No final terrain art pass.
+* No minimap or exploration UI yet.
 * No campaign reward settlement.
+* No final spawn tables or content database.
 
 ---
 
 ## Next Planned Step
 
-### 2-E. Generation Spawn Rule Review Pass
+### 2-F. Generation and Spawn Tuning Review
 
 Goal:
 
-* Review whether treasure, extraction marker, reward drops, and enemy spawns still choose good positions after irregular shapes and terrain presets.
-* Move any fragile spawn assumptions into pure domain placement rules if needed.
+* Playtest irregular generated maps with terrain presets and updated spawn placement.
+* Tune spawn distance, treasure distribution, extraction readability, enemy pressure, and reward pacing.
+* Identify whether spawn placement needs weighted candidate scoring or authored spawn zones.
 
-Notes:
+Explicit exclusions:
 
-* Minimap or exploration map UI remains deferred.
-* Biome and final terrain art remain deferred.
+* No biome system yet.
+* No minimap or exploration UI yet.
+* No campaign reward settlement.
+* No final spawn tables or content database.
 
 ---
 

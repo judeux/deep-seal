@@ -112,6 +112,8 @@ Implemented pure domain areas:
   - Simple extraction completion rules.
   - Prototype reward drop state.
   - Short-range reward drop pickup rules.
+  - Pure expedition spawn placement settings and rules.
+  - Passable, occupied, distance, and reachability checks for treasure/extraction/reward placement.
 
 - `DeepSeal.Upgrades`
   - Prototype upgrade option definitions.
@@ -189,9 +191,11 @@ Current constraints:
 - Procedural preset/vault placement and minimap/exploration map UI are not yet implemented.
 - Procedural terrain presets are currently code-authored prototype data, not Unity assets, Prefabs, or Tilemap chunks.
 - Preset placement must stay in pure `DeepSeal.ProceduralGeneration` unless asset authoring becomes necessary later.
+- Treasure and extraction marker spawners now use pure expedition spawn rules for fallback placement on irregular maps.
+- Spawn placement is still prototype-oriented and does not yet include weighted spawn tables, biome rules, or authored spawn zones.
 
 Next planned area:
 
-- Generation spawn rule review pass.
-- Check treasure, extraction, reward drop, and enemy spawn assumptions against irregular maps with presets.
-- Keep minimap and exploration map UI deferred.
+- Generation and spawn tuning review.
+- Tune spawn density, extraction readability, reward pacing, and enemy pressure on irregular maps with terrain presets.
+- Keep minimap, biome spawn tables, and final content authoring deferred.

@@ -1,4 +1,6 @@
-﻿using DeepSeal.Core;
+﻿using System.Collections.Generic;
+using DeepSeal.Core;
+using DeepSeal.Expedition;
 using DeepSeal.Mining;
 using DeepSeal.UnityAdapters.Grid;
 using DeepSeal.UnityAdapters.Prototype;
@@ -23,6 +25,12 @@ namespace DeepSeal.UnityAdapters.Extraction
         [SerializeField] private int markerId;
         [SerializeField] private int offsetX = -1;
         [SerializeField] private int offsetY = -1;
+
+        [Header("Fallback Spawn Rules")]
+        [SerializeField] private bool useFallbackSpawnRules = true;
+        [SerializeField] private int fallbackSpawnMinDistanceFromStart = 1;
+        [SerializeField] private int fallbackSpawnMaxDistanceFromStart = 6;
+        [SerializeField] private int fallbackSpawnRandomSeed = 1801;
 
         [Header("Debug")]
         [SerializeField] private bool logSkippedSpawn;
@@ -72,17 +80,26 @@ namespace DeepSeal.UnityAdapters.Extraction
             }
 
             GridPosition spawnPosition = startPosition.Offset(offsetX, offsetY);
+            var occupiedPositions = new List<GridPosition> { startPosition };
 
-            if (!CanSpawnAt(grid, spawnPosition))
+            if (!ExpeditionSpawnRules.CanSpawnAt(grid, spawnPosition, occupiedPositions))
             {
-                if (logSkippedSpawn)
+                if (!useFallbackSpawnRules
+                    || !TryFindFallbackSpawnPosition(
+                        grid,
+                        startPosition,
+                        occupiedPositions,
+                        out spawnPosition))
                 {
-                    Debug.LogWarning(
-                        $"Skipped prototype extraction marker spawn at {spawnPosition}. Cell is blocked or out of bounds.",
-                        this);
-                }
+                    if (logSkippedSpawn)
+                    {
+                        Debug.LogWarning(
+                            $"Skipped prototype extraction marker spawn. Requested={startPosition.Offset(offsetX, offsetY)}. No valid passable fallback was found.",
+                            this);
+                    }
 
-                return false;
+                    return false;
+                }
             }
 
             Transform parent = spawnParent != null ? spawnParent : transform;
@@ -131,14 +148,23 @@ namespace DeepSeal.UnityAdapters.Extraction
             return true;
         }
 
-        private static bool CanSpawnAt(MineGrid grid, GridPosition position)
+        private bool TryFindFallbackSpawnPosition(
+            MineGrid grid,
+            GridPosition startPosition,
+            IReadOnlyCollection<GridPosition> occupiedPositions,
+            out GridPosition spawnPosition)
         {
-            if (!grid.TryGetCell(position, out TerrainCell cell))
-            {
-                return false;
-            }
+            var settings = new ExpeditionSpawnSettings(
+                fallbackSpawnMinDistanceFromStart,
+                fallbackSpawnMaxDistanceFromStart);
 
-            return cell.IsPassable;
+            return ExpeditionSpawnRules.TryFindSpawnPosition(
+                grid,
+                startPosition,
+                occupiedPositions,
+                settings,
+                new System.Random(fallbackSpawnRandomSeed),
+                out spawnPosition);
         }
 
         private void Reset()
@@ -149,11 +175,20 @@ namespace DeepSeal.UnityAdapters.Extraction
             markerId = 0;
             offsetX = -1;
             offsetY = -1;
+            useFallbackSpawnRules = true;
+            fallbackSpawnMinDistanceFromStart = 1;
+            fallbackSpawnMaxDistanceFromStart = 6;
+            fallbackSpawnRandomSeed = 1801;
         }
 
         private void OnValidate()
         {
             markerId = Mathf.Max(0, markerId);
+            fallbackSpawnMinDistanceFromStart = Mathf.Max(0, fallbackSpawnMinDistanceFromStart);
+            fallbackSpawnMaxDistanceFromStart = Mathf.Max(
+                fallbackSpawnMinDistanceFromStart,
+                fallbackSpawnMaxDistanceFromStart);
+            fallbackSpawnRandomSeed = Mathf.Max(0, fallbackSpawnRandomSeed);
         }
     }
 }

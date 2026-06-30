@@ -189,5 +189,32 @@ namespace DeepSeal.Tests.Combat
                 _ = new EnemySpawnSettings(1, 4, 0);
             });
         }
+
+        [Test]
+        public void TryFindSpawnPosition_IgnoresVoidAndNonPassableTerrainTypes()
+        {
+            var grid = new MineGrid(5, 5, TerrainCell.Void);
+            var targetPosition = new GridPosition(2, 2);
+            var bridgePosition = new GridPosition(2, 3);
+            var validSpawn = new GridPosition(2, 4);
+
+            grid.TrySetCell(targetPosition, TerrainCell.Floor);
+            grid.TrySetCell(bridgePosition, TerrainCell.Floor);
+            grid.TrySetCell(validSpawn, TerrainCell.Floor);
+            grid.TrySetCell(new GridPosition(4, 2), TerrainCell.MineableWall(3));
+            grid.TrySetCell(new GridPosition(0, 2), TerrainCell.UnmineableWall);
+            grid.TrySetCell(new GridPosition(2, 0), TerrainCell.BoundaryWall);
+
+            bool found = EnemySpawnRules.TryFindSpawnPosition(
+                grid,
+                targetPosition,
+                new List<GridPosition> { targetPosition },
+                new EnemySpawnSettings(2, 2),
+                new Random(1),
+                out GridPosition spawnPosition);
+
+            Assert.That(found, Is.True);
+            Assert.That(spawnPosition, Is.EqualTo(validSpawn));
+        }
     }
 }

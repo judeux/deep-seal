@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DeepSeal.Core;
+using DeepSeal.Expedition;
 using DeepSeal.Mining;
 using DeepSeal.UnityAdapters.Grid;
 using DeepSeal.UnityAdapters.Prototype;
@@ -63,6 +64,12 @@ namespace DeepSeal.UnityAdapters.Treasures
             new TreasureSpawnPoint(1, -1, 2)
         };
 
+        [Header("Fallback Spawn Rules")]
+        [SerializeField] private bool useFallbackSpawnRules = true;
+        [SerializeField] private int fallbackSpawnMinDistanceFromStart = 2;
+        [SerializeField] private int fallbackSpawnMaxDistanceFromStart = 10;
+        [SerializeField] private int fallbackSpawnRandomSeed = 1701;
+
         [Header("Debug")]
         [SerializeField] private bool logSkippedSpawns;
 
@@ -114,22 +121,33 @@ namespace DeepSeal.UnityAdapters.Treasures
 
             Transform parent = spawnParent != null ? spawnParent : transform;
             int spawnedCount = 0;
+            var occupiedPositions = new List<GridPosition> { startPosition };
+            var fallbackRandom = new System.Random(fallbackSpawnRandomSeed);
 
             for (int i = 0; i < treasureSpawnPoints.Length; i++)
             {
                 TreasureSpawnPoint spawnPoint = treasureSpawnPoints[i].Normalized();
                 GridPosition spawnPosition = spawnPoint.ToPosition(startPosition);
 
-                if (!CanSpawnAt(grid, spawnPosition))
+                if (!ExpeditionSpawnRules.CanSpawnAt(grid, spawnPosition, occupiedPositions))
                 {
-                    if (logSkippedSpawns)
+                    if (!useFallbackSpawnRules
+                        || !TryFindFallbackSpawnPosition(
+                            grid,
+                            startPosition,
+                            occupiedPositions,
+                            fallbackRandom,
+                            out spawnPosition))
                     {
-                        Debug.LogWarning(
-                            $"Skipped prototype treasure spawn at {spawnPosition}. SpawnPoint={spawnPoint}. Cell is blocked or out of bounds.",
-                            this);
-                    }
+                        if (logSkippedSpawns)
+                        {
+                            Debug.LogWarning(
+                                $"Skipped prototype treasure spawn. Requested={spawnPoint}. No valid passable fallback was found.",
+                                this);
+                        }
 
-                    continue;
+                        continue;
+                    }
                 }
 
                 int treasureId = firstTreasureId + spawnedCount;
@@ -144,6 +162,7 @@ namespace DeepSeal.UnityAdapters.Treasures
                 treasureView.name = $"PrototypeTreasure_{treasureId}";
                 treasureView.Initialize(treasureId, spawnPosition, spawnPoint.Value);
                 spawnedTreasures.Add(treasureView);
+                occupiedPositions.Add(spawnPosition);
 
                 spawnedCount++;
             }
@@ -188,14 +207,24 @@ namespace DeepSeal.UnityAdapters.Treasures
             return true;
         }
 
-        private static bool CanSpawnAt(MineGrid grid, GridPosition position)
+        private bool TryFindFallbackSpawnPosition(
+            MineGrid grid,
+            GridPosition startPosition,
+            IReadOnlyCollection<GridPosition> occupiedPositions,
+            System.Random fallbackRandom,
+            out GridPosition spawnPosition)
         {
-            if (!grid.TryGetCell(position, out TerrainCell cell))
-            {
-                return false;
-            }
+            var settings = new ExpeditionSpawnSettings(
+                fallbackSpawnMinDistanceFromStart,
+                fallbackSpawnMaxDistanceFromStart);
 
-            return cell.IsPassable;
+            return ExpeditionSpawnRules.TryFindSpawnPosition(
+                grid,
+                startPosition,
+                occupiedPositions,
+                settings,
+                fallbackRandom,
+                out spawnPosition);
         }
 
         private void Reset()
@@ -204,11 +233,20 @@ namespace DeepSeal.UnityAdapters.Treasures
             spawnOnStart = true;
             generateGridIfMissing = true;
             firstTreasureId = 0;
+            useFallbackSpawnRules = true;
+            fallbackSpawnMinDistanceFromStart = 2;
+            fallbackSpawnMaxDistanceFromStart = 10;
+            fallbackSpawnRandomSeed = 1701;
         }
 
         private void OnValidate()
         {
             firstTreasureId = Mathf.Max(0, firstTreasureId);
+            fallbackSpawnMinDistanceFromStart = Mathf.Max(0, fallbackSpawnMinDistanceFromStart);
+            fallbackSpawnMaxDistanceFromStart = Mathf.Max(
+                fallbackSpawnMinDistanceFromStart,
+                fallbackSpawnMaxDistanceFromStart);
+            fallbackSpawnRandomSeed = Mathf.Max(0, fallbackSpawnRandomSeed);
 
             if (treasureSpawnPoints == null)
             {
