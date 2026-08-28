@@ -1,0 +1,15 @@
+# AI가 읽거나 수정하지 않도록 방지하는 목록
+*.meta
+*.unitypackage
+*.bin
+
+# 대용량 바이너리/미디어 (토큰 낭비 방지)
+*.wav
+*.mp3
+*.ogg
+*.psd
+*.psb
+*.blend
+*.fbx
+*.obj
+*.mp4
