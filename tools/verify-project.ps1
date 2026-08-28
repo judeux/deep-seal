@@ -21,13 +21,22 @@ Write-Host "Unity: $UnityPath"
 Write-Host "Project: $ProjectPath"
 Write-Host "Log: $logFile"
 
-& $UnityPath `
-    -batchmode `
-    -quit `
-    -projectPath $ProjectPath `
-    -logFile $logFile
+$unityArguments = @(
+    "-batchmode"
+    "-quit"
+    "-projectPath"
+    "`"$ProjectPath`""
+    "-logFile"
+    "`"$logFile`""
+)
 
-$exitCode = $LASTEXITCODE
+$unityProcess = Start-Process -FilePath $UnityPath -ArgumentList $unityArguments -Wait -PassThru
+
+$exitCode = $unityProcess.ExitCode
+
+if ($null -eq $exitCode) {
+    Write-Error "Unity process did not report an exit code. See $logFile"
+}
 
 if ($exitCode -ne 0) {
     Write-Error "Unity verification failed with exit code $exitCode. See $logFile"

@@ -25,32 +25,33 @@ if (Test-Path $resultsFile) {
 
 Write-Host "Running Unity PlayMode tests..."
 
-& $UnityPath `
-    -batchmode `
-    -projectPath $ProjectPath `
-    -runTests `
-    -testPlatform PlayMode `
-    -testResults $resultsFile `
-    -logFile $logFile
+$unityArguments = @(
+    "-batchmode"
+    "-projectPath"
+    "`"$ProjectPath`""
+    "-runTests"
+    "-testPlatform"
+    "PlayMode"
+    "-testResults"
+    "`"$resultsFile`""
+    "-logFile"
+    "`"$logFile`""
+)
 
-$exitCode = $LASTEXITCODE
+$unityProcess = Start-Process -FilePath $UnityPath -ArgumentList $unityArguments -Wait -PassThru
+
+$exitCode = $unityProcess.ExitCode
+
+if ($null -eq $exitCode) {
+    Write-Error "Unity process did not report an exit code. See $logFile"
+}
 
 if ($exitCode -ne 0) {
     Write-Error "PlayMode tests failed with exit code $exitCode. See $logFile and $resultsFile"
 }
 
-$resultsDeadline = (Get-Date).AddSeconds(60)
-
-do {
-    if (Test-Path -LiteralPath $resultsFile) {
-        break
-    }
-
-    Start-Sleep -Milliseconds 500
-} while ((Get-Date) -lt $resultsDeadline)
-
 if (-not (Test-Path -LiteralPath $resultsFile)) {
-    Write-Error "PlayMode test results file was not created within 60 seconds. See $logFile"
+    Write-Error "PlayMode test results file was not created. See $logFile"
 }
 
 [xml]$resultsXml = Get-Content -LiteralPath $resultsFile
