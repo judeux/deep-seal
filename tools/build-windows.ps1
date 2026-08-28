@@ -26,15 +26,26 @@ $logFile = "$ProjectPath\Logs\build-windows.log"
 Write-Host "Building Windows player..."
 Write-Host "BuildPath: $BuildPath"
 
-& $UnityPath `
-    -batchmode `
-    -quit `
-    -projectPath $ProjectPath `
-    -executeMethod DeepSeal.EditorBuild.BuildPlayer.PerformWindowsDevelopmentBuild `
-    -deepSealBuildPath $BuildPath `
-    -logFile $logFile
+$unityArguments = @(
+    "-batchmode"
+    "-quit"
+    "-projectPath"
+    "`"$ProjectPath`""
+    "-executeMethod"
+    "DeepSeal.EditorBuild.BuildPlayer.PerformWindowsDevelopmentBuild"
+    "-deepSealBuildPath"
+    "`"$BuildPath`""
+    "-logFile"
+    "`"$logFile`""
+)
 
-$exitCode = $LASTEXITCODE
+$unityProcess = Start-Process -FilePath $UnityPath -ArgumentList $unityArguments -Wait -PassThru
+
+$exitCode = $unityProcess.ExitCode
+
+if ($null -eq $exitCode) {
+    Write-Error "Unity process did not report an exit code. See $logFile"
+}
 
 if ($exitCode -ne 0) {
     Write-Error "Windows build failed with exit code $exitCode. See $logFile"
