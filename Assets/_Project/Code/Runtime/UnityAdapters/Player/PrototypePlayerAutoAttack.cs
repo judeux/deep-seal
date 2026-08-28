@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using DeepSeal.Combat;
 using DeepSeal.Core;
+using DeepSeal.Mining;
 using DeepSeal.UnityAdapters.Enemies;
+using DeepSeal.UnityAdapters.Grid;
+using DeepSeal.UnityAdapters.Prototype;
 using DeepSeal.UnityAdapters.RewardDrops;
 using UnityEngine;
 
@@ -18,6 +21,7 @@ namespace DeepSeal.UnityAdapters.Player
         [SerializeField] private PrototypePlayerMovement playerMovement;
         [SerializeField] private PrototypeEnemySpawner enemySpawner;
         [SerializeField] private PrototypeRewardDropSpawner rewardDropSpawner;
+        [SerializeField] private PrototypeMineGridBootstrap mineGridBootstrap;
 
         [Header("Attack")]
         [SerializeField] private bool attackOnUpdate = true;
@@ -25,11 +29,13 @@ namespace DeepSeal.UnityAdapters.Player
         [SerializeField] private int attackRangeCells = 4;
         [SerializeField] private int attackDamage = 1;
         [SerializeField] private bool spawnRewardDropsOnEnemyDefeat = true;
+        [SerializeField] private AttackPatternKind attackPattern = AttackPatternKind.Nearest;
 
         [Header("Debug")]
         [SerializeField] private bool logAttackResults;
 
         private readonly List<EnemyState> candidateEnemies = new List<EnemyState>(16);
+        private readonly List<EnemyState> affectedEnemies = new List<EnemyState>(16);
         private float nextAttackTime;
         private bool warnedMissingPlayerMovement;
         private bool warnedMissingEnemySpawner;
@@ -56,11 +62,11 @@ namespace DeepSeal.UnityAdapters.Player
             }
 
             ScheduleNextAttack();
-            TryAttackNearestEnemy();
+            TryPerformAttack();
         }
 
-        [ContextMenu("Attack Nearest Enemy")]
-        public bool TryAttackNearestEnemy()
+                [ContextMenu("Perform Attack")]
+        public bool TryPerformAttack()
         {
             if (!TryResolveReferences())
             {
@@ -73,26 +79,21 @@ namespace DeepSeal.UnityAdapters.Player
                 return false;
             }
 
-            enemySpawner.RemoveInactiveEnemyReferences();
-            candidateEnemies.Clear();
+            CollectCandidateEnemies();
 
-            IReadOnlyList<PrototypeEnemyView> spawnedEnemies = enemySpawner.SpawnedEnemies;
-
-            for (int i = 0; i < spawnedEnemies.Count; i++)
+            switch (attackPattern)
             {
-                PrototypeEnemyView enemyView = spawnedEnemies[i];
-
-                if (enemyView == null || enemyView.IsDefeated || !enemyView.isActiveAndEnabled)
-                {
-                    continue;
-                }
-
-                if (enemyView.TryGetCurrentEnemy(out EnemyState enemy))
-                {
-                    candidateEnemies.Add(enemy);
-                }
+                case AttackPatternKind.Projectile:
+                    return TryPerformProjectileAttack(attackerPosition);
+                case AttackPatternKind.Area:
+                    return TryPerformAreaAttack(attackerPosition);
+                default:
+                    return TryPerformNearestAttack(attackerPosition);
             }
+        }
 
+        private bool TryPerformNearestAttack(GridPosition attackerPosition)
+        {
             if (!AttackTargetingRules.TryFindNearestTarget(
                     attackerPosition,
                     candidateEnemies,
@@ -107,6 +108,91 @@ namespace DeepSeal.UnityAdapters.Player
                 return false;
             }
 
+            return ApplyDamageToEnemy(targetEnemy);
+        }
+
+        private bool TryPerformAreaAttack(GridPosition attackerPosition)
+        {
+            int affectedCount = AreaAttackRules.CollectAffectedEnemies(
+                attackerPosition,
+                candidateEnemies,
+                attackRangeCells,
+                affectedEnemies);
+
+            if (affectedCount == 0)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < affectedEnemies.Count; i++)
+            {
+                ApplyDamageToEnemy(affectedEnemies[i]);
+            }
+
+            return true;
+        }
+
+        private bool TryPerformProjectileAttack(GridPosition attackerPosition)
+        {
+            if (!AttackTargetingRules.TryFindNearestTarget(
+                    attackerPosition,
+                    candidateEnemies,
+                    attackRangeCells,
+                    out EnemyState targetEnemy))
+            {
+                return false;
+            }
+
+            if (!TryResolveMineGrid(out MineGrid grid))
+            {
+                return false;
+            }
+
+            ProjectileTraceResult trace = ProjectileAttackRules.Trace(
+                grid,
+                attackerPosition,
+                targetEnemy.Position,
+                candidateEnemies,
+                attackRangeCells);
+
+            if (!trace.HasImpact)
+            {
+                return false;
+            }
+
+            Vector3 impactWorldPosition = GridCoordinateConverter.GridToWorldCenter(trace.ImpactPosition);
+            int hitEnemyId = trace.HitEnemyId;
+
+            PrototypeProjectileView projectile = PrototypeProjectileView.Create(transform.position, transform);
+            projectile.Begin(impactWorldPosition, arrived => OnProjectileArrived(hitEnemyId));
+
+            if (logAttackResults)
+            {
+                Debug.Log(
+                    $"Projectile fired toward enemy {targetEnemy.Id}. Impact={trace.ImpactPosition}, BlockedByWall={trace.BlockedByWall}, HitEnemyId={trace.HitEnemyId}.",
+                    this);
+            }
+
+            return true;
+        }
+
+        private void OnProjectileArrived(int hitEnemyId)
+        {
+            if (hitEnemyId < 0)
+            {
+                return;
+            }
+
+            if (!FindEnemyViewById(hitEnemyId).TryGetCurrentEnemy(out EnemyState enemy))
+            {
+                return;
+            }
+
+            ApplyDamageToEnemy(enemy);
+        }
+
+        private bool ApplyDamageToEnemy(EnemyState targetEnemy)
+        {
             PrototypeEnemyView targetView = FindEnemyViewById(targetEnemy.Id);
 
             if (targetView == null)
@@ -129,6 +215,48 @@ namespace DeepSeal.UnityAdapters.Player
                 Debug.Log(
                     $"Auto attack hit enemy {targetEnemy.Id} for {attackDamage}. Defeated={defeated}.",
                     this);
+            }
+
+            return true;
+        }
+
+        private void CollectCandidateEnemies()
+        {
+            enemySpawner.RemoveInactiveEnemyReferences();
+            candidateEnemies.Clear();
+
+            IReadOnlyList<PrototypeEnemyView> spawnedEnemies = enemySpawner.SpawnedEnemies;
+
+            for (int i = 0; i < spawnedEnemies.Count; i++)
+            {
+                PrototypeEnemyView enemyView = spawnedEnemies[i];
+
+                if (enemyView == null || enemyView.IsDefeated || !enemyView.isActiveAndEnabled)
+                {
+                    continue;
+                }
+
+                if (enemyView.TryGetCurrentEnemy(out EnemyState enemy))
+                {
+                    candidateEnemies.Add(enemy);
+                }
+            }
+        }
+
+        private bool TryResolveMineGrid(out MineGrid grid)
+        {
+            grid = null;
+
+            if (mineGridBootstrap == null)
+            {
+                Debug.LogError("Projectile attack pattern requires a Prototype Mine Grid Bootstrap reference.", this);
+                return false;
+            }
+
+            if (!mineGridBootstrap.TryGetCurrentGrid(out grid))
+            {
+                Debug.LogWarning("Projectile attack pattern could not read the current mine grid.", this);
+                return false;
             }
 
             return true;
@@ -199,6 +327,7 @@ namespace DeepSeal.UnityAdapters.Player
             attackRangeCells = 4;
             attackDamage = 1;
             spawnRewardDropsOnEnemyDefeat = true;
+            attackPattern = AttackPatternKind.Nearest;
         }
 
         public void AddAttackDamage(int amount)

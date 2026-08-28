@@ -1099,11 +1099,13 @@ MonoBehaviour:
   playerMovement: {fileID: 2045824079}
   enemySpawner: {fileID: 2039030422}
   rewardDropSpawner: {fileID: 583619462}
+  mineGridBootstrap: {fileID: 1450090157}
   attackOnUpdate: 1
   attackIntervalSeconds: 0.6
   attackRangeCells: 3
   attackDamage: 1
   spawnRewardDropsOnEnemyDefeat: 1
+  attackPattern: 0
   logAttackResults: 0
 --- !u!114 &2045824083
 MonoBehaviour:
