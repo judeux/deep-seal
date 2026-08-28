@@ -212,6 +212,8 @@ Use conventional commit-style messages when suggesting commits:
 - `refactor:` structure changes without behavior change.
 - `test:` tests only.
 
+When proposing commits, provide complete, copy-paste-ready git command sequences instead of commit message text alone. Include `git add` with explicit file paths, `git commit`, `git push`, and the merge into the main branch when the work is finished, including new branch creation when the next task requires a separate branch. Commands must be runnable as-is in PowerShell without additional editing.
+
 ## Coding Rules
 
 First-party runtime code should live under `Assets/_Project/Code/Runtime/`.
