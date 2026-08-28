@@ -62,6 +62,7 @@ namespace DeepSeal.UnityAdapters.Enemies
         [SerializeField] private float spawnIntervalSeconds = 4f;
         [SerializeField] private int minimumActiveEnemies = 4;
         [SerializeField] private int maximumActiveEnemies = 10;
+        [SerializeField] private float spawnPressureRampSeconds = 90f;
         [SerializeField] private int randomSpawnSeed = 1401;
         [SerializeField] private int minimumSpawnDistanceFromTarget = 5;
         [SerializeField] private int maximumSpawnDistanceFromTarget = 14;
@@ -83,6 +84,7 @@ namespace DeepSeal.UnityAdapters.Enemies
         private bool hasInitializedRandom;
         private int nextEnemyId;
         private float nextRuntimeSpawnTime;
+        private float spawnPressureStartTime;
 
         public IReadOnlyList<PrototypeEnemyView> SpawnedEnemies => spawnedEnemies;
 
@@ -115,6 +117,7 @@ namespace DeepSeal.UnityAdapters.Enemies
                 SpawnEnemies();
             }
 
+            spawnPressureStartTime = Time.time;
             ScheduleNextRuntimeSpawn();
         }
 
@@ -134,15 +137,14 @@ namespace DeepSeal.UnityAdapters.Enemies
             RemoveInactiveEnemyReferences();
 
             int activeCount = ActiveEnemyCount;
+            int targetActiveEnemies = GetCurrentActiveEnemyTarget();
 
-            if (activeCount >= maximumActiveEnemies || activeCount >= minimumActiveEnemies)
+            if (activeCount >= targetActiveEnemies)
             {
                 return;
             }
 
-            int spawnCount = Mathf.Min(
-                minimumActiveEnemies - activeCount,
-                maximumActiveEnemies - activeCount);
+            int spawnCount = targetActiveEnemies - activeCount;
 
             for (int i = 0; i < spawnCount; i++)
             {
@@ -151,6 +153,13 @@ namespace DeepSeal.UnityAdapters.Enemies
                     break;
                 }
             }
+        }
+
+        private int GetCurrentActiveEnemyTarget()
+        {
+            float elapsedSeconds = Mathf.Max(0f, Time.time - spawnPressureStartTime);
+            int rampSteps = Mathf.FloorToInt(elapsedSeconds / spawnPressureRampSeconds);
+            return Mathf.Min(maximumActiveEnemies, minimumActiveEnemies + rampSteps);
         }
 
         [ContextMenu("Spawn Enemies")]
@@ -436,6 +445,7 @@ namespace DeepSeal.UnityAdapters.Enemies
             maximumEnemyHitPoints = 5;
             minimumMoveIntervalSeconds = 0.35f;
             maximumMoveIntervalSeconds = 0.7f;
+            spawnPressureRampSeconds = 90f;
         }
 
         private void OnValidate()
@@ -450,6 +460,7 @@ namespace DeepSeal.UnityAdapters.Enemies
             maximumEnemyHitPoints = Mathf.Max(minimumEnemyHitPoints, maximumEnemyHitPoints);
             minimumMoveIntervalSeconds = Mathf.Max(0.05f, minimumMoveIntervalSeconds);
             maximumMoveIntervalSeconds = Mathf.Max(minimumMoveIntervalSeconds, maximumMoveIntervalSeconds);
+            spawnPressureRampSeconds = Mathf.Max(1f, spawnPressureRampSeconds);
         }
     }
 }
