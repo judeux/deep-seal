@@ -62,7 +62,12 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 2-C  | Terrain Wall Type Pass | Done | Added explicit mineable, unmineable, boundary, and void terrain semantics while preserving the prototype mining and movement loop. |
 | 2-D  | Procedural Preset Placement Pass | Done | Added seed-stable pure C# terrain preset placement for generated mine maps while preserving terrain semantics and passable connectivity. |
 | 2-E  | Generation Spawn Rule Review Pass | Done | Added pure expedition spawn placement rules and connected treasure/extraction fallback placement to irregular generated maps. |
-| 2-F  | Generation and Spawn Tuning Review | Planned | Playtest irregular maps, terrain presets, and spawn placement together to tune density, readability, pressure, and reward pacing. |
+| 2-F  | Generation and Spawn Tuning Review | Deferred   | Applied the runtime enemy pressure ramp only; detailed spawn, treasure, and reward tuning is deferred until core feature breadth is validated. |
+| 3-A  | Attack Pattern Variety             | Planned    | Add distinct automatic attack patterns beyond the single adjacent auto-attack. |
+| 3-B  | Map Variety Pass                   | Planned    | Vary map scale and shape, with a first simple biome flavor layer. |
+| 3-C  | Enemy Variety Pass                 | Planned    | Add distinct enemy behaviors and a first named elite. |
+| 3-D  | Progression and Difficulty Pass    | Planned    | Add in-run progression structure and a readable difficulty gradient. |
+| 3-E  | Sub-Dungeon Prototype              | Planned    | Add one optional sub-dungeon and diversify biome flavor. |
 
 ---
 
@@ -213,55 +218,76 @@ Notes:
 
 ## Current Step
 
-### 2-F. Generation and Spawn Tuning Review
+### 3-A. Attack Pattern Variety
 
 Goal:
 
-* Playtest irregular generated maps with terrain presets and updated spawn placement.
-* Tune spawn distance, treasure distribution, extraction readability, enemy pressure, and reward pacing.
-* Identify whether spawn placement needs weighted candidate scoring or authored spawn zones.
+* Add distinct automatic attack patterns, such as projectile, piercing, or area attacks, beyond the current single adjacent auto-attack.
+* Keep new attack patterns compatible with mining terrain, movement, and the existing upgrade loop.
+* Validate that different attack patterns create different movement and mining decisions.
 
 Explicit exclusions:
 
-* No biome system yet.
-* No minimap or exploration UI yet.
-* No campaign reward settlement.
-* No final spawn tables or content database.
+* No final weapon database or authored content.
+* No weapon evolution, synergy, or upgrade-tree system yet.
+* No VFX or audio polish.
+* No new enemy types yet.
 
 ---
 
 ## Next Planned Step
 
-### 2-F. Generation and Spawn Tuning Review
+### 3-B. Map Variety Pass
 
 Goal:
 
-* Playtest irregular generated maps with terrain presets and updated spawn placement.
-* Tune spawn distance, treasure distribution, extraction readability, enemy pressure, and reward pacing.
-* Identify whether spawn placement needs weighted candidate scoring or authored spawn zones.
+* Vary map scale and cavern shape across runs.
+* Add a first simple biome flavor layer over the existing terrain generation.
 
 Explicit exclusions:
 
-* No biome system yet.
-* No minimap or exploration UI yet.
-* No campaign reward settlement.
-* No final spawn tables or content database.
+* No biome-specific spawn tables or encounters.
+* No minimap or exploration UI.
+* No multi-floor or depth descent structure yet.
 
 ---
 
 ## Later Prototype Steps
 
-### 1-H. Basic Enemy Domain
+### 3-C. Enemy Variety Pass
 
 Goal:
 
-* Add pure C# enemy state and simple movement rules.
+* Add distinct enemy behaviors such as ranged or charging enemies.
+* Add a first named elite with soft counterplay.
 
 Explicit exclusions:
 
-* No Unity rendering yet.
-* No combat damage yet.
-* No animation.
+* No boss logic yet.
+* No hand-made combination pools or forbidden combo validation yet.
+
+### 3-D. Progression and Difficulty Pass
+
+Goal:
+
+* Add in-run progression structure and a readable difficulty gradient.
+
+Explicit exclusions:
+
+* No campaign persistence or meta progression.
+* No injury, missing, or rescue states yet.
+
+### 3-E. Sub-Dungeon Prototype
+
+Goal:
+
+* Add one optional sub-dungeon prototype.
+* Diversify biome flavor beyond 3-B.
+
+Explicit exclusions:
+
+* No full sub-dungeon rotation from the GDD.
+* No counter-play item rewards yet.
 
 ---
 
