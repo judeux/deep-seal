@@ -34,6 +34,7 @@
 *.hlsl text eol=lf
 *.uxml text eol=lf
 *.uss text eol=lf
+*.cs text eol=lf
 
 # Unity YAML Merge (충돌 방지 힌트)
 *.unity merge=unityyamlmerge eol=lf

@@ -63,7 +63,7 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 2-D  | Procedural Preset Placement Pass | Done | Added seed-stable pure C# terrain preset placement for generated mine maps while preserving terrain semantics and passable connectivity. |
 | 2-E  | Generation Spawn Rule Review Pass | Done | Added pure expedition spawn placement rules and connected treasure/extraction fallback placement to irregular generated maps. |
 | 2-F  | Generation and Spawn Tuning Review | Deferred   | Applied the runtime enemy pressure ramp only; detailed spawn, treasure, and reward tuning is deferred until core feature breadth is validated. |
-| 3-A  | Attack Pattern Variety             | Planned    | Add distinct automatic attack patterns beyond the single adjacent auto-attack. |
+| 3-A  | Attack Pattern Variety             | Done        | Added projectile and area auto attack patterns with pure trace rules and EditMode tests. |
 | 3-B  | Map Variety Pass                   | Planned    | Vary map scale and shape, with a first simple biome flavor layer. |
 | 3-C  | Enemy Variety Pass                 | Planned    | Add distinct enemy behaviors and a first named elite. |
 | 3-D  | Progression and Difficulty Pass    | Planned    | Add in-run progression structure and a readable difficulty gradient. |
@@ -216,26 +216,30 @@ Notes:
 
 ---
 
-## Current Step
-
 ### 3-A. Attack Pattern Variety
 
 Goal:
 
-* Add distinct automatic attack patterns, such as projectile, piercing, or area attacks, beyond the current single adjacent auto-attack.
+* Add distinct automatic attack patterns beyond the adjacent auto-attack.
 * Keep new attack patterns compatible with mining terrain, movement, and the existing upgrade loop.
-* Validate that different attack patterns create different movement and mining decisions.
 
-Explicit exclusions:
+Completed:
 
-* No final weapon database or authored content.
-* No weapon evolution, synergy, or upgrade-tree system yet.
-* No VFX or audio polish.
-* No new enemy types yet.
+* Added pure projectile trace rules that decide a straight cardinal flight at fire time and stop at the first wall, the first enemy on the path, or the range limit.
+* Added pure area attack rules that affect every enemy within Manhattan range.
+* Added a traveling projectile view with an explicit white-square placeholder sprite.
+* Extended the prototype auto attack adapter with a Nearest, Projectile, and Area pattern selector.
+* Added EditMode tests for projectile tracing and area collection.
+
+Notes:
+
+* Projectile flights are blocked by walls, so mining opens firing lines; the combat-mining link is validated.
+* The Nearest and Area patterns have no visible attack motion, effect, or range display yet; a combat feedback pass is deferred until after the feature breadth steps.
+* The projectile placeholder sprite must be replaced by a real asset before production content.
 
 ---
 
-## Next Planned Step
+## Current Step
 
 ### 3-B. Map Variety Pass
 
@@ -252,7 +256,7 @@ Explicit exclusions:
 
 ---
 
-## Later Prototype Steps
+## Next Planned Step
 
 ### 3-C. Enemy Variety Pass
 
@@ -265,6 +269,10 @@ Explicit exclusions:
 
 * No boss logic yet.
 * No hand-made combination pools or forbidden combo validation yet.
+
+---
+
+## Later Prototype Steps
 
 ### 3-D. Progression and Difficulty Pass
 
