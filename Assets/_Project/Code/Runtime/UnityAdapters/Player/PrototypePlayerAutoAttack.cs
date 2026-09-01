@@ -65,7 +65,7 @@ namespace DeepSeal.UnityAdapters.Player
             TryPerformAttack();
         }
 
-                [ContextMenu("Perform Attack")]
+        [ContextMenu("Perform Attack")]
         public bool TryPerformAttack()
         {
             if (!TryResolveReferences())
@@ -183,7 +183,9 @@ namespace DeepSeal.UnityAdapters.Player
                 return;
             }
 
-            if (!FindEnemyViewById(hitEnemyId).TryGetCurrentEnemy(out EnemyState enemy))
+            PrototypeEnemyView targetView = FindEnemyViewById(hitEnemyId);
+
+            if (targetView == null || !targetView.TryGetCurrentEnemy(out EnemyState enemy))
             {
                 return;
             }
