@@ -12,16 +12,16 @@ namespace DeepSeal.Core
         Up = 1,
         Right = 2,
         Down = 3,
-        Left = 4    
+        Left = 4
     }
 
     public static class GridDirectionExtensions
     {
         public static bool IsCardinal(this GridDirection direction)
         {
-            return direction == GridDirection.Up 
-                || direction == GridDirection.Right 
-                || direction == GridDirection.Down 
+            return direction == GridDirection.Up
+                || direction == GridDirection.Right
+                || direction == GridDirection.Down
                 || direction == GridDirection.Left;
         }
 

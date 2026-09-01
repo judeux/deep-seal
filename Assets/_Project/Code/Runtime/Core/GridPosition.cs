@@ -19,7 +19,7 @@ namespace DeepSeal.Core
 
         public static GridPosition Zero => new GridPosition(0, 0);
 
-        public GridPosition Offset(int deltaX, int deltaY) 
+        public GridPosition Offset(int deltaX, int deltaY)
         {
             return new GridPosition(X + deltaX, Y + deltaY);
         }
@@ -41,7 +41,7 @@ namespace DeepSeal.Core
 
         public override int GetHashCode()
         {
-            unchecked 
+            unchecked
             {
                 return (X * 397) ^ Y;
             }

@@ -12,7 +12,7 @@ namespace DeepSeal.Tests.Core
         public void Constructor_StoresCoordinates()
         {
             var position = new GridPosition(3, -2);
-            
+
             Assert.That(position.X, Is.EqualTo(3));
             Assert.That(position.Y, Is.EqualTo(-2));
         }

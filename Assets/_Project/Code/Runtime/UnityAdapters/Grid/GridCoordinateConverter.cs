@@ -23,6 +23,6 @@ namespace DeepSeal.UnityAdapters.Grid
                 Mathf.FloorToInt(worldPosition.x),
                 Mathf.FloorToInt(worldPosition.y));
         }
-    
+
     }
 }

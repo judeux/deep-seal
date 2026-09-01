@@ -759,6 +759,7 @@ MonoBehaviour:
   treasurePickup: {fileID: 2045824085}
   playerExtraction: {fileID: 2045824086}
   rewardDropPickup: {fileID: 2045824087}
+  mineGridBootstrap: {fileID: 1450090157}
   showHud: 1
   showCenterLoopResult: 1
   topLeftOffset: {x: 16, y: 16}

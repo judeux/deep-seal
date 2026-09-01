@@ -66,6 +66,20 @@ namespace DeepSeal.UnityAdapters.Tilemaps
             targetTilemap.RefreshAllTiles();
         }
 
+        /// <summary>
+        /// 타일맵 전체에 색조를 입힌다. 바이옴 표현용이며 기본값은 흰색(무변경)이다.
+        /// </summary>
+        public void SetTint(Color tint)
+        {
+            if (targetTilemap == null)
+            {
+                Debug.LogWarning("Cannot apply tint because Target Tilemap is not assigned.", this);
+                return;
+            }
+
+            targetTilemap.color = tint;
+        }
+
         public void Clear()
         {
             if (targetTilemap == null)
