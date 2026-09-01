@@ -64,7 +64,7 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 2-E  | Generation Spawn Rule Review Pass | Done | Added pure expedition spawn placement rules and connected treasure/extraction fallback placement to irregular generated maps. |
 | 2-F  | Generation and Spawn Tuning Review | Deferred   | Applied the runtime enemy pressure ramp only; detailed spawn, treasure, and reward tuning is deferred until core feature breadth is validated. |
 | 3-A  | Attack Pattern Variety             | Done        | Added projectile and area auto attack patterns with pure trace rules and EditMode tests. |
-| 3-B  | Map Variety Pass                   | Planned    | Vary map scale and shape, with a first simple biome flavor layer. |
+| 3-B  | Map Variety Pass                   | Done        | Added seeded biome selection with four prototype biomes, biome tile tints, and HUD biome and seed display. |
 | 3-C  | Enemy Variety Pass                 | Planned    | Add distinct enemy behaviors and a first named elite. |
 | 3-D  | Progression and Difficulty Pass    | Planned    | Add in-run progression structure and a readable difficulty gradient. |
 | 3-E  | Sub-Dungeon Prototype              | Planned    | Add one optional sub-dungeon and diversify biome flavor. |
@@ -239,8 +239,6 @@ Notes:
 
 ---
 
-## Current Step
-
 ### 3-B. Map Variety Pass
 
 Goal:
@@ -248,15 +246,23 @@ Goal:
 * Vary map scale and cavern shape across runs.
 * Add a first simple biome flavor layer over the existing terrain generation.
 
-Explicit exclusions:
+Completed:
 
-* No biome-specific spawn tables or encounters.
-* No minimap or exploration UI.
-* No multi-floor or depth descent structure yet.
+* Added pure MineBiome range data and seeded MineBiomeSelectionRules that produce existing MineGenerationSettings without touching the generator.
+* Added four code-authored prototype biomes: rubble-cavern, dense-rock, hollow-cavern, and vein-field.
+* Added a biome selection mode to the prototype bootstrap with manual settings preserved as the default.
+* Added per-biome Tilemap tint and HUD biome and seed display.
+* Added EditMode tests for biome library validity, determinism, and generated grid validation.
+
+Notes:
+
+* The owner noted that walls, floors, and preset composition still read as monotonous; variety currently comes from generation parameters and tint only.
+* Biome-specific tilesets and more preset types are deferred to a later presentation and content pass and will need asset requests.
+* The biome tint is an explicit placeholder that reuses the existing prototype tiles.
 
 ---
 
-## Next Planned Step
+## Current Step
 
 ### 3-C. Enemy Variety Pass
 
@@ -272,7 +278,7 @@ Explicit exclusions:
 
 ---
 
-## Later Prototype Steps
+## Next Planned Step
 
 ### 3-D. Progression and Difficulty Pass
 
@@ -284,6 +290,10 @@ Explicit exclusions:
 
 * No campaign persistence or meta progression.
 * No injury, missing, or rescue states yet.
+
+---
+
+## Later Prototype Steps
 
 ### 3-E. Sub-Dungeon Prototype
 
