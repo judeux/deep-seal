@@ -45,7 +45,21 @@ namespace DeepSeal.UnityAdapters.Prototype
         [Range(0, MineGenerationSettings.MaxPresetPlacementAttempts)]
         [SerializeField] private int presetPlacementAttempts = 60;
 
+        [Header("Biome")]
+        [Tooltip("ManualSettings keeps the manual fields above. SeededBiome picks a prototype biome from the seed.")]
+        [SerializeField] private MineBiomeSelectionMode biomeSelectionMode = MineBiomeSelectionMode.ManualSettings;
+
         private MineGenerationResult currentResult;
+        /// <summary>
+        /// 맵 생성 설정을 수동 필드에서 가져올지, 시드 기반 바이옴 선택에서 가져올지 고른다.
+        /// </summary>
+        public enum MineBiomeSelectionMode
+        {
+            ManualSettings = 0,
+            SeededBiome = 1
+        }
+
+        private string lastSelectedBiomeName;
         private bool hasCurrentResult;
 
         public bool HasCurrentResult => hasCurrentResult;
@@ -146,8 +160,24 @@ namespace DeepSeal.UnityAdapters.Prototype
             return false;
         }
 
+        /// <summary>
+        /// 마지막으로 생성에 사용된 바이옴 이름을 반환한다. 3-B-2에서 HUD 표시에 사용한다.
+        /// </summary>
+        public bool TryGetSelectedBiomeName(out string biomeName)
+        {
+            biomeName = lastSelectedBiomeName;
+            return !string.IsNullOrEmpty(biomeName);
+        }
+
         private bool TryCreateSettings(out MineGenerationSettings settings)
         {
+            if (biomeSelectionMode == MineBiomeSelectionMode.SeededBiome)
+            {
+                return TryCreateBiomeSettings(out settings);
+            }
+
+            lastSelectedBiomeName = null;
+
             try
             {
                 settings = new MineGenerationSettings(
@@ -173,6 +203,30 @@ namespace DeepSeal.UnityAdapters.Prototype
 
                 Debug.LogError(
                     $"Invalid prototype mine generation settings. {exception.Message}",
+                    this);
+
+                return false;
+            }
+        }
+
+        private bool TryCreateBiomeSettings(out MineGenerationSettings settings)
+        {
+            try
+            {
+                settings = MineBiomeSelectionRules.CreateSettings(
+                    MineBiomeLibrary.CreatePrototypeBiomes(),
+                    seed,
+                    out MineBiome selectedBiome);
+
+                lastSelectedBiomeName = selectedBiome.DisplayName;
+                return true;
+            }
+            catch (ArgumentException exception)
+            {
+                settings = default;
+
+                Debug.LogError(
+                    $"Invalid prototype biome selection settings. {exception.Message}",
                     this);
 
                 return false;
