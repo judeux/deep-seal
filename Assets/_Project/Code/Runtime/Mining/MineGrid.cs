@@ -5,7 +5,7 @@ namespace DeepSeal.Mining
 {
     /// <summary>
     /// Stores mutable terrain cells for a rectangular integer mine grid.
-    /// 2D Á¤¼ö ÁÂÇ¥ ±â¹İÀÇ ÁöÇü ¼¿ ¹è¿­À» º¸°üÇÏ°í, ¹üÀ§ °Ë»çÈ­ ¾ÈÀüÇÑ Á¶È¸/°»½Å API¸¦ Á¦°øÇÑ´Ù.
+    /// 2D ì •ìˆ˜ ì¢Œí‘œ ê¸°ë°˜ì˜ ì§€í˜• ì…€ ë°°ì—´ì„ ë³´ê´€í•˜ê³ , ë²”ìœ„ ê²€ì‚¬í™” ì•ˆì „í•œ ì¡°íšŒ/ê°±ì‹  APIë¥¼ ì œê³µí•œë‹¤.
     /// </summary>
     public sealed class MineGrid
     {
