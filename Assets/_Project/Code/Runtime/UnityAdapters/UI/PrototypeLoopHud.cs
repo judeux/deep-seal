@@ -1,4 +1,5 @@
 ﻿using DeepSeal.UnityAdapters.Player;
+using DeepSeal.UnityAdapters.Prototype;
 using UnityEngine;
 
 namespace DeepSeal.UnityAdapters.UI
@@ -15,6 +16,7 @@ namespace DeepSeal.UnityAdapters.UI
         [SerializeField] private PrototypePlayerTreasurePickup treasurePickup;
         [SerializeField] private PrototypePlayerExtraction playerExtraction;
         [SerializeField] private PrototypePlayerRewardDropPickup rewardDropPickup;
+        [SerializeField] private PrototypeMineGridBootstrap mineGridBootstrap;
 
         [Header("Display")]
         [SerializeField] private bool showHud = true;
@@ -60,7 +62,7 @@ namespace DeepSeal.UnityAdapters.UI
             float rowGap = 2f;
             float paddingX = 10f;
             float paddingY = 10f;
-            float panelHeight = paddingY * 2f + rowHeight * 5f + rowGap * 4f;
+            float panelHeight = paddingY * 2f + rowHeight * 6f + rowGap * 5f;
 
             var panelRect = new Rect(
                 topLeftOffset.x,
@@ -76,6 +78,9 @@ namespace DeepSeal.UnityAdapters.UI
                 panelRect.width - paddingX * 2f,
                 rowHeight);
 
+            DrawHudLine(rowRect, BuildBiomeText(), labelStyle, normalTextColor);
+
+            rowRect.y += rowHeight + rowGap;
             DrawHudLine(rowRect, BuildHealthText(), labelStyle, normalTextColor);
 
             rowRect.y += rowHeight + rowGap;
@@ -99,6 +104,21 @@ namespace DeepSeal.UnityAdapters.UI
         {
             style.normal.textColor = color;
             GUI.Label(rect, text, style);
+        }
+
+        private string BuildBiomeText()
+        {
+            if (mineGridBootstrap == null)
+            {
+                return "Biome: unassigned";
+            }
+
+            if (mineGridBootstrap.TryGetSelectedBiomeName(out string biomeName))
+            {
+                return $"Biome: {biomeName} (seed {mineGridBootstrap.CurrentSeed})";
+            }
+
+            return $"Biome: manual settings (seed {mineGridBootstrap.CurrentSeed})";
         }
 
         private string BuildHealthText()

@@ -127,6 +127,7 @@ namespace DeepSeal.UnityAdapters.Prototype
             hasCurrentResult = true;
 
             mineGridRenderer.Render(generationResult.Grid);
+            ApplyBiomeTint();
             return true;
         }
 
@@ -168,6 +169,11 @@ namespace DeepSeal.UnityAdapters.Prototype
             biomeName = lastSelectedBiomeName;
             return !string.IsNullOrEmpty(biomeName);
         }
+
+        /// <summary>
+        /// 현재 Inspector에 설정된 생성 시드를 반환한다. HUD 표시용이다.
+        /// </summary>
+        public int CurrentSeed => seed;
 
         private bool TryCreateSettings(out MineGenerationSettings settings)
         {
@@ -231,6 +237,19 @@ namespace DeepSeal.UnityAdapters.Prototype
 
                 return false;
             }
+        }
+
+        private void ApplyBiomeTint()
+        {
+            Color tint = Color.white;
+
+            if (TryGetSelectedBiomeName(out string biomeName)
+                && PrototypeBiomeTintLibrary.TryGetTint(biomeName, out Color biomeTint))
+            {
+                tint = biomeTint;
+            }
+
+            mineGridRenderer.SetTint(tint);
         }
 
         private void ClearCurrentResult()
