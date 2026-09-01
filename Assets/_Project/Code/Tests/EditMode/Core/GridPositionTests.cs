@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace DeepSeal.Tests.Core
 {
     /// <summary>
-    /// GridPositionÀÇ ÁÂÇ¥ ÀúÀå, ¿ÀÇÁ¼Â, µî°¡¼º, ¿¬»êÀÚ µ¿ÀÛÀ» °ËÁõÇÑ´Ù.
+    /// GridPositionì˜ ì¢Œí‘œ ì €ì¥, ì˜¤í”„ì…‹, ë“±ê°€ì„±, ì—°ì‚°ì ë™ì‘ì„ ê²€ì¦í•œë‹¤.
     /// </summary>
     public sealed class GridPositionTests
     {

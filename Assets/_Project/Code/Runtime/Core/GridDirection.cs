@@ -4,7 +4,7 @@ namespace DeepSeal.Core
 {
     /// <summary>
     /// Represents cardinal movement or mining direction on an integer grid
-    /// ¼¿ ±×¸®µå¿¡¼­ ¾²´Â ±âº» ¹æÇâ°ú ¹æÇâ À¯Æ¿¸®Æ¼¸¦ Á¦°øÇÑ´Ù.
+    /// ì…€ ê·¸ë¦¬ë“œì—ì„œ ì“°ëŠ” ê¸°ë³¸ ë°©í–¥ê³¼ ë°©í–¥ ìœ í‹¸ë¦¬í‹°ë¥¼ ì œê³µí•œë‹¤.
     /// </summary>
     public enum GridDirection
     {
