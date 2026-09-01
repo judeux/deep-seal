@@ -12,7 +12,7 @@ namespace DeepSeal.Mining
 
     /// <summary>
     /// Describes the outcome of one mining attempt against a mine grid cell.
-    /// ì±„êµ´ ì‹œë„ì˜ ê²°ê³¼ë¥¼ í‘œí˜„í•œë‹¤. ë²”ìœ„ ë°–, ì±„êµ´ ë¶ˆê°€, ë‚´êµ¬ë„ ê°ì†Œ, íŒŒê´´ ì™„ë£Œë¥¼ êµ¬ë¶„í•œë‹¤.
+    /// Ã¤±¼ ½ÃµµÀÇ °á°ú¸¦ Ç¥ÇöÇÑ´Ù. ¹üÀ§ ¹Û, Ã¤±¼ ºÒ°¡, ³»±¸µµ °¨¼Ò, ÆÄ±« ¿Ï·á¸¦ ±¸ºĞÇÑ´Ù.
     /// </summary>
     public readonly struct MiningResult
     {

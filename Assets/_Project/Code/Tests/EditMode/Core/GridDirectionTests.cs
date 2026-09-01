@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace DeepSeal.Tests.Core
 {
     /// <summary>
-    /// ë°©í–¥ enumì˜ ì˜¤í”„ì…‹ ë³€í™˜, ë°˜ëŒ€ ë°©í–¥, cardinal íŒì •ì„ ê²€ì¦í•œë‹¤.
+    /// ¹æÇâ enumÀÇ ¿ÀÇÁ¼Â º¯È¯, ¹İ´ë ¹æÇâ, cardinal ÆÇÁ¤À» °ËÁõÇÑ´Ù.
     /// </summary>
     public sealed class GridDirectionTests
     {
