@@ -23,6 +23,8 @@ The default workflow for this repository is **proposal-only implementation**.
 
 Codex must not directly create, modify, delete, or move project files unless the project owner explicitly asks for direct file edits in that specific task.
 
+Exception — documentation: Codex (ZCode) may directly create, update, and modify documentation files under `docs/` and this `AGENTS.md` file whenever a task requires documentation changes, including roadmap status updates after a completed step. Codex must report exactly which documentation files were changed. Code, scene, prefab, asset, and project settings changes remain proposal-only.
+
 For normal development tasks, Codex should follow this loop:
 
 1. Read the relevant design and architecture documents.
@@ -233,6 +235,8 @@ Avoid unnecessary inheritance hierarchies. Prefer composition and explicit data 
 Avoid per-frame allocations in gameplay loops. Do not use LINQ in `Update`, `FixedUpdate`, tight enemy loops, or procedural generation hot paths unless the allocation cost is measured and acceptable.
 
 Do not introduce global singletons or service locators during the prototype phase unless explicitly approved.
+
+Prefer Korean for code comments and XML documentation comments in proposed code. Keep type and member identifiers, commit messages, and runtime log messages in English to match the existing codebase. All text files, including files that contain Korean comments, must be encoded in UTF-8.
 
 ## Design Implementation Rules
 
