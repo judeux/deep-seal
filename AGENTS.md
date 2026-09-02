@@ -117,6 +117,17 @@ Codex must present the asset request as a proposal only. The project owner will 
 
 If a placeholder is acceptable for a prototype step, Codex must explicitly state the placeholder requirements and the later replacement criteria.
 
+UI direction:
+
+* New UI must be built as real Unity UI objects (Canvas, prefabs, sprites, atlases) instead of temporary OnGUI code once the prototype HUDs are replaced.
+* Proposals that include UI must consider screen composition, readability, and the overall UI/UX flow.
+* First-pass UI does not need to be perfect; screen composition and UI/UX will keep changing and being optimized as development progresses.
+
+AI-assisted asset workflow:
+
+* Asset request specs must be written so the project owner can paste them directly into an AI generation tool. Include the exact prompt text for images, sprites, and SFX where applicable.
+* ZCode may generate and import assets directly when the project owner permits it for that task. In that case the generation spec or prompt must be saved under `ArtSource/` and the asset must be registered in `docs/licenses/ASSET_REGISTER.md`.
+
 
 ## Primary Source Documents
 
