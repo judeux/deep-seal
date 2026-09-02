@@ -1,6 +1,7 @@
 $ErrorActionPreference = "Stop"
 
-# pre-commit 훅과 같은 유형의 추적 파일에서 줄끝 공백을 제거한다.
+# pre-commit 훅과 같은 유형의 추적 파일에서 줄끝 공백을 제거하고 다시 스테이징한다.
+# 작업 폴더만 정리하면 커밋 훅이 여전히 실패할 수 있으므로 정리한 파일은 git add로 인덱스도 갱신한다.
 # Unity .meta 파일은 표준 포맷에 trailing space가 있으므로 대상에서 제외한다.
 $previousEncoding = [Console]::OutputEncoding
 
@@ -38,7 +39,8 @@ foreach ($file in $trackedFiles) {
     if ($clean -ne $text) {
         $encoding = if ($hasBom) { $utf8Bom } else { $utf8NoBom }
         [System.IO.File]::WriteAllText($file, $clean, $encoding)
-        Write-Host "Cleaned: $file"
+        git add -- $file
+        Write-Host "Cleaned and staged: $file"
         $cleanedCount++
     }
 }
