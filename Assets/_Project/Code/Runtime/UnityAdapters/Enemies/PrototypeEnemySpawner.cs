@@ -73,6 +73,16 @@ namespace DeepSeal.UnityAdapters.Enemies
         [SerializeField] private float minimumMoveIntervalSeconds = 0.35f;
         [SerializeField] private float maximumMoveIntervalSeconds = 0.7f;
 
+        [Header("Elite Spawning")]
+        [SerializeField] private bool spawnElitesOverTime = true;
+        [SerializeField] private float eliteSpawnIntervalSeconds = 150f;
+        [SerializeField] private string eliteDisplayName = "Vanguard Kolt";
+        [SerializeField] private int eliteHitPoints = 9;
+        [SerializeField] private float eliteMoveIntervalSeconds = 0.9f;
+        [SerializeField] private int eliteDefeatRewardValue = 5;
+        [SerializeField] private float eliteScaleMultiplier = 1.35f;
+        [SerializeField] private Color eliteTint = new Color(1f, 0.6f, 0.2f, 1f);
+
         [Header("Debug")]
         [SerializeField] private bool logSkippedSpawns;
         [SerializeField] private bool logRuntimeSpawns;
@@ -84,6 +94,8 @@ namespace DeepSeal.UnityAdapters.Enemies
         private bool hasInitializedRandom;
         private int nextEnemyId;
         private float nextRuntimeSpawnTime;
+        private float nextEliteSpawnTime;
+        private PrototypeEnemyView activeEliteView;
         private float spawnPressureStartTime;
 
         public IReadOnlyList<PrototypeEnemyView> SpawnedEnemies => spawnedEnemies;
@@ -118,11 +130,33 @@ namespace DeepSeal.UnityAdapters.Enemies
             }
 
             spawnPressureStartTime = Time.time;
+            ScheduleNextEliteSpawn();
             ScheduleNextRuntimeSpawn();
         }
 
         private void Update()
         {
+            if (spawnElitesOverTime && Time.time >= nextEliteSpawnTime)
+            {
+                ScheduleNextEliteSpawn();
+
+                if (TrySpawnRuntimeEnemy(out PrototypeEnemyView eliteView))
+                {
+                    eliteView.ConfigureElite(
+                        EnemyBehaviorKind.Charger,
+                        eliteDisplayName,
+                        eliteDefeatRewardValue,
+                        eliteHitPoints,
+                        eliteMoveIntervalSeconds,
+                        eliteScaleMultiplier,
+                        eliteTint);
+
+                    activeEliteView = eliteView;
+
+                    Debug.Log($"Elite spawned. Name={eliteDisplayName}.", this);
+                }
+            }
+
             if (!spawnOverTime)
             {
                 return;
@@ -148,9 +182,31 @@ namespace DeepSeal.UnityAdapters.Enemies
 
             for (int i = 0; i < spawnCount; i++)
             {
-                if (!TrySpawnRuntimeEnemy())
+                if (!TrySpawnRuntimeEnemy(out _))
                 {
                     break;
+                }
+            }
+
+            if (spawnElitesOverTime && Time.time >= nextEliteSpawnTime)
+            {
+                ScheduleNextEliteSpawn();
+
+                if (TrySpawnRuntimeEnemy(out PrototypeEnemyView eliteView))
+                {
+                    eliteView.ConfigureElite(
+                        EnemyBehaviorKind.Charger,
+                        eliteDisplayName,
+                        eliteDefeatRewardValue,
+                        eliteHitPoints,
+                        eliteMoveIntervalSeconds,
+                        eliteScaleMultiplier,
+                        eliteTint);
+
+                    if (logRuntimeSpawns)
+                    {
+                        Debug.Log($"Elite spawned. Name={eliteDisplayName}.", this);
+                    }
                 }
             }
         }
@@ -231,8 +287,10 @@ namespace DeepSeal.UnityAdapters.Enemies
             }
         }
 
-        private bool TrySpawnRuntimeEnemy()
+        private bool TrySpawnRuntimeEnemy(out PrototypeEnemyView spawnedEnemy)
         {
+            spawnedEnemy = null;
+
             EnsureRandomInitialized();
 
             if (!TryResolveGrid(out MineGrid grid))
@@ -279,6 +337,7 @@ namespace DeepSeal.UnityAdapters.Enemies
                     this);
             }
 
+            spawnedEnemy = enemy;
             return enemy != null;
         }
 
@@ -416,6 +475,32 @@ namespace DeepSeal.UnityAdapters.Enemies
         private void ScheduleNextRuntimeSpawn()
         {
             nextRuntimeSpawnTime = Time.time + spawnIntervalSeconds;
+        }
+
+        private void ScheduleNextEliteSpawn()
+        {
+            nextEliteSpawnTime = Time.time + eliteSpawnIntervalSeconds;
+        }
+
+        /// <summary>
+        /// 현재 활성 상태의 엘리트 정보를 반환한다. 엘리트가 없으면 false를 반환한다.
+        /// </summary>
+        public bool TryGetActiveEliteInfo(out string eliteName, out int currentHitPoints, out int maxHitPoints)
+        {
+            eliteName = "";
+            currentHitPoints = 0;
+            maxHitPoints = 0;
+
+            if (activeEliteView == null || activeEliteView.IsDefeated || !activeEliteView.isActiveAndEnabled)
+            {
+                activeEliteView = null;
+                return false;
+            }
+
+            eliteName = activeEliteView.DisplayName;
+            currentHitPoints = activeEliteView.CurrentHitPoints;
+            maxHitPoints = activeEliteView.MaxHitPoints;
+            return true;
         }
 
         private static bool CanSpawnAt(MineGrid grid, GridPosition position)

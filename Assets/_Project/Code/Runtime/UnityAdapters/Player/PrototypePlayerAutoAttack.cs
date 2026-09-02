@@ -209,7 +209,7 @@ namespace DeepSeal.UnityAdapters.Player
 
             if (defeated && spawnRewardDropsOnEnemyDefeat)
             {
-                TrySpawnEnemyDefeatRewardDrop(targetEnemy.Position);
+                TrySpawnEnemyDefeatRewardDrop(targetEnemy.Position, targetView.DefeatRewardValue);
             }
 
             if (logAttackResults)
@@ -361,7 +361,7 @@ namespace DeepSeal.UnityAdapters.Player
             attackDamage = Mathf.Max(1, attackDamage);
         }
 
-        private void TrySpawnEnemyDefeatRewardDrop(GridPosition position)
+        private void TrySpawnEnemyDefeatRewardDrop(GridPosition position, int rewardValue)
         {
             if (rewardDropSpawner == null)
             {
@@ -375,7 +375,7 @@ namespace DeepSeal.UnityAdapters.Player
             }
 
             warnedMissingRewardDropSpawner = false;
-            rewardDropSpawner.TrySpawnEnemyDefeatRewardDrop(position);
+            rewardDropSpawner.TrySpawnEnemyDefeatRewardDrop(position, rewardValue);
         }
     }
 }

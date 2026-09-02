@@ -760,6 +760,7 @@ MonoBehaviour:
   playerExtraction: {fileID: 2045824086}
   rewardDropPickup: {fileID: 2045824087}
   mineGridBootstrap: {fileID: 1450090157}
+  enemySpawner: {fileID: 2039030422}
   showHud: 1
   showCenterLoopResult: 1
   topLeftOffset: {x: 16, y: 16}
@@ -928,6 +929,14 @@ MonoBehaviour:
   maximumEnemyHitPoints: 5
   minimumMoveIntervalSeconds: 0.35
   maximumMoveIntervalSeconds: 0.7
+  spawnElitesOverTime: 1
+  eliteSpawnIntervalSeconds: 150
+  eliteDisplayName: Vanguard Kolt
+  eliteHitPoints: 9
+  eliteMoveIntervalSeconds: 0.9
+  eliteDefeatRewardValue: 5
+  eliteScaleMultiplier: 1.35
+  eliteTint: {r: 1, g: 0.6, b: 0.2, a: 1}
   logSkippedSpawns: 0
   logRuntimeSpawns: 0
 --- !u!4 &2039030423
@@ -1143,7 +1152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerHealth
   maxHitPoints: 10
   resetOnAwake: 1
-  currentHitPoints: 10
+  currentHitPoints: 1
   reenableOnReset: 1
   tintOnDefeat: 1
   aliveTint: {r: 1, g: 1, b: 1, a: 1}

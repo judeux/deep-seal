@@ -1,4 +1,5 @@
-﻿using DeepSeal.UnityAdapters.Player;
+﻿using DeepSeal.UnityAdapters.Enemies;
+using DeepSeal.UnityAdapters.Player;
 using DeepSeal.UnityAdapters.Prototype;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ namespace DeepSeal.UnityAdapters.UI
         [SerializeField] private PrototypePlayerExtraction playerExtraction;
         [SerializeField] private PrototypePlayerRewardDropPickup rewardDropPickup;
         [SerializeField] private PrototypeMineGridBootstrap mineGridBootstrap;
+        [SerializeField] private PrototypeEnemySpawner enemySpawner;
 
         [Header("Display")]
         [SerializeField] private bool showHud = true;
@@ -62,7 +64,7 @@ namespace DeepSeal.UnityAdapters.UI
             float rowGap = 2f;
             float paddingX = 10f;
             float paddingY = 10f;
-            float panelHeight = paddingY * 2f + rowHeight * 6f + rowGap * 5f;
+            float panelHeight = paddingY * 2f + rowHeight * 7f + rowGap * 6f;
 
             var panelRect = new Rect(
                 topLeftOffset.x,
@@ -79,6 +81,9 @@ namespace DeepSeal.UnityAdapters.UI
                 rowHeight);
 
             DrawHudLine(rowRect, BuildBiomeText(), labelStyle, normalTextColor);
+
+            rowRect.y += rowHeight + rowGap;
+            DrawHudLine(rowRect, BuildEliteText(), labelStyle, GetEliteTextColor());
 
             rowRect.y += rowHeight + rowGap;
             DrawHudLine(rowRect, BuildHealthText(), labelStyle, normalTextColor);
@@ -104,6 +109,31 @@ namespace DeepSeal.UnityAdapters.UI
         {
             style.normal.textColor = color;
             GUI.Label(rect, text, style);
+        }
+
+        private string BuildEliteText()
+        {
+            if (enemySpawner == null)
+            {
+                return "Elite: unassigned";
+            }
+
+            if (!enemySpawner.TryGetActiveEliteInfo(out string eliteName, out int currentHitPoints, out int maxHitPoints))
+            {
+                return "Elite: none";
+            }
+
+            return $"Elite: {eliteName} - HP {currentHitPoints}/{maxHitPoints}";
+        }
+
+        private Color GetEliteTextColor()
+        {
+            if (enemySpawner != null && enemySpawner.TryGetActiveEliteInfo(out _, out _, out _))
+            {
+                return warningTextColor;
+            }
+
+            return normalTextColor;
         }
 
         private string BuildBiomeText()

@@ -35,6 +35,18 @@ namespace DeepSeal.UnityAdapters.Enemies
         [SerializeField] private int maxPathVisitedCells = 512;
         [SerializeField] private bool logMovementResults;
 
+        [Header("Behavior")]
+        [SerializeField] private EnemyBehaviorKind behaviorKind = EnemyBehaviorKind.Chaser;
+
+        [Header("Charger Behavior")]
+        [SerializeField] private float chargeCooldownSeconds = 4f;
+        [SerializeField] private float chargeWindupSeconds = 0.6f;
+        [SerializeField] private float chargeSpeedCellsPerSecond = 9f;
+        [SerializeField] private int chargeMaxCells = 6;
+        [SerializeField] private int chargeOffAxisToleranceCells = 1;
+        [SerializeField] private float chargeStunSeconds = 1.5f;
+        [SerializeField] private Color chargeWindupTint = new Color(1f, 0.35f, 0.25f, 1f);
+
         private EnemyState enemyState;
         private bool hasEnemyState;
         private HitPointState hitPoints;
@@ -43,6 +55,26 @@ namespace DeepSeal.UnityAdapters.Enemies
         private bool warnedMissingBootstrap;
         private bool warnedMissingGrid;
         private bool warnedMissingTarget;
+
+        private enum ChargePhase
+        {
+            Cruise = 0,
+            Windup = 1,
+            Charging = 2,
+            Stunned = 3
+        }
+
+        private ChargePhase chargePhase;
+        private float nextChargeTime;
+        private float phaseEndTime;
+        private GridPosition[] chargePath;
+        private int chargePathIndex;
+        private float nextChargeCellTime;
+        private bool chargeEndsStunned;
+        private Color defaultSpriteTint = Color.white;
+        private bool hasDefaultSpriteTint;
+        private string displayName = "";
+        private int defeatRewardValue = 1;
 
         public bool HasEnemyState => hasEnemyState;
 
@@ -53,6 +85,12 @@ namespace DeepSeal.UnityAdapters.Enemies
         public int MaxHitPoints => hitPoints.IsInitialized ? hitPoints.MaxHitPoints : maxHitPoints;
 
         public EnemyState CurrentEnemy => enemyState;
+
+        public string DisplayName => displayName;
+
+        public int DefeatRewardValue => defeatRewardValue;
+
+        public EnemyBehaviorKind BehaviorKind => behaviorKind;
 
         private void Start()
         {
@@ -66,12 +104,19 @@ namespace DeepSeal.UnityAdapters.Enemies
 
             EnsurePrototypeHealthInitialized();
             ScheduleNextMove();
+            ScheduleNextChargeTime();
         }
 
         private void Update()
         {
             if (!hasEnemyState || isDefeated)
             {
+                return;
+            }
+
+            if (behaviorKind == EnemyBehaviorKind.Charger)
+            {
+                UpdateCharger();
                 return;
             }
 
@@ -204,6 +249,235 @@ namespace DeepSeal.UnityAdapters.Enemies
             return result.Moved;
         }
 
+        private void ScheduleNextChargeTime()
+        {
+            nextChargeTime = Time.time + chargeCooldownSeconds;
+        }
+
+        private void UpdateCharger()
+        {
+            switch (chargePhase)
+            {
+                case ChargePhase.Cruise:
+                    UpdateChargeCruise();
+                    break;
+                case ChargePhase.Windup:
+                    UpdateChargeWindup();
+                    break;
+                case ChargePhase.Charging:
+                    UpdateChargeMovement();
+                    break;
+                case ChargePhase.Stunned:
+                    UpdateChargeStun();
+                    break;
+            }
+        }
+
+        private void UpdateChargeCruise()
+        {
+            if (Time.time >= nextChargeTime && TryBeginChargeWindup())
+            {
+                return;
+            }
+
+            if (Time.time < nextMoveTime)
+            {
+                return;
+            }
+
+            ScheduleNextMove();
+            TryMoveTowardTarget();
+        }
+
+        private bool TryBeginChargeWindup()
+        {
+            if (target == null || !TryResolveGrid(out MineGrid grid))
+            {
+                return false;
+            }
+
+            GridPosition targetPosition = GridCoordinateConverter.WorldToGridPosition(target.position);
+
+            if (!IsWithinChargeAlignment(enemyState.Position, targetPosition))
+            {
+                return false;
+            }
+
+            chargePhase = ChargePhase.Windup;
+            phaseEndTime = Time.time + chargeWindupSeconds;
+            ApplyWindupTint();
+            return true;
+        }
+
+        private bool IsWithinChargeAlignment(GridPosition from, GridPosition to)
+        {
+            int deltaX = Mathf.Abs(to.X - from.X);
+            int deltaY = Mathf.Abs(to.Y - from.Y);
+            int offAxisDistance = deltaX >= deltaY ? deltaY : deltaX;
+
+            return offAxisDistance <= chargeOffAxisToleranceCells;
+        }
+
+        private void UpdateChargeWindup()
+        {
+            if (Time.time < phaseEndTime)
+            {
+                return;
+            }
+
+            if (target == null || !TryResolveGrid(out MineGrid grid))
+            {
+                EndCharge(false);
+                return;
+            }
+
+            GridPosition targetPosition = GridCoordinateConverter.WorldToGridPosition(target.position);
+            EnemyChargeResult chargeResult = EnemyChargeRules.TraceCharge(
+                grid,
+                enemyState.Position,
+                targetPosition,
+                chargeMaxCells);
+
+            if (chargeResult.PathCellCount == 0)
+            {
+                EndCharge(chargeResult.Stunned);
+                return;
+            }
+
+            chargePath = chargeResult.PathCells;
+            chargePathIndex = 0;
+            chargeEndsStunned = chargeResult.Stunned;
+            nextChargeCellTime = Time.time;
+            chargePhase = ChargePhase.Charging;
+        }
+
+        private void UpdateChargeMovement()
+        {
+            if (chargePath == null)
+            {
+                EndCharge(false);
+                return;
+            }
+
+            while (chargePathIndex < chargePath.Length && Time.time >= nextChargeCellTime)
+            {
+                SetEnemyState(new EnemyState(enemyState.Id, chargePath[chargePathIndex]), true);
+                chargePathIndex++;
+                nextChargeCellTime += 1f / Mathf.Max(0.1f, chargeSpeedCellsPerSecond);
+            }
+
+            if (chargePathIndex >= chargePath.Length)
+            {
+                EndCharge(chargeEndsStunned);
+            }
+        }
+
+        private void UpdateChargeStun()
+        {
+            if (Time.time < phaseEndTime)
+            {
+                return;
+            }
+
+            EndCharge(false);
+        }
+
+        private void EndCharge(bool stunned)
+        {
+            chargePath = null;
+            chargePathIndex = 0;
+            RestoreDefaultTint();
+            ScheduleNextChargeTime();
+
+            if (stunned)
+            {
+                chargePhase = ChargePhase.Stunned;
+                phaseEndTime = Time.time + chargeStunSeconds;
+                return;
+            }
+
+            chargePhase = ChargePhase.Cruise;
+            ScheduleNextMove();
+        }
+
+        private void ApplyWindupTint()
+        {
+            if (!TryGetSpriteRenderer(out SpriteRenderer spriteRenderer))
+            {
+                return;
+            }
+
+            if (!hasDefaultSpriteTint)
+            {
+                defaultSpriteTint = spriteRenderer.color;
+                hasDefaultSpriteTint = true;
+            }
+
+            spriteRenderer.color = chargeWindupTint;
+        }
+
+        private void RestoreDefaultTint()
+        {
+            if (TryGetSpriteRenderer(out SpriteRenderer spriteRenderer) && hasDefaultSpriteTint)
+            {
+                spriteRenderer.color = defaultSpriteTint;
+            }
+        }
+
+        private bool TryGetSpriteRenderer(out SpriteRenderer spriteRenderer)
+        {
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            return spriteRenderer != null;
+        }
+
+        /// <summary>
+        /// 명명 엘리트 구성을 적용한다. 행동, 표시 이름, 격파 보상, 체력, 이동 간격, 크기, 색조를 지정한다.
+        /// </summary>
+        public void ConfigureElite(
+            EnemyBehaviorKind kind,
+            string eliteDisplayName,
+            int eliteDefeatRewardValue,
+            int eliteMaxHitPoints,
+            float eliteMoveIntervalSeconds,
+            float scaleMultiplier,
+            Color tint)
+        {
+            behaviorKind = kind;
+            displayName = eliteDisplayName ?? "";
+            defeatRewardValue = Mathf.Max(1, eliteDefeatRewardValue);
+            maxHitPoints = Mathf.Max(1, eliteMaxHitPoints);
+            moveIntervalSeconds = Mathf.Max(0.05f, eliteMoveIntervalSeconds);
+
+            ResetPrototypeHealth();
+            ScheduleNextMove();
+            ScheduleNextChargeTime();
+            EnsureControlledTransform();
+
+            if (controlledTransform != null)
+            {
+                float multiplier = Mathf.Max(0.1f, scaleMultiplier);
+                controlledTransform.localScale = new Vector3(
+                    controlledTransform.localScale.x * multiplier,
+                    controlledTransform.localScale.y * multiplier,
+                    controlledTransform.localScale.z);
+            }
+
+            if (TryGetSpriteRenderer(out SpriteRenderer spriteRenderer))
+            {
+                if (!hasDefaultSpriteTint)
+                {
+                    defaultSpriteTint = spriteRenderer.color;
+                    hasDefaultSpriteTint = true;
+                }
+
+                spriteRenderer.color = tint;
+            }
+            if (!string.IsNullOrEmpty(displayName))
+            {
+                PrototypeEnemyNameplate.Create(controlledTransform, displayName);
+            }
+        }
+
         private bool TryResolveGrid(out MineGrid grid)
         {
             grid = null;
@@ -306,6 +580,7 @@ namespace DeepSeal.UnityAdapters.Enemies
             usePathfinding = true;
             maxPathVisitedCells = 512;
             placeAtInitialPositionOnStart = true;
+            behaviorKind = EnemyBehaviorKind.Chaser;
         }
 
         private void OnValidate()
@@ -314,6 +589,12 @@ namespace DeepSeal.UnityAdapters.Enemies
             maxHitPoints = Mathf.Max(1, maxHitPoints);
             moveIntervalSeconds = Mathf.Max(0.05f, moveIntervalSeconds);
             maxPathVisitedCells = Mathf.Max(1, maxPathVisitedCells);
+            chargeCooldownSeconds = Mathf.Max(0.5f, chargeCooldownSeconds);
+            chargeWindupSeconds = Mathf.Max(0.05f, chargeWindupSeconds);
+            chargeSpeedCellsPerSecond = Mathf.Max(0.5f, chargeSpeedCellsPerSecond);
+            chargeMaxCells = Mathf.Max(0, chargeMaxCells);
+            chargeOffAxisToleranceCells = Mathf.Max(0, chargeOffAxisToleranceCells);
+            chargeStunSeconds = Mathf.Max(0f, chargeStunSeconds);
         }
     }
 }

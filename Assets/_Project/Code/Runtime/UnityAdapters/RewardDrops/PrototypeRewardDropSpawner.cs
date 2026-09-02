@@ -49,9 +49,15 @@ namespace DeepSeal.UnityAdapters.RewardDrops
 
         public bool TrySpawnEnemyDefeatRewardDrop(GridPosition position)
         {
+            return TrySpawnEnemyDefeatRewardDrop(position, enemyDefeatRewardValue);
+        }
+
+        public bool TrySpawnEnemyDefeatRewardDrop(GridPosition position, int rewardValue)
+        {
+            EnsureRandomInitialized();
             return TrySpawnRewardDrop(
                 position,
-                enemyDefeatRewardValue,
+                Mathf.Max(1, rewardValue),
                 RewardDropSource.EnemyDefeat,
                 true);
         }
