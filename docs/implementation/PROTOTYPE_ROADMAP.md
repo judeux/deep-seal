@@ -67,7 +67,8 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 3-B  | Map Variety Pass                   | Done        | Added seeded biome selection with four prototype biomes, biome tile tints, and HUD biome and seed display. |
 | 3-C  | Enemy Variety Pass                 | Done        | Added charger and ranged enemy behaviors with terrain counterplay, plus a first named elite. |
 | 3-D  | Progression and Difficulty Pass    | Planned    | Add in-run progression structure and a readable difficulty gradient. |
-| 3-E  | Sub-Dungeon Prototype              | Planned    | Add one optional sub-dungeon and diversify biome flavor. |
+| 3-E  | Movement Pacing and Map Openness Pass | Planned | Widen maps, soften early pressure, slow base movement, and enrich route pioneering options. |
+| 3-F  | Sub-Dungeon Prototype              | Planned    | Add one optional sub-dungeon and diversify biome flavor. |
 
 ---
 
@@ -302,7 +303,25 @@ Explicit exclusions:
 
 ## Next Planned Step
 
-### 3-E. Sub-Dungeon Prototype
+### 3-E. Movement Pacing and Map Openness Pass
+
+Goal:
+
+* Widen generated maps substantially so expeditions feel less cramped.
+* Reduce early enemy pressure so the opening of a run is calmer.
+* Slow base movement for all characters: the player speeds up through upgrades, and enemies gain speed variety such as slow and fast types.
+* Enrich route pioneering: more viable options to escape, reroute, and mine new paths.
+
+Explicit exclusions:
+
+* No new player movement mechanics such as dashes or teleports.
+* No fog-of-war or vision system.
+
+---
+
+## Later Prototype Steps
+
+### 3-F. Sub-Dungeon Prototype
 
 Goal:
 

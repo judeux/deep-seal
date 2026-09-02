@@ -64,7 +64,7 @@ namespace DeepSeal.UnityAdapters.UI
             float rowGap = 2f;
             float paddingX = 10f;
             float paddingY = 10f;
-            float panelHeight = paddingY * 2f + rowHeight * 7f + rowGap * 6f;
+            float panelHeight = paddingY * 2f + rowHeight * 8f + rowGap * 7f;
 
             var panelRect = new Rect(
                 topLeftOffset.x,
@@ -84,6 +84,9 @@ namespace DeepSeal.UnityAdapters.UI
 
             rowRect.y += rowHeight + rowGap;
             DrawHudLine(rowRect, BuildEliteText(), labelStyle, GetEliteTextColor());
+
+            rowRect.y += rowHeight + rowGap;
+            DrawHudLine(rowRect, BuildThreatText(), labelStyle, GetThreatTextColor());
 
             rowRect.y += rowHeight + rowGap;
             DrawHudLine(rowRect, BuildHealthText(), labelStyle, normalTextColor);
@@ -129,6 +132,26 @@ namespace DeepSeal.UnityAdapters.UI
         private Color GetEliteTextColor()
         {
             if (enemySpawner != null && enemySpawner.TryGetActiveEliteInfo(out _, out _, out _))
+            {
+                return warningTextColor;
+            }
+
+            return normalTextColor;
+        }
+
+        private string BuildThreatText()
+        {
+            if (enemySpawner == null)
+            {
+                return "Threat: unassigned";
+            }
+
+            return $"Threat: {enemySpawner.CurrentThreatLevel} / {enemySpawner.MaximumThreatLevel}";
+        }
+
+        private Color GetThreatTextColor()
+        {
+            if (enemySpawner != null && enemySpawner.CurrentThreatLevel > 0)
             {
                 return warningTextColor;
             }
