@@ -168,6 +168,10 @@ MonoBehaviour:
   fallbackSpawnMinDistanceFromStart: 2
   fallbackSpawnMaxDistanceFromStart: 10
   fallbackSpawnRandomSeed: 1701
+  applyDepthValueGradient: 1
+  depthTierDistanceCells: 6
+  maximumDepthTier: 2
+  treasureValueBonusPerTier: 1
   logSkippedSpawns: 0
 --- !u!4 &9823384
 Transform:
@@ -938,6 +942,10 @@ MonoBehaviour:
   eliteScaleMultiplier: 1.35
   eliteTint: {r: 1, g: 0.6, b: 0.2, a: 1}
   rangedSpawnChancePercent: 25
+  threatSecondsPerLevel: 60
+  threatMaximumLevel: 5
+  threatHitPointsBonusPerLevel: 1
+  threatRewardValueBonusPerLevel: 1
   logSkippedSpawns: 0
   logRuntimeSpawns: 0
 --- !u!4 &2039030423

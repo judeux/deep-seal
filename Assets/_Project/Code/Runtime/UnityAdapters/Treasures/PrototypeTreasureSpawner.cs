@@ -70,6 +70,12 @@ namespace DeepSeal.UnityAdapters.Treasures
         [SerializeField] private int fallbackSpawnMaxDistanceFromStart = 10;
         [SerializeField] private int fallbackSpawnRandomSeed = 1701;
 
+        [Header("Depth Value Gradient")]
+        [SerializeField] private bool applyDepthValueGradient = true;
+        [SerializeField] private int depthTierDistanceCells = 6;
+        [SerializeField] private int maximumDepthTier = 2;
+        [SerializeField] private int treasureValueBonusPerTier = 1;
+
         [Header("Debug")]
         [SerializeField] private bool logSkippedSpawns;
 
@@ -160,7 +166,8 @@ namespace DeepSeal.UnityAdapters.Treasures
                     parent);
 
                 treasureView.name = $"PrototypeTreasure_{treasureId}";
-                treasureView.Initialize(treasureId, spawnPosition, spawnPoint.Value);
+                int treasureValue = ResolveTreasureValue(startPosition, spawnPosition, spawnPoint.Value);
+                treasureView.Initialize(treasureId, spawnPosition, treasureValue);
                 spawnedTreasures.Add(treasureView);
                 occupiedPositions.Add(spawnPosition);
 
@@ -227,6 +234,22 @@ namespace DeepSeal.UnityAdapters.Treasures
                 out spawnPosition);
         }
 
+        private int ResolveTreasureValue(GridPosition startPosition, GridPosition spawnPosition, int baseValue)
+        {
+            if (!applyDepthValueGradient)
+            {
+                return baseValue;
+            }
+
+            int depthTier = DepthTierRules.ResolveDepthTier(
+                spawnPosition,
+                startPosition,
+                depthTierDistanceCells,
+                maximumDepthTier);
+
+            return DepthTierRules.ResolveTieredValue(baseValue, depthTier, treasureValueBonusPerTier);
+        }
+
         private void Reset()
         {
             spawnParent = transform;
@@ -247,6 +270,9 @@ namespace DeepSeal.UnityAdapters.Treasures
                 fallbackSpawnMinDistanceFromStart,
                 fallbackSpawnMaxDistanceFromStart);
             fallbackSpawnRandomSeed = Mathf.Max(0, fallbackSpawnRandomSeed);
+            depthTierDistanceCells = Mathf.Max(1, depthTierDistanceCells);
+            maximumDepthTier = Mathf.Max(0, maximumDepthTier);
+            treasureValueBonusPerTier = Mathf.Max(0, treasureValueBonusPerTier);
 
             if (treasureSpawnPoints == null)
             {
