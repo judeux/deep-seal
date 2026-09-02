@@ -286,6 +286,8 @@ After code or Unity configuration changes, run the most relevant script from `to
 
 If Unity is not installed at the expected path or a script cannot run locally, report that clearly and include what was not verified.
 
+The self-healing pre-commit hook in `.git/hooks/` (strips and re-stages trailing whitespace on staged text files) is local-only and not tracked by Git. On a fresh clone, recreate it as described in `docs/testing/LOCAL_VERIFICATION.md` before committing.
+
 ## Response Rules for Codex
 
 When finishing a task, report:
