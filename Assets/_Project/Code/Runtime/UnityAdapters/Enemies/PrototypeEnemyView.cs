@@ -503,6 +503,16 @@ namespace DeepSeal.UnityAdapters.Enemies
             behaviorKind = kind;
         }
 
+        /// <summary>
+        /// 위협 단계 보너스를 적용한다. 최대 체력과 격파 보상을 영구히 높인다.
+        /// </summary>
+        public void ConfigureThreat(int hitPointsBonus, int rewardValueBonus)
+        {
+            maxHitPoints = Mathf.Max(1, maxHitPoints + Mathf.Max(0, hitPointsBonus));
+            defeatRewardValue = Mathf.Max(1, defeatRewardValue + Mathf.Max(0, rewardValueBonus));
+            ResetPrototypeHealth();
+        }
+
         private void UpdateRanged()
         {
             if (target == null || !TryResolveGrid(out MineGrid grid))

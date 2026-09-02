@@ -87,6 +87,12 @@ namespace DeepSeal.UnityAdapters.Enemies
         [Range(0, 100)]
         [SerializeField] private int rangedSpawnChancePercent = 25;
 
+        [Header("Threat")]
+        [SerializeField] private float threatSecondsPerLevel = 90f;
+        [SerializeField] private int threatMaximumLevel = 5;
+        [SerializeField] private int threatHitPointsBonusPerLevel = 1;
+        [SerializeField] private int threatRewardValueBonusPerLevel = 1;
+
         [Header("Debug")]
         [SerializeField] private bool logSkippedSpawns;
         [SerializeField] private bool logRuntimeSpawns;
@@ -99,8 +105,19 @@ namespace DeepSeal.UnityAdapters.Enemies
         private int nextEnemyId;
         private float nextRuntimeSpawnTime;
         private float nextEliteSpawnTime;
+        private int lastLoggedThreatLevel;
         private PrototypeEnemyView activeEliteView;
         private float spawnPressureStartTime;
+
+        /// <summary>
+        /// 현재 위협 단계. 원정 경과 시간에 따라 결정된다.
+        /// </summary>
+        public int CurrentThreatLevel => ThreatRules.ResolveThreatLevel(
+            Mathf.Max(0f, Time.time - spawnPressureStartTime),
+            threatSecondsPerLevel,
+            threatMaximumLevel);
+
+        public int MaximumThreatLevel => threatMaximumLevel;
 
         public IReadOnlyList<PrototypeEnemyView> SpawnedEnemies => spawnedEnemies;
 
@@ -140,6 +157,14 @@ namespace DeepSeal.UnityAdapters.Enemies
 
         private void Update()
         {
+            int threatLevel = CurrentThreatLevel;
+
+            if (threatLevel != lastLoggedThreatLevel)
+            {
+                Debug.Log($"Threat level is now {threatLevel}.", this);
+                lastLoggedThreatLevel = threatLevel;
+            }
+
             if (spawnElitesOverTime && Time.time >= nextEliteSpawnTime)
             {
                 ScheduleNextEliteSpawn();
@@ -348,6 +373,19 @@ namespace DeepSeal.UnityAdapters.Enemies
             {
                 enemy.ConfigureBehavior(EnemyBehaviorKind.Ranged);
             }
+
+            if (enemy != null)
+            {
+                int threatLevel = CurrentThreatLevel;
+
+                if (threatLevel > 0)
+                {
+                    enemy.ConfigureThreat(
+                        threatLevel * threatHitPointsBonusPerLevel,
+                        threatLevel * threatRewardValueBonusPerLevel);
+                }
+            }
+
             return enemy != null;
         }
 
@@ -557,6 +595,10 @@ namespace DeepSeal.UnityAdapters.Enemies
             maximumMoveIntervalSeconds = Mathf.Max(minimumMoveIntervalSeconds, maximumMoveIntervalSeconds);
             spawnPressureRampSeconds = Mathf.Max(1f, spawnPressureRampSeconds);
             rangedSpawnChancePercent = Mathf.Clamp(rangedSpawnChancePercent, 0, 100);
+            threatSecondsPerLevel = Mathf.Max(1f, threatSecondsPerLevel);
+            threatMaximumLevel = Mathf.Max(0, threatMaximumLevel);
+            threatHitPointsBonusPerLevel = Mathf.Max(0, threatHitPointsBonusPerLevel);
+            threatRewardValueBonusPerLevel = Mathf.Max(0, threatRewardValueBonusPerLevel);
         }
     }
 }
