@@ -182,6 +182,15 @@ namespace DeepSeal.UnityAdapters.Enemies
 
                     activeEliteView = eliteView;
 
+                    int eliteThreatLevel = CurrentThreatLevel;
+
+                    if (eliteThreatLevel > 0)
+                    {
+                        eliteView.ConfigureThreat(
+                            eliteThreatLevel * threatHitPointsBonusPerLevel,
+                            eliteThreatLevel * threatRewardValueBonusPerLevel);
+                    }
+
                     Debug.Log($"Elite spawned. Name={eliteDisplayName}.", this);
                 }
             }
