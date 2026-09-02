@@ -937,6 +937,7 @@ MonoBehaviour:
   eliteDefeatRewardValue: 5
   eliteScaleMultiplier: 1.35
   eliteTint: {r: 1, g: 0.6, b: 0.2, a: 1}
+  rangedSpawnChancePercent: 25
   logSkippedSpawns: 0
   logRuntimeSpawns: 0
 --- !u!4 &2039030423
