@@ -66,7 +66,7 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 3-A  | Attack Pattern Variety             | Done        | Added projectile and area auto attack patterns with pure trace rules and EditMode tests. |
 | 3-B  | Map Variety Pass                   | Done        | Added seeded biome selection with four prototype biomes, biome tile tints, and HUD biome and seed display. |
 | 3-C  | Enemy Variety Pass                 | Done        | Added charger and ranged enemy behaviors with terrain counterplay, plus a first named elite. |
-| 3-D  | Progression and Difficulty Pass    | Planned    | Add in-run progression structure and a readable difficulty gradient. |
+| 3-D  | Progression and Difficulty Pass    | Done        | Added a time-based threat level with stat scaling and a depth-tier treasure value gradient. |
 | 3-E  | Movement Pacing and Map Openness Pass | Planned | Widen maps, soften early pressure, slow base movement, and enrich route pioneering options. |
 | 3-F  | Sub-Dungeon Prototype              | Planned    | Add one optional sub-dungeon and diversify biome flavor. |
 
@@ -286,31 +286,44 @@ Notes:
 
 ---
 
-## Current Step
-
 ### 3-D. Progression and Difficulty Pass
 
 Goal:
 
 * Add in-run progression structure and a readable difficulty gradient.
 
-Explicit exclusions:
+Completed:
 
-* No campaign persistence or meta progression.
-* No injury, missing, or rescue states yet.
+* Added pure time-based ThreatRules: the threat level rises deterministically with elapsed expedition time and is capped.
+* Runtime-spawned enemies gain hit points and defeat rewards per threat level, including elites (applied after elite configuration so it is not overwritten).
+* Added a HUD threat row and console logs on threat level changes.
+* Added pure DepthTierRules and connected the treasure spawner: treasure value increases with the Manhattan distance tier from the expedition start, giving a reason to push deeper.
+* Added EditMode tests for threat ramping and depth tiers.
+
+Notes:
+
+* Threat pacing, stat bonuses, and depth gradient values are Inspector-tunable prototypes.
+* The depth gradient only affects treasures placed beyond the tier distance; fixed near-start spawn points stay at base value.
 
 ---
 
-## Next Planned Step
+## Current Step
 
 ### 3-E. Movement Pacing and Map Openness Pass
 
 Goal:
 
-* Widen generated maps substantially so expeditions feel less cramped.
-* Reduce early enemy pressure so the opening of a run is calmer.
-* Slow base movement for all characters: the player speeds up through upgrades, and enemies gain speed variety such as slow and fast types.
-* Enrich route pioneering: more viable options to escape, reroute, and mine new paths.
+* At least double generated map width and height, and make characters relatively smaller through camera framing, so dead ends and fight-or-mine decisions occur constantly.
+* Halve base movement speed as a first experiment: the player recovers speed through upgrades and enemies gain speed variety such as slow and fast types.
+* Soften early enemy pressure so the opening of a run does not demand dodging from the first second.
+* Make mining detours, bypasses, and retreat paths viable strategies instead of mining being only upgrade income.
+
+Owner playtest findings (2026-09-02):
+
+* Map centers are mostly empty while walls sit at the edges, so orbiting the perimeter while upgrading attack removes the need for evasion or pioneering until the threat ramp catches up.
+* Treasure collection and extraction are too easy at the current map scale.
+* Immediate damage is possible right after start unless the player dodges from the first second.
+* A first speed experiment at roughly 50 percent of current movement speed is desired.
 
 Explicit exclusions:
 
@@ -319,7 +332,7 @@ Explicit exclusions:
 
 ---
 
-## Later Prototype Steps
+## Next Planned Step
 
 ### 3-F. Sub-Dungeon Prototype
 
