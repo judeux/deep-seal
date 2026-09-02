@@ -42,6 +42,19 @@ namespace DeepSeal.UnityAdapters.Player
             this.arrivedCallback = arrivedCallback;
         }
 
+        /// <summary>
+        /// 발사체 색상을 변경한다. 플레이어 발사체와 적 발사체를 구분하는 표현용이다.
+        /// </summary>
+        public void SetTint(Color color)
+        {
+            tint = color;
+
+            if (TryGetComponent(out SpriteRenderer spriteRenderer))
+            {
+                spriteRenderer.color = color;
+            }
+        }
+
         private void Update()
         {
             float maxStep = moveSpeedCellsPerSecond * Time.deltaTime;

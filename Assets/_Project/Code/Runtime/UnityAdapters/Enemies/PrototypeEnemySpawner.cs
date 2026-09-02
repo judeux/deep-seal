@@ -83,6 +83,10 @@ namespace DeepSeal.UnityAdapters.Enemies
         [SerializeField] private float eliteScaleMultiplier = 1.35f;
         [SerializeField] private Color eliteTint = new Color(1f, 0.6f, 0.2f, 1f);
 
+        [Header("Ranged Spawning")]
+        [Range(0, 100)]
+        [SerializeField] private int rangedSpawnChancePercent = 25;
+
         [Header("Debug")]
         [SerializeField] private bool logSkippedSpawns;
         [SerializeField] private bool logRuntimeSpawns;
@@ -338,6 +342,12 @@ namespace DeepSeal.UnityAdapters.Enemies
             }
 
             spawnedEnemy = enemy;
+            if (enemy != null
+                && rangedSpawnChancePercent > 0
+                && spawnRandom.Next(0, 100) < rangedSpawnChancePercent)
+            {
+                enemy.ConfigureBehavior(EnemyBehaviorKind.Ranged);
+            }
             return enemy != null;
         }
 
@@ -546,6 +556,7 @@ namespace DeepSeal.UnityAdapters.Enemies
             minimumMoveIntervalSeconds = Mathf.Max(0.05f, minimumMoveIntervalSeconds);
             maximumMoveIntervalSeconds = Mathf.Max(minimumMoveIntervalSeconds, maximumMoveIntervalSeconds);
             spawnPressureRampSeconds = Mathf.Max(1f, spawnPressureRampSeconds);
+            rangedSpawnChancePercent = Mathf.Clamp(rangedSpawnChancePercent, 0, 100);
         }
     }
 }
