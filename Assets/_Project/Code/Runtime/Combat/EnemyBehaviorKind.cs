@@ -6,6 +6,7 @@
     public enum EnemyBehaviorKind
     {
         Chaser = 0,
-        Charger = 1
+        Charger = 1,
+        Ranged = 2
     }
 }

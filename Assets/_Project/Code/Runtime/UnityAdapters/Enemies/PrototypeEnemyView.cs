@@ -3,6 +3,7 @@ using DeepSeal.Combat;
 using DeepSeal.Core;
 using DeepSeal.Mining;
 using DeepSeal.UnityAdapters.Grid;
+using DeepSeal.UnityAdapters.Player;
 using DeepSeal.UnityAdapters.Prototype;
 using UnityEngine;
 
@@ -47,6 +48,13 @@ namespace DeepSeal.UnityAdapters.Enemies
         [SerializeField] private float chargeStunSeconds = 1.5f;
         [SerializeField] private Color chargeWindupTint = new Color(1f, 0.35f, 0.25f, 1f);
 
+        [Header("Ranged Behavior")]
+        [SerializeField] private int rangedMinimumRangeCells = 3;
+        [SerializeField] private int rangedMaximumRangeCells = 7;
+        [SerializeField] private float rangedFireCooldownSeconds = 2.5f;
+        [SerializeField] private int rangedDamage = 1;
+        [SerializeField] private Color rangedProjectileTint = new Color(1f, 0.4f, 0.35f, 1f);
+
         private EnemyState enemyState;
         private bool hasEnemyState;
         private HitPointState hitPoints;
@@ -75,6 +83,9 @@ namespace DeepSeal.UnityAdapters.Enemies
         private bool hasDefaultSpriteTint;
         private string displayName = "";
         private int defeatRewardValue = 1;
+        private float nextRangedFireTime;
+        private PrototypePlayerHealth cachedPlayerHealth;
+        private bool warnedMissingPlayerHealth;
 
         public bool HasEnemyState => hasEnemyState;
 
@@ -117,6 +128,12 @@ namespace DeepSeal.UnityAdapters.Enemies
             if (behaviorKind == EnemyBehaviorKind.Charger)
             {
                 UpdateCharger();
+                return;
+            }
+
+            if (behaviorKind == EnemyBehaviorKind.Ranged)
+            {
+                UpdateRanged();
                 return;
             }
 
@@ -478,6 +495,128 @@ namespace DeepSeal.UnityAdapters.Enemies
             }
         }
 
+                /// <summary>
+        /// 이 적의 행동 유형만 교체한다. 원거리 등 행동 세부값은 프리팹의 인스펙터 값을 따른다.
+        /// </summary>
+        public void ConfigureBehavior(EnemyBehaviorKind kind)
+        {
+            behaviorKind = kind;
+        }
+
+        private void UpdateRanged()
+        {
+            if (target == null || !TryResolveGrid(out MineGrid grid))
+            {
+                return;
+            }
+
+            GridPosition targetPosition = GridCoordinateConverter.WorldToGridPosition(target.position);
+
+            if (Time.time >= nextRangedFireTime && TryFireRangedShot(grid, targetPosition))
+            {
+                return;
+            }
+
+            if (Time.time < nextMoveTime)
+            {
+                return;
+            }
+
+            ScheduleNextMove();
+            TryRangedBandStep(grid, targetPosition);
+        }
+
+        private bool TryFireRangedShot(MineGrid grid, GridPosition targetPosition)
+        {
+            int distance = AttackTargetingRules.ManhattanDistance(enemyState.Position, targetPosition);
+
+            if (distance < rangedMinimumRangeCells || distance > rangedMaximumRangeCells)
+            {
+                return false;
+            }
+
+            if (!EnemyRangedRules.HasClearCardinalLine(grid, enemyState.Position, targetPosition))
+            {
+                return false;
+            }
+
+            if (!TryResolvePlayerHealth(out PrototypePlayerHealth health))
+            {
+                return false;
+            }
+
+            nextRangedFireTime = Time.time + rangedFireCooldownSeconds;
+
+            PrototypeProjectileView projectile = PrototypeProjectileView.Create(transform.position, transform);
+            projectile.SetTint(rangedProjectileTint);
+
+            Vector3 impactWorldPosition = GridCoordinateConverter.GridToWorldCenter(targetPosition);
+            projectile.Begin(impactWorldPosition, arrived => OnRangedProjectileArrived(health, targetPosition));
+            return true;
+        }
+
+        private void OnRangedProjectileArrived(PrototypePlayerHealth health, GridPosition impactPosition)
+        {
+            if (target == null)
+            {
+                return;
+            }
+
+            // 발사 시점 셀에 플레이어가 아직 남아 있을 때만 피해를 입힌다. 이동하면 회피된다.
+            GridPosition playerPosition = GridCoordinateConverter.WorldToGridPosition(target.position);
+
+            if (playerPosition == impactPosition)
+            {
+                health.TryApplyDamage(rangedDamage);
+            }
+        }
+
+        private void TryRangedBandStep(MineGrid grid, GridPosition targetPosition)
+        {
+            GridDirection stepDirection = EnemyRangedRules.ResolveBandStepDirection(
+                enemyState.Position,
+                targetPosition,
+                rangedMinimumRangeCells,
+                rangedMaximumRangeCells);
+
+            if (stepDirection == GridDirection.None)
+            {
+                return;
+            }
+
+            GridPosition offset = stepDirection.ToOffset();
+            GridPosition next = enemyState.Position.Offset(offset.X, offset.Y);
+
+            if (grid.TryGetCell(next, out TerrainCell cell) && cell.IsPassable)
+            {
+                SetEnemyState(enemyState.WithPosition(next), true);
+            }
+        }
+
+        private bool TryResolvePlayerHealth(out PrototypePlayerHealth health)
+        {
+            health = cachedPlayerHealth;
+
+            if (health == null && target != null)
+            {
+                health = target.GetComponent<PrototypePlayerHealth>();
+                cachedPlayerHealth = health;
+            }
+
+            if (health == null)
+            {
+                if (!warnedMissingPlayerHealth)
+                {
+                    Debug.LogWarning("Ranged enemy requires a Prototype Player Health component on its target.", this);
+                    warnedMissingPlayerHealth = true;
+                }
+
+                return false;
+            }
+
+            return true;
+        }
+
         private bool TryResolveGrid(out MineGrid grid)
         {
             grid = null;
@@ -595,6 +734,10 @@ namespace DeepSeal.UnityAdapters.Enemies
             chargeMaxCells = Mathf.Max(0, chargeMaxCells);
             chargeOffAxisToleranceCells = Mathf.Max(0, chargeOffAxisToleranceCells);
             chargeStunSeconds = Mathf.Max(0f, chargeStunSeconds);
+            rangedMinimumRangeCells = Mathf.Max(0, rangedMinimumRangeCells);
+            rangedMaximumRangeCells = Mathf.Max(rangedMinimumRangeCells, rangedMaximumRangeCells);
+            rangedFireCooldownSeconds = Mathf.Max(0.5f, rangedFireCooldownSeconds);
+            rangedDamage = Mathf.Max(1, rangedDamage);
         }
     }
 }
