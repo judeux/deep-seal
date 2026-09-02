@@ -65,7 +65,7 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 2-F  | Generation and Spawn Tuning Review | Deferred   | Applied the runtime enemy pressure ramp only; detailed spawn, treasure, and reward tuning is deferred until core feature breadth is validated. |
 | 3-A  | Attack Pattern Variety             | Done        | Added projectile and area auto attack patterns with pure trace rules and EditMode tests. |
 | 3-B  | Map Variety Pass                   | Done        | Added seeded biome selection with four prototype biomes, biome tile tints, and HUD biome and seed display. |
-| 3-C  | Enemy Variety Pass                 | Planned    | Add distinct enemy behaviors and a first named elite. |
+| 3-C  | Enemy Variety Pass                 | Done        | Added charger and ranged enemy behaviors with terrain counterplay, plus a first named elite. |
 | 3-D  | Progression and Difficulty Pass    | Planned    | Add in-run progression structure and a readable difficulty gradient. |
 | 3-E  | Sub-Dungeon Prototype              | Planned    | Add one optional sub-dungeon and diversify biome flavor. |
 
@@ -262,8 +262,6 @@ Notes:
 
 ---
 
-## Current Step
-
 ### 3-C. Enemy Variety Pass
 
 Goal:
@@ -271,14 +269,23 @@ Goal:
 * Add distinct enemy behaviors such as ranged or charging enemies.
 * Add a first named elite with soft counterplay.
 
-Explicit exclusions:
+Completed:
 
-* No boss logic yet.
-* No hand-made combination pools or forbidden combo validation yet.
+* Added charger behavior: a telegraphed straight cardinal dash that stops and stuns at walls, so terrain and mining provide counterplay.
+* Added ranged behavior: enemies keep a distance band and fire only with a clear cardinal line of sight; projectiles are dodged by moving and blocked by walls.
+* Added runtime behavior variety with a configurable ranged spawn chance.
+* Added a named elite charger that spawns on an interval independent of enemy pressure, with larger stats, a guaranteed defeat reward, a floating nameplate, and a HUD elite row.
+* Added EditMode tests for charge tracing and ranged line-of-sight and band rules.
+
+Notes:
+
+* The elite nameplate, tint, and scale are explicit placeholders until real elite art exists.
+* Ranged projectiles only damage the player when the fire-time cell is still occupied on arrival.
+* Combat feedback such as hit flashes, attack effects, and range display remains deferred to a later feedback pass.
 
 ---
 
-## Next Planned Step
+## Current Step
 
 ### 3-D. Progression and Difficulty Pass
 
@@ -293,7 +300,7 @@ Explicit exclusions:
 
 ---
 
-## Later Prototype Steps
+## Next Planned Step
 
 ### 3-E. Sub-Dungeon Prototype
 
