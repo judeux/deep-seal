@@ -1,107 +1,118 @@
-# AGENTS.md — Documentation Rules
+# Documentation scope
 
-This file applies to the `docs/` tree.
+이 파일은 `docs/` 아래 repository 문서에 적용된다.
 
-## Documentation Purpose
+## Default execution mode: owner-agent managed
 
-The documentation exists to keep design, architecture, decisions, testing, and licensing clear enough for a solo developer and Codex to work consistently over a long project.
+사용자가 proposal-only 또는 read-only review를 명시하지 않으면 현재 승인된 work
+unit의 owner agent가 필요한 문서를 직접 생성, 수정, 이동 및 정리한다.
 
-## Status Tags
+- 현재 source of truth와 user change를 먼저 확인하고 unrelated change를 보존한다.
+- 문서 변경 후 diff, link, status, 날짜와 구현·검증 주장의 근거를 검토한다.
+- 문서 권한으로 source/test code, Unity asset, package 또는 project setting을 변경하지
+  않는다.
+- 게임 규칙, concept, architecture contract, compatibility, milestone scope 또는 중대한
+  방향 변경은 사용자 승인 전에 문서에 확정 사항으로 반영하지 않는다.
+- 승인 전 아이디어는 `Proposed` 또는 `DRAFT`로 명확히 표시한다.
 
-Use these tags when describing design elements:
+## Documentation sources of truth
 
-- `LOCKED`: Current agreed direction. Do not change without a decision record.
-- `DRAFT`: Direction is useful, but details are not final.
-- `DEFERRED`: Not part of the current prototype, but may return later.
-- `OUT`: Intentionally excluded from scope.
+- `docs/gdd/`: 승인된 game rule, player experience와 design scope
+- `docs/architecture/`: code boundary, dependency와 implemented structure
+- `docs/implementation/PROTOTYPE_ROADMAP.md`: 현재 prototype 순서와 current step
+- `docs/decisions/`: 구조·workflow·호환성 결정과 rationale
+- `docs/testing/`: local verification procedure와 evidence expectation
+- `docs/licenses/ASSET_REGISTER.md`: external/AI asset provenance와 license
 
-## Decision Records
+W0-B에서 새 roadmap/ADR/current-state 구조가 승인·적용되기 전까지 이 경로를
+유효한 기준으로 유지한다.
 
-Use `docs/decisions/` when a decision explains a meaningful change in direction.
+## Status vocabulary and evidence
 
-Filename format:
+Work unit에는 필요한 경우 다음 상태만 사용한다.
 
-```text
-NNNN-short-kebab-case-title.md
-```
+- `Proposed`: 방향 제안, 승인 전
+- `Awaiting Approval`: 사용자 결정 필요
+- `Approved`: 범위와 계약 승인, 구현 전
+- `In Progress`: 승인 범위에서 작업 중
+- `Applied — Awaiting Verification`: 사용자 적용 완료, 증거 대기
+- `Review Required`: 적용 또는 검증 문제 확인
+- `Verified`: 필수 검증과 owner review 통과
+- `Completed`: 문서와 Git 통합까지 완료
+- `Deferred`: 현재 순서에서 연기
+- `Blocked`: 외부 결정이나 환경 없이는 진행 불가
+- `Superseded`: 더 최신 결정이나 계획으로 대체
 
-Example:
+`Designed`, `Implemented`, `Verified`, `Completed`와 archive는 서로 다른 주장이다.
+Code, asset, test와 verification evidence를 직접 확인한 범위만 기록한다. Application
+실행을 compile/test 통과와 같은 증거로 취급하지 않는다.
 
-```text
-0002-codex-working-rules.md
-```
+## Required maintenance events
 
-Recommended structure:
+- 사용자 승인: 범위, 제외, owner와 verification gate 기록
+- 작업 시작: active work unit, branch/worktree와 대상 path 기록
+- Proposal 전달: 적용 파일, 핵심 contract, 적용 순서와 예상 결과 기록
+- 사용자 적용 보고: 실제 diff를 확인한 뒤 implemented 범위와 차이 기록
+- Verification 보고: 날짜, Unity version, 수준, command/Editor route, pass/fail 수,
+  log path, 미검증 범위와 blocker 기록
+- Review 완료: confirmed problem, accepted risk와 follow-up 기록
+- Work unit 완료: 관련 roadmap/architecture/decision/license 문서를 동기화
+- Milestone 완료: 완료 범위, 제외, verification evidence, commit과 다음 milestone을
+  archive에 기록
+
+이미 정확하게 기록된 history를 여러 문서에 복제하지 않는다. 상세 source-of-truth
+문서로 link하고 현재 상태만 요약한다.
+
+## GDD and design changes
+
+- `LOCKED`: 사용자 승인을 받은 현재 기준
+- `DRAFT`: 유용하지만 미확정
+- `DEFERRED`: 현재 milestone 밖으로 연기
+- `OUT`: 의도적으로 제외
+
+큰 design idea를 조용히 삭제하지 않는다. 연기 또는 제외 이유와 영향을 기록한다.
+GDD의 LOCKED rule과 code가 충돌하면 어느 쪽도 임의로 고치지 않고 사용자 결정을
+요청한다.
+
+## Decision records
+
+현재는 `docs/decisions/NNNN-short-kebab-case-title.md` 형식을 사용한다.
+
+Decision record에는 최소한 다음을 포함한다.
 
 ```markdown
-# 0002. Title
+# NNNN. Title
 
 Date: YYYY-MM-DD
+Status: Proposed | Accepted | Superseded
 
+## Context
 ## Decision
-
 ## Rationale
-
 ## Consequences
-
-## Status
+## Verification or follow-up
 ```
 
-## GDD Changes
+구조, dependency, compatibility, workflow authority, persistent identity 또는 승인된
+design 방향을 바꾸는 결정에 사용한다. 이미 accepted인 record를 새 결론에 맞게
+소급 수정하지 말고 새 record로 supersede한다.
 
-Do not delete major design ideas silently.
+## Roadmap maintenance
 
-If a feature is postponed, mark it as `DEFERRED` and explain why.
+`docs/implementation/PROTOTYPE_ROADMAP.md`는 step 완료, 분할, 병합, 연기 또는
+재범위화 시 owner agent가 갱신한다.
 
-If a feature is removed, mark it as `OUT` and explain the reason.
+- Current step, completed behavior, explicit exclusion, verification evidence와 next step을
+  일치시킨다.
+- 사용자 verification과 owner review 전에는 `Done`으로 표시하지 않는다.
+- Current step 밖 기능을 조용히 끼워 넣지 않는다.
+- Roadmap 순서를 바꿀 필요가 있으면 이유와 대안을 먼저 제안하고 승인받는다.
 
-If a feature is core, mark it as `LOCKED` only when the project owner explicitly agrees.
+## Documentation quality
 
-## Asset Request Documentation Rule
-
-When a task requires new assets, Codex must document the request clearly instead of assuming that the asset already exists.
-
-Asset-related requests should be written in a reusable format so the project owner can later create the asset manually, purchase it from an asset store, generate it with AI, or commission it.
-
-If the asset affects design direction, Codex should also suggest whether the relevant GDD document should be updated.
-
-Examples:
-
-* A new miner sprite requirement may affect `docs/gdd/08_world_art_and_audio.md`.
-* A terrain tileset requirement may affect `docs/gdd/10_procedural_generation.md`.
-* A UI icon requirement may affect future UI documentation.
-* A third-party or AI-generated asset must be recorded in `docs/licenses/ASSET_REGISTER.md`.
-
-Asset requests should not be mixed into code-only implementation instructions without a clear heading.
-
-## Architecture Documents
-
-Architecture documents should describe code boundaries, responsibilities, and dependencies.
-
-Do not use architecture documents to introduce large new systems unless they are tied to the current MVP or a decision record.
-
-## Licensing Documents
-
-Whenever adding external assets or AI-generated assets, update:
-
-```text
-docs/licenses/ASSET_REGISTER.md
-```
-
-Never assume that a free asset is commercially usable without checking and recording the license.
-
-## Prototype Roadmap Maintenance Rule
-
-`docs/implementation/PROTOTYPE_ROADMAP.md` must be updated when a prototype step is completed, skipped, split, merged, or re-scoped.
-
-Each roadmap update should include:
-
-* current step status;
-* completed behavior;
-* explicit exclusions that remain out of scope;
-* next planned step;
-* verification results or expected verification method;
-* suggested commit message if relevant.
-
-Do not rewrite the full roadmap for small updates. Prefer small, targeted edits.
+- UTF-8과 repository의 Markdown style을 유지한다.
+- Link는 repository-relative path를 사용하고 rename/move 후 target을 검증한다.
+- 표의 상태, 날짜, file path와 count가 본문과 일치해야 한다.
+- 긴 command output을 복사하기보다 재현 command, 핵심 결과와 log path를 기록한다.
+- 관련 heading과 link target만 먼저 읽고 충돌이나 전체 context가 필요할 때 확장한다.
 
