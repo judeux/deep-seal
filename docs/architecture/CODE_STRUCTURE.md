@@ -59,6 +59,14 @@ If compilation time or test boundaries require assembly definitions, start with:
 - `DeepSeal.Tests.EditMode.asmdef`
 - `DeepSeal.Tests.PlayMode.asmdef`
 
+Currently tracked assemblies are intentionally limited to:
+
+- `Assets/_Project/Code/Runtime/DeepSeal.Runtime.asmdef`
+- `Assets/_Project/Code/Tests/EditMode/DeepSeal.Tests.EditMode.asmdef`
+
+Editor and PlayMode assemblies have not been created because no current tracked code requires
+those boundaries yet.
+
 ## Current Runtime Structure
 
 The runtime code structure has started with pure C# domain logic plus a thin Unity adapter layer.
@@ -87,6 +95,7 @@ Implemented pure domain areas:
   - Pure C# terrain preset pattern data.
   - Deterministic terrain preset placement rules.
   - Preset placement validation that preserves start passability and connected passable areas.
+  - Four prototype biome definitions and deterministic biome selection.
 
 - `DeepSeal.Combat`
   - Prototype enemy state.
@@ -96,14 +105,10 @@ Implemented pure domain areas:
   - Prototype hit point state and damage application rules.
   - Prototype enemy grid pathfinding rules.
   - Prototype enemy spawn position selection rules.
-
-- `DeepSeal.UnityAdapters.Enemies`
-  - Prototype enemy view adapter.
-  - Prototype enemy spawner adapter.
-  - Scene connection between enemy GameObjects and pure Combat movement rules.
-  - Prototype-only enemy hit points and defeat handling for automatic attack validation.
-  - Runtime prototype enemy spawning based on active enemy count and spawn interval.
-  - Prototype enemy movement variation through spawner-provided movement interval and hit point values.
+  - Projectile trace and area attack collection rules.
+  - Charger movement tracing with wall-stop counterplay.
+  - Ranged distance-band and cardinal line-of-sight rules.
+  - Deterministic time-based threat-level scaling rules.
 
 - `DeepSeal.Expedition`
   - Prototype treasure state.
@@ -114,6 +119,7 @@ Implemented pure domain areas:
   - Short-range reward drop pickup rules.
   - Pure expedition spawn placement settings and rules.
   - Passable, occupied, distance, and reachability checks for treasure/extraction/reward placement.
+  - Depth-tier treasure value calculation.
 
 - `DeepSeal.Upgrades`
   - Prototype upgrade option definitions.
@@ -125,6 +131,7 @@ Implemented Unity adapter areas:
 - `DeepSeal.UnityAdapters.Tilemaps`
   - Terrain cell type to TileBase mapping.
   - MineGrid to Unity Tilemap rendering.
+  - Prototype biome tint mapping.
 
 - `DeepSeal.UnityAdapters.Grid`
   - Prototype conversion between `GridPosition` and Unity world coordinates.
@@ -143,6 +150,17 @@ Implemented Unity adapter areas:
   - Prototype treasure pickup adapter.
   - Prototype extraction completion adapter.
   - Prototype reward drop pickup adapter.
+  - Projectile view and runtime binding for projectile/area attack patterns.
+
+- `DeepSeal.UnityAdapters.Enemies`
+  - Prototype enemy view adapter.
+  - Prototype enemy spawner adapter.
+  - Scene connection between enemy GameObjects and pure Combat movement rules.
+  - Prototype-only enemy hit points and defeat handling for automatic attack validation.
+  - Runtime prototype enemy spawning based on active enemy count and spawn interval.
+  - Prototype enemy movement variation through spawner-provided movement interval and hit point values.
+  - Charger and ranged enemy presentation behavior.
+  - Independent named-elite spawning, placeholder nameplate, stat configuration, and defeat reward.
 
 - `DeepSeal.UnityAdapters.Cameras`
   - Prototype camera follow adapter for keeping the player visible during movement and mining.
@@ -156,7 +174,7 @@ Implemented Unity adapter areas:
   - Prototype extraction marker spawner adapter.
 
 - `DeepSeal.UnityAdapters.UI`
-  - Prototype OnGUI loop HUD for health, treasure, extraction state, defeat, and extraction completion.
+  - Prototype OnGUI loop HUD for health, treasure, extraction, threat, biome/seed, elite state, defeat, and extraction completion.
   - Prototype wall mining durability overlay.
 
 - `DeepSeal.UnityAdapters.RewardDrops`
@@ -167,19 +185,19 @@ Implemented Unity adapter areas:
   - Prototype OnGUI upgrade selection controller.
   - Scene wiring from reward value to temporary attack, mining, and movement upgrades.
 
-Current constraints:
+## Current Constraints
 
 - Pure domain logic must not depend on `UnityEngine`.
 - Unity scene, Tilemap, rendering, input, and MonoBehaviour code must stay in Unity adapter namespaces.
 - Player movement and prototype combat input are currently temporary adapters; they should be replaced by InputActions when production input bindings are introduced.
 - The current Tilemap adapter is clear and prototype-oriented, not optimized for large dirty-cell refresh workflows.
-- Automatic attack, enemy contact damage, and player defeat are prototype-only and do not yet include formal weapon definitions, upgrades, combat UI, treasure, or extraction.
+- Automatic attack, enemy contact damage, and player defeat are prototype-only and do not yet use formal weapon definitions, validated stat/effect data, production combat UI, animation timing contracts, or final VFX/audio.
 - Enemy and player hit point handling now share pure `DeepSeal.Combat` health rules, while Unity adapters remain responsible for scene visibility and component disabling.
 - Treasure pickup is prototype-only and currently tracks only collected count/value, not inventory, economy, campaign persistence, or reward settlement.
 - Extraction is prototype-only and currently represents completion with marker state and component disabling, not a full expedition result screen or campaign reward settlement.
-- Prototype loop feedback currently uses temporary OnGUI adapters and should be replaced by a proper UI stack after the first loop is validated.
+- Prototype loop feedback currently uses temporary OnGUI adapters and must be replaced by retained Unity UI before production presentation.
 - Prototype tuning values currently live in scene and prefab Inspector settings, not in dedicated balance data assets.
-- Enemy movement now has prototype grid pathfinding, but it is still not final AI and does not include enemy archetypes, attack patterns, or weighted terrain costs.
+- Enemy movement includes prototype pathfinding plus charger and ranged behavior, but it is not final AI and does not include production archetype data, weighted terrain costs, navigation caching, or formal behavior composition.
 - Runtime enemy spawning exists as a prototype pressure tool and is still configured through scene Inspector values rather than production spawn tables.
 - Reward drops are prototype-only and currently track only collected count/value, not inventory, economy, campaign settlement, or permanent progression.
 - Upgrade selection is prototype-only and currently uses temporary OnGUI plus scene references, not final UI, save data, or content tables.
@@ -188,14 +206,23 @@ Current constraints:
 - `Void` means outside the generated mine footprint; it is not a wall and is not mineable.
 - Terrain cells now distinguish floor, mineable wall, unmineable wall, boundary wall, and void.
 - Wall material variants and final terrain art are still deferred.
-- Procedural preset/vault placement and minimap/exploration map UI are not yet implemented.
+- Code-authored procedural preset placement exists; asset-authored vault chunks and minimap/exploration UI are not implemented.
 - Procedural terrain presets are currently code-authored prototype data, not Unity assets, Prefabs, or Tilemap chunks.
 - Preset placement must stay in pure `DeepSeal.ProceduralGeneration` unless asset authoring becomes necessary later.
 - Treasure and extraction marker spawners now use pure expedition spawn rules for fallback placement on irregular maps.
 - Spawn placement is still prototype-oriented and does not yet include weighted spawn tables, biome rules, or authored spawn zones.
 
-Next planned area:
+## Current and Next Planned Area
 
-- Generation and spawn tuning review.
-- Tune spawn density, extraction readability, reward pacing, and enemy pressure on irregular maps with terrain presets.
-- Keep minimap, biome spawn tables, and final content authoring deferred.
+- Current gameplay track: `3-E. Movement Pacing and Map Openness Pass`.
+- 3-E-1 enlarged maps, reduced relative character scale and base pacing, added a spawn grace
+  period, and expanded pathfinding budgets.
+- Remaining 3-E scope must be proposed by its ZCode owner; current findings call out camera
+  framing, enemy spawn style, long-run performance, and deferred treasure tuning without
+  pre-authorizing a combined implementation.
+- Next planned step after reviewed 3-E completion: `3-F. Sub-Dungeon Prototype`.
+- Minimap, production biome spawn tables, final content authoring, campaign settlement and save
+  remain deferred.
+
+Current status and work-unit order are owned by
+[`docs/roadmap/next-milestone.md`](../roadmap/next-milestone.md), not by this architecture file.

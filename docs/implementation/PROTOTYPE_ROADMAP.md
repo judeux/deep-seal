@@ -69,7 +69,7 @@ This roadmap is not the full game roadmap. It is the first playable prototype ro
 | 3-B  | Map Variety Pass                   | Done        | Added seeded biome selection with four prototype biomes, biome tile tints, and HUD biome and seed display. |
 | 3-C  | Enemy Variety Pass                 | Done        | Added charger and ranged enemy behaviors with terrain counterplay, plus a first named elite. |
 | 3-D  | Progression and Difficulty Pass    | Done        | Added a time-based threat level with stat scaling and a depth-tier treasure value gradient. |
-| 3-E  | Movement Pacing and Map Openness Pass | Planned | Widen maps, soften early pressure, slow base movement, and enrich route pioneering options. |
+| 3-E  | Movement Pacing and Map Openness Pass | In Progress | 3-E-1 scaled the map and initial pacing; remaining bounded scope awaits its owner proposal. |
 | 3-F  | Sub-Dungeon Prototype              | Planned    | Add one optional sub-dungeon and diversify biome flavor. |
 
 ---

@@ -1,7 +1,7 @@
 # Prototype Tuning Pass
 
 Date: 2026-06-23
-Status: Draft
+Status: Complete — historical 1-P tuning record
 Reviewed Scene: `Assets/_Project/Scenes/Prototype/PrototypeMineGrid.unity`
 Scope: 1-P Prototype Tuning Pass
 

@@ -33,20 +33,20 @@
 
 | 문서 | 내용 |
 |---|---|
-| `docs/00_vision.md` | 제품 비전, 타깃 경험, 차별점 |
-| `docs/01_design_pillars.md` | 핵심 설계 원칙과 금지 원칙 |
-| `docs/02_campaign_structure.md` | 장기 캠페인과 봉인석 구조 |
-| `docs/03_expedition_loop.md` | 개별 원정의 흐름과 원정 유형 |
-| `docs/04_combat_and_mining.md` | 자동 전투, 채굴, 성장 선택 |
-| `docs/05_encounters_and_counters.md` | 보스·네임드·상성·대응 구조 |
-| `docs/06_sub_dungeons.md` | 무작위 서브 던전 설계 |
-| `docs/07_miners_failure_and_death.md` | 광부, 부상, 실종, 구조, 영구 사망 |
-| `docs/08_world_art_and_audio.md` | 세계관, 아트, 오디오 방향 |
-| `docs/09_progression_and_economy.md` | 거점, 자원, 보물, 메타 성장 |
-| `docs/10_procedural_generation.md` | 절차적 생성 구조와 검증 규칙 |
-| `docs/11_scope_mvp_roadmap.md` | 1인 개발 범위, MVP와 단계별 로드맵 |
-| `docs/12_open_questions.md` | 미결정 항목과 추후 검토 목록 |
-| `docs/13_decision_log.md` | 주요 결정 이력 |
+| `docs/gdd/00_vision.md` | 제품 비전, 타깃 경험, 차별점 |
+| `docs/gdd/01_design_pillars.md` | 핵심 설계 원칙과 금지 원칙 |
+| `docs/gdd/02_campaign_structure.md` | 장기 캠페인과 봉인석 구조 |
+| `docs/gdd/03_expedition_loop.md` | 개별 원정의 흐름과 원정 유형 |
+| `docs/gdd/04_combat_and_mining.md` | 자동 전투, 채굴, 성장 선택 |
+| `docs/gdd/05_encounters_and_counters.md` | 보스·네임드·상성·대응 구조 |
+| `docs/gdd/06_sub_dungeons.md` | 무작위 서브 던전 설계 |
+| `docs/gdd/07_miners_failure_and_death.md` | 광부, 부상, 실종, 구조, 영구 사망 |
+| `docs/gdd/08_world_art_and_audio.md` | 세계관, 아트, 오디오 방향 |
+| `docs/gdd/09_progression_and_economy.md` | 거점, 자원, 보물, 메타 성장 |
+| `docs/gdd/10_procedural_generation.md` | 절차적 생성 구조와 검증 규칙 |
+| `docs/gdd/11_scope_mvp_roadmap.md` | 1인 개발 범위, MVP와 단계별 로드맵 |
+| `docs/gdd/12_open_questions.md` | 미결정 항목과 추후 검토 목록 |
+| `docs/gdd/13_decision_log.md` | 주요 결정 이력 |
 | `GDD_MASTER.md` | 위 문서를 합친 통합본 |
 
 ## 4. 현재 확정된 핵심 방향
@@ -71,8 +71,8 @@
 핵심 시스템을 수정할 때는 다음 항목을 함께 갱신한다.
 
 - 관련 문서의 상태 태그
-- `docs/12_open_questions.md`
-- `docs/13_decision_log.md`
-- MVP 범위에 영향을 주면 `docs/11_scope_mvp_roadmap.md`
+- `docs/gdd/12_open_questions.md`
+- `docs/gdd/13_decision_log.md`
+- MVP 범위에 영향을 주면 `docs/gdd/11_scope_mvp_roadmap.md`
 
-문서를 코드보다 먼저 갱신하는 것을 원칙으로 하되, 프로토타입 검증 결과가 문서와 충돌하면 **재미와 구현 가능성**을 우선하고 문서를 즉시 수정한다.
+문서를 코드보다 먼저 갱신하는 것을 원칙으로 한다. 프로토타입 검증 결과가 문서와 충돌하면 충돌, 재미와 구현 가능성의 영향을 먼저 보고하고, 사용자가 방향을 승인한 뒤 관련 GDD와 필요 ADR을 갱신한다.

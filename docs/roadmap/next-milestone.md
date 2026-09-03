@@ -1,6 +1,6 @@
 # Next Milestone: Prototype Pacing and Optional Sub-Dungeon
 
-- Status: In Progress — 3-E-1 verified; remaining 3-E scope is not yet recorded
+- Status: In Progress — 3-E-1 verified; remaining 3-E is `Awaiting Proposal`
 - Current gameplay owner: ZCode, based on the project owner's 2026-09-03 report
 - Target Unity version: `6000.3.17f1`
 - Historical step index: [`../implementation/PROTOTYPE_ROADMAP.md`](../implementation/PROTOTYPE_ROADMAP.md)
@@ -48,6 +48,9 @@ Known findings:
 The exact next 3-E work unit is not present in repository documentation. Do not infer or
 implement it from the interim findings alone. The owner must propose the next bounded unit,
 explicit exclusions and verification gate for user approval.
+
+Before that proposal becomes an implementation task, ZCode must use a dedicated clean worktree
+and a new `zcode/<short-scope>` branch based on current `origin/main`.
 
 ### 3-F. Sub-Dungeon Prototype
 

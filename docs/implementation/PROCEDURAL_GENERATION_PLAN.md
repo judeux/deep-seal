@@ -1,14 +1,18 @@
 # Procedural Generation Plan
 
 Date: 2026-06-25
-Status: Draft
+Status: Complete — historical plan for 2-B through 2-E
 Scope: Prototype procedural generation direction after 2-A.
+
+Current execution status is maintained in
+[`docs/roadmap/next-milestone.md`](../roadmap/next-milestone.md). The limitations below
+describe the proposal-time baseline before the completed 2-B through 2-E work.
 
 ## Purpose
 
 The current prototype validates the first playable loop, but the mine shape is still too rectangular. This document stages procedural generation improvements without mixing too many terrain features into one implementation step.
 
-## Current Limitations
+## Limitations at Proposal Time
 
 - Maps are generated inside a fixed rectangular width/height.
 - Terrain semantics are still only floor and wall.

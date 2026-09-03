@@ -1,5 +1,11 @@
 # Deep Seal Codex Bootstrap Files
 
+> Legacy bootstrap record. 초기 repository 설치에는 사용되었지만 현재 작업 절차와
+> project status의 source of truth는 [`AGENTS.md`](AGENTS.md),
+> [`docs/README.md`](docs/README.md)와
+> [`docs/project/current-state.md`](docs/project/current-state.md)다. 아래 copy/commit
+> 절차를 기존 repository에서 다시 실행하지 않는다.
+
 Copy the contents of this bundle into the repository root:
 
 ```text

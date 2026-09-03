@@ -1,42 +1,26 @@
-## Current Development Phase
+# Deep Seal
 
-Interactive prototype foundation.
+Deep Seal은 자동 전투, 셀 단위 채굴과 절차 생성 지형을 결합한 single-player
+expedition-management survival roguelite prototype이다.
 
-Implemented:
-- Core grid primitives.
-- Basic mining domain model.
-- Seed-based procedural mine grid generation.
-- Basic generated mine grid validation.
-- Unity Tilemap rendering adapter for generated MineGrid data.
-- Prototype scene that displays a seed-based mine grid through Tilemap.
-- Prototype player movement over passable MineGrid cells.
-- Wall collision based on MineGrid terrain passability.
-- Player mining input and runtime Tilemap refresh after terrain changes.
-- Prototype camera follow.
-- Pure C# enemy state and MineGrid-based enemy movement rules.
-- Prototype enemy spawning and Unity view adapter.
-- Basic automatic attack targeting and prototype enemy defeat/removal.
-- EditMode tests for core, mining, procedural generation, enemy movement, and attack targeting rules.
-- Prototype player health, enemy contact damage, and player defeat handling.
-- Prototype treasure spawning and grid-position pickup tracking.
-- Prototype extraction marker and simple return completion tracking.
-- Prototype loop feedback HUD for health, treasure, extraction state, defeat, and extraction completion.
-- Prototype wall mining durability overlay.
-- Tuned first playable prototype baseline values for map size, mining pace, enemy pressure, treasure requirement, and extraction pacing.
-- Prototype enemy pathfinding around simple wall obstacles.
-- Runtime prototype enemy spawning based on active enemy pressure.
-- Basic enemy movement and health variation through prototype spawner settings.
-- Prototype reward drops from enemy defeat and selected mining actions.
-- Short-range automatic reward drop pickup.
-- Temporary reward-funded upgrade selection.
-- Prototype upgrades that modify attack damage, attack range, mining speed, and movement speed during a run.
+## Project status
 
-Not implemented yet:
-- Weapon definitions, upgrades, combat UI, and polished combat feedback.
-- Full expedition result screen, campaign rewards, and persistence.
-- Irregular mine layouts beyond rectangular prototype generation.
-- Unmineable boundary walls and wall material variants.
-- Hand-authored terrain presets blended into procedural generation.
+- Unity: `6000.3.17f1` (Unity 6.3 LTS), URP 2D
+- Primary target: Windows PC / Steam
+- Current implementation and verification: [`docs/project/current-state.md`](docs/project/current-state.md)
+- Current milestone and next work unit: [`docs/roadmap/next-milestone.md`](docs/roadmap/next-milestone.md)
+- Documentation map: [`docs/README.md`](docs/README.md)
 
-Next:
-- Improve procedural mine generation so maps have less rectangular, more varied shapes while preserving the current prototype loop.
+현재 기능 목록을 이 README에 중복해서 유지하지 않는다. 위 current-state 문서가
+code, tests와 verification evidence에 맞춰 갱신되는 canonical snapshot이다.
+
+## Development workflow
+
+- Repository 공통 규칙: [`AGENTS.md`](AGENTS.md)
+- Source/test와 Unity content는 task-level direct-edit 승인이 없으면 proposal-only다.
+- 승인된 work unit의 문서는 owner agent가 직접 관리한다.
+- Codex와 ZCode는 별도 worktree/branch를 사용하고 work unit마다 한 owner만 둔다.
+- Local verification: [`docs/testing/LOCAL_VERIFICATION.md`](docs/testing/LOCAL_VERIFICATION.md)
+
+Generated Unity directories such as `Library`, `Temp`, `Logs`, `TestResults` and `Builds`
+are local-only and must not be committed.
