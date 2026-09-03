@@ -1,4 +1,4 @@
-# 0006. Prototype Player Movement
+# ADR-0006: Prototype Player Movement
 
 Date: 2026-06-18
 

@@ -116,15 +116,14 @@ Input Action, package와 `ProjectSettings/` 변경은 기본적으로 사용자 
 ## Current source of truth
 
 - Game rule과 player experience: `docs/gdd/`
-- Current prototype sequence: `docs/implementation/PROTOTYPE_ROADMAP.md`
+- Current milestone and work-unit sequence: `docs/roadmap/next-milestone.md`
+- Project implementation snapshot: `docs/project/current-state.md`
+- Historical prototype step index: `docs/implementation/PROTOTYPE_ROADMAP.md`
 - Architecture boundary와 current structure: `docs/architecture/CODE_STRUCTURE.md`
-- Structural and workflow decisions: `docs/decisions/`
+- Structural and workflow decisions: `docs/adr/`
 - Verification procedure: `docs/testing/LOCAL_VERIFICATION.md`
 - Asset provenance and licensing: `docs/licenses/ASSET_REGISTER.md`
 - Implemented behavior: current code, tests, Unity assets와 verification evidence
-
-`docs/roadmap/next-milestone.md`, milestone archive와 ADR 구조로의 전환은 별도 승인된
-documentation work unit에서 수행한다. 전환 완료 전에는 위 기존 경로를 기준으로 한다.
 
 ## Architecture invariants
 

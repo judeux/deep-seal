@@ -1,8 +1,10 @@
 # Prototype Implementation Roadmap
 
-This document defines the current step-by-step implementation plan for the Deep Seal playable prototype.
+This document preserves the detailed historical step index for the Deep Seal playable prototype.
 
-Codex must use this document as the primary source of truth when proposing the next implementation task.
+Current execution status and the next approved work unit are maintained in
+[`docs/roadmap/next-milestone.md`](../roadmap/next-milestone.md). Do not update the
+`Current Step` or `Next Planned Step` sections here as a second source of truth.
 
 ## Current Prototype Goal
 

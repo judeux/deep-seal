@@ -1,4 +1,4 @@
-# 0004. Asset Request Specification Workflow
+# ADR-0004: Asset Request Specification Workflow
 
 Date: 2026-06-16
 

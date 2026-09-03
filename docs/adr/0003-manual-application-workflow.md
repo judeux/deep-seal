@@ -1,4 +1,4 @@
-# 0003. Manual Application Workflow
+# ADR-0003: Manual Application Workflow
 
 Date: 2026-06-15
 

@@ -1,4 +1,4 @@
-# 0002. Codex Working Rules
+# ADR-0002: Codex Working Rules
 
 Date: 2026-06-15
 

@@ -19,13 +19,13 @@ unit의 owner agent가 필요한 문서를 직접 생성, 수정, 이동 및 정
 
 - `docs/gdd/`: 승인된 game rule, player experience와 design scope
 - `docs/architecture/`: code boundary, dependency와 implemented structure
-- `docs/implementation/PROTOTYPE_ROADMAP.md`: 현재 prototype 순서와 current step
-- `docs/decisions/`: 구조·workflow·호환성 결정과 rationale
+- `docs/project/current-state.md`: 현재 구현·검증·active work snapshot
+- `docs/roadmap/next-milestone.md`: 현재 milestone, work-unit 순서와 completion gate
+- `docs/roadmap/archive/`: 완료된 milestone의 불변 completion record
+- `docs/implementation/PROTOTYPE_ROADMAP.md`: 기존 prototype step의 역사적 상세 색인
+- `docs/adr/`: 구조·workflow·호환성 결정과 rationale
 - `docs/testing/`: local verification procedure와 evidence expectation
 - `docs/licenses/ASSET_REGISTER.md`: external/AI asset provenance와 license
-
-W0-B에서 새 roadmap/ADR/current-state 구조가 승인·적용되기 전까지 이 경로를
-유효한 기준으로 유지한다.
 
 ## Status vocabulary and evidence
 
@@ -76,12 +76,12 @@ GDD의 LOCKED rule과 code가 충돌하면 어느 쪽도 임의로 고치지 않
 
 ## Decision records
 
-현재는 `docs/decisions/NNNN-short-kebab-case-title.md` 형식을 사용한다.
+`docs/adr/NNNN-short-kebab-case-title.md` 형식을 사용한다.
 
 Decision record에는 최소한 다음을 포함한다.
 
 ```markdown
-# NNNN. Title
+# ADR-NNNN: Title
 
 Date: YYYY-MM-DD
 Status: Proposed | Accepted | Superseded
@@ -99,14 +99,17 @@ design 방향을 바꾸는 결정에 사용한다. 이미 accepted인 record를 
 
 ## Roadmap maintenance
 
-`docs/implementation/PROTOTYPE_ROADMAP.md`는 step 완료, 분할, 병합, 연기 또는
-재범위화 시 owner agent가 갱신한다.
+`docs/roadmap/next-milestone.md`는 work unit 완료, 분할, 병합, 연기 또는 재범위화 시
+owner agent가 갱신한다. `docs/project/current-state.md`는 실제 구현·검증 snapshot이
+바뀔 때 함께 갱신한다.
 
 - Current step, completed behavior, explicit exclusion, verification evidence와 next step을
   일치시킨다.
 - 사용자 verification과 owner review 전에는 `Done`으로 표시하지 않는다.
 - Current step 밖 기능을 조용히 끼워 넣지 않는다.
 - Roadmap 순서를 바꿀 필요가 있으면 이유와 대안을 먼저 제안하고 승인받는다.
+- Milestone completion gate를 모두 통과하면 `docs/roadmap/archive/`에 completion
+  record를 만들고 그 다음에만 `next-milestone.md`를 다음 계획으로 교체한다.
 
 ## Documentation quality
 
@@ -115,4 +118,3 @@ design 방향을 바꾸는 결정에 사용한다. 이미 accepted인 record를 
 - 표의 상태, 날짜, file path와 count가 본문과 일치해야 한다.
 - 긴 command output을 복사하기보다 재현 command, 핵심 결과와 log path를 기록한다.
 - 관련 heading과 link target만 먼저 읽고 충돌이나 전체 context가 필요할 때 확장한다.
-

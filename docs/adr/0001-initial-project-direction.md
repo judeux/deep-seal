@@ -1,4 +1,4 @@
-# 0001. Initial Project Direction
+# ADR-0001: Initial Project Direction
 
 Date: 2026-06-15
 

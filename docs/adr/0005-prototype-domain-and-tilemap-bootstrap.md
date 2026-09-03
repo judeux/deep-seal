@@ -1,4 +1,4 @@
-# 0005. Prototype Domain and Tilemap Bootstrap
+# ADR-0005: Prototype Domain and Tilemap Bootstrap
 
 Date: 2026-06-18
 
