@@ -2,7 +2,7 @@
 
 - Status: Active evidence baseline
 - Snapshot date: 2026-09-03
-- Snapshot input main commit: `d38cb90`
+- Snapshot implementation commit: `46cd937`
 - Target Unity version: `6000.3.17f1` (`cf0352b38e81`)
 - Active gameplay track: 3-E Movement Pacing and Map Openness Pass
 - Current gameplay owner: ZCode
@@ -24,8 +24,8 @@
 | ZCode worktree | Not registered in `git worktree list`; required before the next ZCode-owned write task |
 
 W0-A agent workflow governance was integrated as `0f38c40`. W0-B documentation lifecycle
-was integrated as `d38cb90`. W0-C is the current document-only baseline work unit; its final
-integration is represented by this file's Git history rather than a self-referential hash.
+was integrated as `d38cb90`. W0-C evidence synchronization was integrated as `46cd937`;
+later metadata-only documentation commits do not change that gameplay implementation baseline.
 
 ## Implemented prototype scope
 
