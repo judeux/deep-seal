@@ -66,8 +66,8 @@ namespace DeepSeal.UnityAdapters.Treasures
 
         [Header("Fallback Spawn Rules")]
         [SerializeField] private bool useFallbackSpawnRules = true;
-        [SerializeField] private int fallbackSpawnMinDistanceFromStart = 2;
-        [SerializeField] private int fallbackSpawnMaxDistanceFromStart = 10;
+        [SerializeField] private int fallbackSpawnMinDistanceFromStart = 6;
+        [SerializeField] private int fallbackSpawnMaxDistanceFromStart = 20;
         [SerializeField] private int fallbackSpawnRandomSeed = 1701;
 
         [Header("Depth Value Gradient")]
@@ -257,8 +257,8 @@ namespace DeepSeal.UnityAdapters.Treasures
             generateGridIfMissing = true;
             firstTreasureId = 0;
             useFallbackSpawnRules = true;
-            fallbackSpawnMinDistanceFromStart = 2;
-            fallbackSpawnMaxDistanceFromStart = 10;
+            fallbackSpawnMinDistanceFromStart = 6;
+            fallbackSpawnMaxDistanceFromStart = 20;
             fallbackSpawnRandomSeed = 1701;
         }
 

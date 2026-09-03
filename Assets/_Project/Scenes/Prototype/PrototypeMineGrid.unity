@@ -165,8 +165,8 @@ MonoBehaviour:
     y: -2
     value: 2
   useFallbackSpawnRules: 1
-  fallbackSpawnMinDistanceFromStart: 2
-  fallbackSpawnMaxDistanceFromStart: 10
+  fallbackSpawnMinDistanceFromStart: 6
+  fallbackSpawnMaxDistanceFromStart: 20
   fallbackSpawnRandomSeed: 1701
   applyDepthValueGradient: 1
   depthTierDistanceCells: 6
@@ -346,6 +346,8 @@ MonoBehaviour:
   maxFollowSpeed: 50
   followX: 1
   followY: 1
+  overrideOrthographicSize: 1
+  orthographicSize: 20
 --- !u!1 &583619461
 GameObject:
   m_ObjectHideFlags: 0
@@ -913,26 +915,27 @@ MonoBehaviour:
   generateGridIfMissing: 1
   firstEnemyId: 0
   spawnOffsets:
-  - x: 2
+  - x: 4
     y: 0
   - x: 0
-    y: 2
-  - x: -2
+    y: 4
+  - x: -4
     y: 0
   - x: 0
-    y: -2
+    y: -4
   spawnOverTime: 1
   spawnIntervalSeconds: 4
-  minimumActiveEnemies: 4
+  initialSpawnGraceSeconds: 20
+  minimumActiveEnemies: 3
   maximumActiveEnemies: 10
   spawnPressureRampSeconds: 60
   randomSpawnSeed: 1401
-  minimumSpawnDistanceFromTarget: 5
-  maximumSpawnDistanceFromTarget: 14
+  minimumSpawnDistanceFromTarget: 8
+  maximumSpawnDistanceFromTarget: 30
   minimumEnemyHitPoints: 3
   maximumEnemyHitPoints: 5
-  minimumMoveIntervalSeconds: 0.35
-  maximumMoveIntervalSeconds: 0.7
+  minimumMoveIntervalSeconds: 0.7
+  maximumMoveIntervalSeconds: 1.4
   spawnElitesOverTime: 1
   eliteSpawnIntervalSeconds: 150
   eliteDisplayName: Vanguard Kolt
@@ -1061,7 +1064,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: DeepSeal.Runtime::DeepSeal.UnityAdapters.Player.PrototypePlayerMovement
   mineGridBootstrap: {fileID: 1450090157}
   controlledTransform: {fileID: 2045824080}
-  moveSpeed: 3.5
+  moveSpeed: 2
   placeAtStartOnStart: 1
   generateGridIfMissing: 1
   normalizeDiagonalInput: 1

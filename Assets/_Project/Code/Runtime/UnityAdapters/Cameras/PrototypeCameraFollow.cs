@@ -23,14 +23,36 @@ namespace DeepSeal.UnityAdapters.Cameras
         [SerializeField] private bool followX = true;
         [SerializeField] private bool followY = true;
 
+        [Header("Framing")]
+        [Tooltip("활성화 시 시작 시점에 지정한 orthographic size를 적용한다. 넓은 맵 프로토타입 프레이밍용이다.")]
+        [SerializeField] private bool overrideOrthographicSize = false;
+        [SerializeField] private float orthographicSize = 10f;
+
         private Vector3 followVelocity;
         private bool warnedMissingTarget;
 
         private void Start()
         {
+            ApplyOrthographicSize();
+
             if (snapToTargetOnStart)
             {
                 SnapToTarget();
+            }
+        }
+
+        private void ApplyOrthographicSize()
+        {
+            if (!overrideOrthographicSize)
+            {
+                return;
+            }
+
+            Camera camera = GetComponent<Camera>();
+
+            if (camera != null && camera.orthographic)
+            {
+                camera.orthographicSize = Mathf.Max(1f, orthographicSize);
             }
         }
 
@@ -112,6 +134,7 @@ namespace DeepSeal.UnityAdapters.Cameras
 
         private void Reset()
         {
+            overrideOrthographicSize = false; orthographicSize = 10f;
             targetOffset = new Vector3(0f, 0f, -10f);
             snapToTargetOnStart = true;
             smoothFollow = true;

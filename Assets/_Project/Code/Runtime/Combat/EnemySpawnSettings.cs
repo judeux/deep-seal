@@ -10,7 +10,7 @@ namespace DeepSeal.Combat
         public EnemySpawnSettings(
             int minimumDistanceFromTarget,
             int maximumDistanceFromTarget)
-            : this(minimumDistanceFromTarget, maximumDistanceFromTarget, 512)
+            : this(minimumDistanceFromTarget, maximumDistanceFromTarget, 4096)
         {
         }
 
