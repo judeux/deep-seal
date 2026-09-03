@@ -10,7 +10,7 @@ namespace DeepSeal.Expedition
         public ExpeditionSpawnSettings(
             int minimumDistanceFromOrigin,
             int maximumDistanceFromOrigin)
-            : this(minimumDistanceFromOrigin, maximumDistanceFromOrigin, 512)
+            : this(minimumDistanceFromOrigin, maximumDistanceFromOrigin, 4096)
         {
         }
 

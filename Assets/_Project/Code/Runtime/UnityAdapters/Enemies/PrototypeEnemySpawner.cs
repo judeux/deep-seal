@@ -52,26 +52,28 @@ namespace DeepSeal.UnityAdapters.Enemies
         [SerializeField]
         private SpawnOffset[] spawnOffsets =
         {
-            new SpawnOffset(1, 0),
-            new SpawnOffset(0, 1),
-            new SpawnOffset(-1, 0)
+            new SpawnOffset(4, 0),
+            new SpawnOffset(0, 4),
+            new SpawnOffset(-4, 0),
+            new SpawnOffset(0, -4)
         };
 
         [Header("Runtime Spawn")]
         [SerializeField] private bool spawnOverTime = true;
         [SerializeField] private float spawnIntervalSeconds = 4f;
-        [SerializeField] private int minimumActiveEnemies = 4;
+        [SerializeField] private float initialSpawnGraceSeconds = 20f;
+        [SerializeField] private int minimumActiveEnemies = 3;
         [SerializeField] private int maximumActiveEnemies = 10;
         [SerializeField] private float spawnPressureRampSeconds = 90f;
         [SerializeField] private int randomSpawnSeed = 1401;
-        [SerializeField] private int minimumSpawnDistanceFromTarget = 5;
-        [SerializeField] private int maximumSpawnDistanceFromTarget = 14;
+        [SerializeField] private int minimumSpawnDistanceFromTarget = 8;
+        [SerializeField] private int maximumSpawnDistanceFromTarget = 30;
 
         [Header("Enemy Variation")]
         [SerializeField] private int minimumEnemyHitPoints = 3;
         [SerializeField] private int maximumEnemyHitPoints = 5;
-        [SerializeField] private float minimumMoveIntervalSeconds = 0.35f;
-        [SerializeField] private float maximumMoveIntervalSeconds = 0.7f;
+        [SerializeField] private float minimumMoveIntervalSeconds = 0.7f;
+        [SerializeField] private float maximumMoveIntervalSeconds = 1.4f;
 
         [Header("Elite Spawning")]
         [SerializeField] private bool spawnElitesOverTime = true;
@@ -152,7 +154,7 @@ namespace DeepSeal.UnityAdapters.Enemies
 
             spawnPressureStartTime = Time.time;
             ScheduleNextEliteSpawn();
-            ScheduleNextRuntimeSpawn();
+            nextRuntimeSpawnTime = Time.time + Mathf.Max(spawnIntervalSeconds, initialSpawnGraceSeconds);
         }
 
         private void Update()
@@ -578,16 +580,18 @@ namespace DeepSeal.UnityAdapters.Enemies
             firstEnemyId = 0;
             spawnOverTime = true;
             spawnIntervalSeconds = 4f;
-            minimumActiveEnemies = 4;
+            minimumActiveEnemies = 3;
             maximumActiveEnemies = 10;
             randomSpawnSeed = 1401;
-            minimumSpawnDistanceFromTarget = 5;
-            maximumSpawnDistanceFromTarget = 14;
+            minimumSpawnDistanceFromTarget = 8;
+            maximumSpawnDistanceFromTarget = 30;
             minimumEnemyHitPoints = 3;
             maximumEnemyHitPoints = 5;
-            minimumMoveIntervalSeconds = 0.35f;
-            maximumMoveIntervalSeconds = 0.7f;
+            minimumMoveIntervalSeconds = 0.7f;
+            maximumMoveIntervalSeconds = 1.4f;
             spawnPressureRampSeconds = 90f;
+            initialSpawnGraceSeconds = Mathf.Max(0f, initialSpawnGraceSeconds);
+            initialSpawnGraceSeconds = 20f;
         }
 
         private void OnValidate()
@@ -608,6 +612,8 @@ namespace DeepSeal.UnityAdapters.Enemies
             threatMaximumLevel = Mathf.Max(0, threatMaximumLevel);
             threatHitPointsBonusPerLevel = Mathf.Max(0, threatHitPointsBonusPerLevel);
             threatRewardValueBonusPerLevel = Mathf.Max(0, threatRewardValueBonusPerLevel);
+            initialSpawnGraceSeconds = Mathf.Max(0f, initialSpawnGraceSeconds);
+            initialSpawnGraceSeconds = 20f;
         }
     }
 }

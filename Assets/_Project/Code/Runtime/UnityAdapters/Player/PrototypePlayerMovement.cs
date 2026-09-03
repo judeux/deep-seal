@@ -21,7 +21,7 @@ namespace DeepSeal.UnityAdapters.Player
         [SerializeField] private Transform controlledTransform;
 
         [Header("Movement")]
-        [SerializeField] private float moveSpeed = 4f;
+        [SerializeField] private float moveSpeed = 2f;
         [SerializeField] private bool placeAtStartOnStart = true;
         [SerializeField] private bool generateGridIfMissing = true;
         [SerializeField] private bool normalizeDiagonalInput = true;

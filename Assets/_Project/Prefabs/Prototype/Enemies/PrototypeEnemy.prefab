@@ -112,5 +112,20 @@ MonoBehaviour:
   placeAtInitialPositionOnStart: 1
   maxHitPoints: 4
   disableOnDefeat: 1
-  moveIntervalSeconds: 0.45
+  moveIntervalSeconds: 1
+  usePathfinding: 1
+  maxPathVisitedCells: 4096
   logMovementResults: 0
+  behaviorKind: 0
+  chargeCooldownSeconds: 4
+  chargeWindupSeconds: 0.6
+  chargeSpeedCellsPerSecond: 9
+  chargeMaxCells: 6
+  chargeOffAxisToleranceCells: 1
+  chargeStunSeconds: 1.5
+  chargeWindupTint: {r: 1, g: 0.35, b: 0.25, a: 1}
+  rangedMinimumRangeCells: 3
+  rangedMaximumRangeCells: 7
+  rangedFireCooldownSeconds: 2.5
+  rangedDamage: 1
+  rangedProjectileTint: {r: 1, g: 0.4, b: 0.35, a: 1}

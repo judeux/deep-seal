@@ -31,9 +31,9 @@ namespace DeepSeal.UnityAdapters.Enemies
         [SerializeField] private bool disableOnDefeat = true;
 
         [Header("Movement")]
-        [SerializeField] private float moveIntervalSeconds = 0.5f;
+        [SerializeField] private float moveIntervalSeconds = 1f;
         [SerializeField] private bool usePathfinding = true;
-        [SerializeField] private int maxPathVisitedCells = 512;
+        [SerializeField] private int maxPathVisitedCells = 4096;
         [SerializeField] private bool logMovementResults;
 
         [Header("Behavior")]
@@ -725,9 +725,9 @@ namespace DeepSeal.UnityAdapters.Enemies
             controlledTransform = transform;
             maxHitPoints = 3;
             disableOnDefeat = true;
-            moveIntervalSeconds = 0.5f;
+            moveIntervalSeconds = 1f;
             usePathfinding = true;
-            maxPathVisitedCells = 512;
+            maxPathVisitedCells = 4096;
             placeAtInitialPositionOnStart = true;
             behaviorKind = EnemyBehaviorKind.Chaser;
         }
