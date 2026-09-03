@@ -325,6 +325,13 @@ Owner playtest findings (2026-09-02):
 * Immediate damage is possible right after start unless the player dodges from the first second.
 * A first speed experiment at roughly 50 percent of current movement speed is desired.
 
+Interim findings after 3-E-1 (2026-09-02):
+
+* Map scale-up, relative character shrink, the halved base pacing, the spawn grace period, and the larger pathfinding budgets are all verified in play.
+* The camera framing zoomed out too far: the view should stay local around the player instead of revealing most of the map. Tune the orthographic size down in a later pass.
+* The enemy spawn style needs a dedicated rework later; no frame drops were observed on spawn ticks so far, but longer and harsher runs are still needed to confirm.
+* Treasure placement rules and balance are deferred to a later tuning pass.
+
 Explicit exclusions:
 
 * No new player movement mechanics such as dashes or teleports.
